@@ -12,10 +12,10 @@ class AppImages {
       'assets/images/onboarding/onboarding3.png';
 
   //Prelogin Serivce Card Images
-  static const String cardImage1 = 'assets/images/doctor.png';
-  static const String cardImage2 = 'assets/images/ther.png';
-  static const String cardImage3 = 'assets/images/grandma.png';
-  static const String cardImage4 = 'assets/images/medicalteam.png';
+  static const String cardImage1 = 'assets/images/zero-waste.png';
+  static const String cardImage3 = 'assets/images/healthcare.png';
+  static const String cardImage2 = 'assets/images/selling.png';
+  static const String cardImage4 = 'assets/images/blog.png';
 
   //Prelogin Banner Images
 

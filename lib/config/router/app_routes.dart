@@ -1,4 +1,5 @@
 import '../../features/auth/presentation/view/login_page.dart';
+import '../../features/presentation/view/pre_login_view.dart';
 
 class MyRoutes {
   MyRoutes._();
@@ -40,7 +41,7 @@ class MyRoutes {
       // splashRoute: (context) => SplashScreen(),
       // onBoardingRoute: (context) => OnBoardingScreen(),
       // // staffDetailsRoute: (context) => AddStaffView(),
-      // preloginRoute: (context) => PreLoginPage(),
+      preloginRoute: (context) => const PreLoginPage(),
       // // viewbookedappointment: (context) => ViewBookedAppointments(),
       // // settingsRoute: (context) => SettingsView(),
       // userProfileRoute: (context) => StaffProfile(),
