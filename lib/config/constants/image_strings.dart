@@ -19,5 +19,5 @@ class AppImages {
 
   //Prelogin Banner Images
 
-  static const String bannerImage1 = 'assets/images/banner1.png';
+  static const String bannerImage1 = 'assets/images/donate.png';
 }

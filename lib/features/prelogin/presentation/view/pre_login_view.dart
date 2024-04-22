@@ -21,7 +21,7 @@ class PreLoginPage extends ConsumerStatefulWidget {
 }
 
 class _PreLoginPageState extends ConsumerState<PreLoginPage> {
-  final List<String> images = List.filled(3, 'assets/images/banner1.png');
+  final List<String> images = List.filled(3, 'assets/images/donate.png');
 
   String? appName;
   String? version;

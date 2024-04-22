@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "890077746968",
+    "project_id": "projectfoharmalai",
+    "storage_bucket": "projectfoharmalai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890077746968:android:ad43ca5fecdb89ee0ff06d",
+        "android_client_info": {
+          "package_name": "com.closedai.foharmalai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3dn5-fCbwtPewsSSguxqEAe7-MIo3T-M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
