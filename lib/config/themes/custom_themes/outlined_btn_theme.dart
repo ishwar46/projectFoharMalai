@@ -1,5 +1,6 @@
-import 'package:care_app_flutter/config/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+
+import '../../constants/app_colors.dart';
 
 class CustomOutlinedThemeButton {
   CustomOutlinedThemeButton._();

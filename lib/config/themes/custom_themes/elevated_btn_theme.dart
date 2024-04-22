@@ -1,5 +1,6 @@
-import 'package:care_app_flutter/config/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+
+import '../../constants/app_colors.dart';
 
 class CustomElevatedButtonTheme {
   CustomElevatedButtonTheme._();
@@ -10,7 +11,7 @@ class CustomElevatedButtonTheme {
     style: ElevatedButton.styleFrom(
         elevation: 0,
         foregroundColor: Colors.white,
-        backgroundColor: const Color.fromARGB(255, 12, 69, 117),
+        backgroundColor: AppColors.primaryColor,
         disabledBackgroundColor: Colors.grey,
         disabledForegroundColor: Colors.grey,
         // side: const BorderSide(

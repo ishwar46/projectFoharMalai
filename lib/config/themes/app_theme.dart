@@ -1,6 +1,6 @@
-import 'package:care_app_flutter/config/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/app_colors.dart';
 import 'custom_themes/appbar_theme.dart';
 import 'custom_themes/bottom_sheet_theme.dart';
 import 'custom_themes/check_box_theme.dart';

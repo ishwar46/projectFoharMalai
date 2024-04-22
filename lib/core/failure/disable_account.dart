@@ -1,5 +1,5 @@
 
-import 'package:care_app_flutter/core/failure/failure.dart';
+import 'package:foharmalai/core/failure/failure.dart';
 
 class AccountDisabledFailure extends Failure {
   final String message;
