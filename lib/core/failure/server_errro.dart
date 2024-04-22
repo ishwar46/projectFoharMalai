@@ -1,5 +1,5 @@
 
-import 'package:care_app_flutter/core/failure/failure.dart';
+import 'package:foharmalai/core/failure/failure.dart';
 
 class ServerError extends Failure {
   final String message;

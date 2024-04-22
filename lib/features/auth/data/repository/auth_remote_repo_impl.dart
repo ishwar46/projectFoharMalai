@@ -1,7 +1,7 @@
-import 'package:care_app_flutter/core/failure/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/failure/failure.dart';
 import '../../domain/repository/auth_repository.dart';
 import '../data_source/auth_remote_data_source.dart';
 
@@ -17,7 +17,7 @@ class AuthRemoteRepository implements IAuthRepository {
   AuthRemoteRepository(this._authRemoteDataSource);
 
   @override
-  Future<Either<Failure, bool>> loginStaff(String username, String password) {
-    return _authRemoteDataSource.loginStaff(username, password);
+  Future<Either<Failure, bool>> loginUser(String username, String password) {
+    return _authRemoteDataSource.loginUser(username, password);
   }
 }

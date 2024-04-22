@@ -123,10 +123,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
     }
   }
 
-  Future<void> _requestPermissions() async {
-    await PermissionHelper.requestLocationPermission(context);
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -195,14 +191,16 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Hero(
-                        tag: 'logo',
-                        child: Image(
-                          height: 150,
-                          image: AssetImage(
-                            dark
-                                ? AppImages.darkAppLogo
-                                : AppImages.lightAppLogo,
+                      Center(
+                        child: Hero(
+                          tag: 'logo',
+                          child: Image(
+                            height: 250,
+                            image: AssetImage(
+                              dark
+                                  ? AppImages.darkAppLogo
+                                  : AppImages.lightAppLogo,
+                            ),
                           ),
                         ),
                       ),
@@ -265,11 +263,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 },
                               ),
                             ),
-                            // validator: (value) {
-                            //   final error =
-                            //       AppValidator.validatePassword(value);
-                            //   return error;
-                            // },
                           ),
                           const SizedBox(
                               height: AppSizes.spaceBtwnInputFields / 2),
@@ -302,17 +295,17 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             ],
                           ),
                           const SizedBox(height: AppSizes.spaceBtwSections),
-                          if (Platform.isAndroid && _isBiometricAvailable)
-                            ElevatedButton(
-                              onPressed: _authenticateUser,
-                              child:
-                                  const Text('Login with Biometrics (Android)'),
-                            ),
-                          if (Platform.isIOS && _isBiometricAvailable)
-                            ElevatedButton(
-                              onPressed: _authenticateUser,
-                              child: const Text('Login with Biometrics (iOS)'),
-                            ),
+                          // if (Platform.isAndroid && _isBiometricAvailable)
+                          //   ElevatedButton(
+                          //     onPressed: _authenticateUser,
+                          //     child:
+                          //         const Text('Login with Biometrics (Android)'),
+                          //   ),
+                          // if (Platform.isIOS && _isBiometricAvailable)
+                          //   ElevatedButton(
+                          //     onPressed: _authenticateUser,
+                          //     child: const Text('Login with Biometrics (iOS)'),
+                          //   ),
                           //Sign in Button
                           Hero(
                             tag: 'loginbutton',
@@ -341,6 +334,24 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           ),
                           const SizedBox(
                             height: AppSizes.spaceBtwSections,
+                          ),
+                          InkWell(
+                            key: const ValueKey('registerButton'),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, MyRoutes.signupRoute);
+                            },
+                            child: Text(
+                              AppTexts.donthaveanaccount,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                    color: dark
+                                        ? AppColors.whiteText
+                                        : AppColors.accentColor,
+                                  ),
+                            ),
                           ),
                         ],
                       ),
