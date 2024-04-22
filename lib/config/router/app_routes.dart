@@ -1,5 +1,5 @@
 import '../../features/auth/presentation/view/login_page.dart';
-import '../../features/presentation/view/pre_login_view.dart';
+import '../../features/prelogin/presentation/view/pre_login_view.dart';
 
 class MyRoutes {
   MyRoutes._();
