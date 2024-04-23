@@ -42,10 +42,10 @@ class AuthViewModel extends StateNotifier<AuthState> {
             status: 'Please wait...',
             maskType: EasyLoadingMaskType.black,
           );
-          Future.delayed(const Duration(seconds: 1), () {
-            Navigator.pushReplacementNamed(context, MyRoutes.homePageRoute);
-            EasyLoading.dismiss();
-          });
+          // Future.delayed(const Duration(seconds: 1), () {
+          //   Navigator.pushReplacementNamed(context, MyRoutes.homePageRoute);
+          //   EasyLoading.dismiss();
+          // });
         } else {
           showSnackBar(
             message: 'Login failed. Please try again.',

@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../../../../config/constants/api_constants.dart';
 import '../../../../core/common/provider/secure_storage_provide.dart';
@@ -34,48 +35,54 @@ class AuthRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        final responseData = response.data;
-        if (responseData.containsKey('data') &&
-            responseData['data'] != null &&
-            responseData['data'].containsKey('jwtToken') &&
-            responseData.containsKey('succeeded') &&
-            responseData['succeeded'] == true) {
-          final token = responseData['data']['jwtToken'];
-          final username = responseData['data']['userName'];
-          // Save JWT Token
+        final Map<String, dynamic>? responseData =
+            response.data as Map<String, dynamic>?;
+
+        if (responseData != null && responseData.containsKey('token')) {
+          final token = responseData['token'];
+
           await secureStorage.write(key: "authToken", value: token);
-          // Save Username
-          await secureStorage.write(key: "username", value: username);
-          // Check if login succeeded and token is not empty
-          if (token.isNotEmpty) {
+
+          final decodedToken = JwtDecoder.decode(token);
+          final tokenUsername = decodedToken['username'];
+
+          if (username == tokenUsername) {
             return const Right(true);
           } else {
-            return Left(Failure(error: "Login failed. Please try again."));
+            return Left(
+              Failure(
+                error: response.data?['message'] ?? "Invalid Username",
+                statusCode: response.statusCode.toString(),
+              ),
+            );
           }
-        } else if (responseData.containsKey('messages')) {
-          // Failed login attempt due to incorrect credentials
-          final errorMessage = responseData['messages'];
-          return Left(Failure(error: errorMessage));
         } else {
-          return Left(Failure(error: "Invalid response data."));
+          return Left(
+            Failure(
+              error: response.data?['message'] ?? "Unknown error",
+              statusCode: response.statusCode.toString(),
+            ),
+          );
         }
       } else {
-        return Left(Failure(
-          error: response.data?['message'] ?? "Unknown error",
-          statusCode: response.statusCode.toString(),
-        ));
+        return Left(
+          Failure(
+            error: response.data?['message'] ?? "Unknown error",
+            statusCode: response.statusCode.toString(),
+          ),
+        );
       }
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
-        return Left(Failure(error: "Connection timeout. Please Try again."));
+        return Left(Failure(error: "Connection timeout. Please try again."));
       } else if (e.type == DioExceptionType.badResponse) {
-        return Left(Failure(error: "Bad server response. Please Try again."));
+        return Left(Failure(error: "Server error. Please try again later."));
       } else {
-        return Left(Failure(error: "An Unexpected error occurred"));
+        return Left(Failure(error: "An unexpected error occurred."));
       }
     } catch (e) {
-      return Left(Failure(error: "Unexpected Error: $e"));
+      return Left(Failure(error: "An unexpected error occurred."));
     }
   }
 }
