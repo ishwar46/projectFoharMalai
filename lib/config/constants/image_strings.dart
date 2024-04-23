@@ -1,6 +1,6 @@
 class AppImages {
   //App Logos
-  static const String darkAppLogo = 'assets/images/foharmalailogo.png';
+  static const String darkAppLogo = 'assets/images/logo_dark.png';
   static const String lightAppLogo = 'assets/images/foharmalailogo.png';
 
   //OnBoarding Images
@@ -19,5 +19,5 @@ class AppImages {
 
   //Prelogin Banner Images
 
-  static const String bannerImage1 = 'assets/images/banner1.png';
+  static const String bannerImage1 = 'assets/images/donate.png';
 }

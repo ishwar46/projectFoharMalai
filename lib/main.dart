@@ -12,13 +12,7 @@ void main() async {
     systemNavigationBarColor: Colors.black,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-    [
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ],
-  );
+
   await dotenv.load(fileName: "assets/.env");
   configLoading();
   runApp(
