@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'config/constants/app_colors.dart';
-import 'core/app.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'core/app.dart';
+import 'config/constants/app_colors.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(

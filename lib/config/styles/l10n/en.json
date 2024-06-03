@@ -1,0 +1,21 @@
+{
+    "title": "Localization Example",
+    "our_services": "Our Services",
+    "articles": "Articles",
+    "choose_language": "Choose Your Preffered Language",
+    "explore_more": "Explore More",
+    "waste_pickup": "Waste Pickup",
+    "sell": "Sell",
+    "donate": "Donate",
+    "blogs": "Blogs",
+    "login": "Login",
+    "username": "Username",
+    "password": "Password",
+    "remember_me": "Remember Me",
+    "forget_password": "Forget Password?",
+    "dont_have_an_account": "Don't have an account? Sign Up",
+    "login_page_title": "Welcome Back!",
+    "login_page_subtitle": "Please sign in to continue",
+    "username_hint": "Enter your username",
+    "password_hint": "Enter your password"
+}

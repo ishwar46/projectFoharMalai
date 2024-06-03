@@ -1,0 +1,22 @@
+{
+    "title": "Ejemplo de Localización",
+    "our_services": "Nuestros Servicios",
+    "articles": "Artículos",
+    "choose_language": "Elija su idioma preferido",
+    "explore_more": "explora más",
+    "waste_pickup": "Recolección de Residuos",
+    "sell": "Vender",
+    "donate": "Donar",
+    "blogs": "Blogs",
+    "login": "Iniciar Sesión",
+    "username": "Usuario",
+    "password": "Contraseña",
+    "remember_me": "Recuérdame",
+    "forget_password": "¿Olvidaste la contraseña?",
+    "dont_have_an_account": "¿No tienes una cuenta? Regístrate",
+    "login_page_title": "¡Bienvenido de nuevo!",
+    "login_page_subtitle": "Por favor, inicia sesión para continuar",
+    "username_hint": "Introduce tu usuario",
+    "password_hint": "Introduce tu contraseña"
+
+}
