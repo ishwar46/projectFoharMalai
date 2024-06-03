@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,10 +15,10 @@ import '../../../../../config/router/app_routes.dart';
 import '../../../../../core/common/styles/spacing_styles.dart';
 
 import '../../../../../core/utils/validators/validators.dart';
+import '../../../../app_localizations.dart';
 import '../../../../core/common/provider/connection.dart';
 import '../../../../core/common/widgets/custom_snackbar.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
-import '../../../../core/utils/helpers/permission_helper.dart';
 import '../auth_viewmodel/auth_viewmodel.dart';
 
 class LoginView extends ConsumerStatefulWidget {
@@ -208,12 +206,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                         height: AppSizes.spaceBtwItems,
                       ),
                       Text(
-                        AppTexts.loginPageTitle,
+                        AppLocalizations.of(context).translate('login'),
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       const SizedBox(height: AppSizes.sm),
                       Text(
-                        AppTexts.loginPageSubTitle,
+                        AppLocalizations.of(context)
+                            .translate('login_page_subtitle'),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -231,10 +230,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           TextFormField(
                             key: const ValueKey('username'),
                             controller: _usernameController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               prefixIcon: Icon(Iconsax.user),
-                              labelText: AppTexts.username,
-                              hintText: AppTexts.usernamehint,
+                              labelText: AppLocalizations.of(context)
+                                  .translate('username'),
+                              hintText: AppLocalizations.of(context)
+                                  .translate('username_hint'),
                             ),
                             validator: (value) {
                               final error =
@@ -250,8 +251,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             obscureText: isObscure,
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Iconsax.password_check),
-                              labelText: AppTexts.password,
-                              hintText: AppTexts.passwordHint,
+                              labelText: AppLocalizations.of(context)
+                                  .translate('password'),
+                              hintText: AppLocalizations.of(context)
+                                  .translate('password_hint'),
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   isObscure ? Iconsax.eye : Iconsax.eye_slash,
@@ -278,7 +281,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 },
                               ),
                               Text(
-                                AppTexts.remeberme,
+                                AppLocalizations.of(context)
+                                    .translate('remember_me'),
                                 style: Theme.of(context).textTheme.labelSmall,
                               ),
                               const Spacer(),
@@ -288,7 +292,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                       context, MyRoutes.sendOTPRoute);
                                 },
                                 child: Text(
-                                  AppTexts.forgetPassword,
+                                  AppLocalizations.of(context)
+                                      .translate('forget_password'),
                                   style: Theme.of(context).textTheme.labelSmall,
                                 ),
                               )
@@ -306,6 +311,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           //     onPressed: _authenticateUser,
                           //     child: const Text('Login with Biometrics (iOS)'),
                           //   ),
+                          
                           //Sign in Button
                           Hero(
                             tag: 'loginbutton',
@@ -328,7 +334,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                         );
                                   }
                                 },
-                                child: Text(AppTexts.login.toUpperCase()),
+                                child: Text(AppLocalizations.of(context)
+                                    .translate('login')
+                                    .toUpperCase()),
                               ),
                             ),
                           ),
@@ -342,7 +350,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   context, MyRoutes.signupRoute);
                             },
                             child: Text(
-                              AppTexts.donthaveanaccount,
+                              AppLocalizations.of(context)
+                                  .translate('dont_have_an_account'),
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall

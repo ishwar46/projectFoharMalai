@@ -1,26 +1,23 @@
-import 'package:flutter/widgets.dart';
-
+import 'package:flutter/material.dart';
+import '../../../../app_localizations.dart';
 import '../../../../config/constants/image_strings.dart';
 import 'card_widget.dart';
 
 class ServicesCard extends StatelessWidget {
-  const ServicesCard({
-    super.key,
-  });
+  const ServicesCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: SizedBox(
               height: 110,
-              //padding: const EdgeInsets.all(5),
               child: CardWidgetPre(
-                title: "Waste Pickup",
+                title: AppLocalizations.of(context).translate('waste_pickup'),
                 routeName: "/hospital",
                 imagePath: AppImages.cardImage1,
               ),
@@ -29,9 +26,8 @@ class ServicesCard extends StatelessWidget {
           Expanded(
             child: SizedBox(
               height: 110,
-              //padding: const EdgeInsets.all(10),
               child: CardWidgetPre(
-                title: "Sell",
+                title: AppLocalizations.of(context).translate('sell'),
                 routeName: "/appointment",
                 imagePath: AppImages.cardImage2,
               ),
@@ -40,9 +36,8 @@ class ServicesCard extends StatelessWidget {
           Expanded(
             child: SizedBox(
               height: 110,
-              //padding: const EdgeInsets.all(10),
               child: CardWidgetPre(
-                title: "Donate",
+                title: AppLocalizations.of(context).translate('donate'),
                 routeName: "/appointment",
                 imagePath: AppImages.cardImage3,
               ),
@@ -51,9 +46,8 @@ class ServicesCard extends StatelessWidget {
           Expanded(
             child: SizedBox(
               height: 110,
-              //padding: const EdgeInsets.all(10),
               child: CardWidgetPre(
-                title: "Blogs",
+                title: AppLocalizations.of(context).translate('blogs'),
                 routeName: "/appointment",
                 imagePath: AppImages.cardImage4,
               ),
