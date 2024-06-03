@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../config/constants/app_colors.dart';
@@ -12,10 +13,10 @@ import '../../../../../config/constants/app_sizes.dart';
 import '../../../../../config/constants/image_strings.dart';
 import '../../../../../config/constants/text_strings.dart';
 import '../../../../../config/router/app_routes.dart';
-import '../../../../../core/common/styles/spacing_styles.dart';
 
 import '../../../../../core/utils/validators/validators.dart';
 import '../../../../app_localizations.dart';
+import '../../../../config/themes/custom_themes/text_form_field_theme.dart';
 import '../../../../core/common/provider/connection.dart';
 import '../../../../core/common/widgets/custom_snackbar.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
@@ -43,14 +44,24 @@ class _LoginViewState extends ConsumerState<LoginView> {
   bool _isBiometricAvailable = false;
   String? versionName;
   List<BiometricType> _availableBiometrics = [];
+  String? appName;
+  String? version;
 
   @override
   void initState() {
     super.initState();
-
     _loadSavedUsername();
     _checkBiometricAvailability();
+    _loadAppInfo();
     setState(() {});
+  }
+
+  Future<void> _loadAppInfo() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      appName = packageInfo.appName;
+      version = packageInfo.version;
+    });
   }
 
   Future<void> _checkBiometricAvailability() async {
@@ -181,7 +192,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: AppSpacingStyle.paddingWithAppBarHeight,
+              padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 //Logo
@@ -203,7 +214,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                         ),
                       ),
                       const SizedBox(
-                        height: AppSizes.spaceBtwItems,
+                        height: AppSizes.spaceBtnCards,
                       ),
                       Text(
                         AppLocalizations.of(context).translate('login'),
@@ -236,7 +247,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   .translate('username'),
                               hintText: AppLocalizations.of(context)
                                   .translate('username_hint'),
-                            ),
+                            ).applyDefaults(
+                                CustomTextFormField.lightInputDecorationTheme),
                             validator: (value) {
                               final error =
                                   AppValidator.validateUsername(value);
@@ -256,20 +268,25 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               hintText: AppLocalizations.of(context)
                                   .translate('password_hint'),
                               suffixIcon: IconButton(
-                                icon: Icon(
-                                  isObscure ? Iconsax.eye : Iconsax.eye_slash,
-                                ),
+                                icon: Icon(isObscure
+                                    ? Iconsax.eye
+                                    : Iconsax.eye_slash),
                                 onPressed: () {
                                   setState(() {
                                     isObscure = !isObscure;
                                   });
                                 },
                               ),
-                            ),
+                            ).applyDefaults(
+                                CustomTextFormField.lightInputDecorationTheme),
+                            validator: (value) {
+                              final error =
+                                  AppValidator.validatePassword(value);
+                              return error;
+                            },
                           ),
                           const SizedBox(
                               height: AppSizes.spaceBtwnInputFields / 2),
-
                           //Remeber Me and Forget Password
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -311,7 +328,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           //     onPressed: _authenticateUser,
                           //     child: const Text('Login with Biometrics (iOS)'),
                           //   ),
-                          
+
                           //Sign in Button
                           Hero(
                             tag: 'loginbutton',
@@ -362,6 +379,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   ),
                             ),
                           ),
+                          if (appName != null && version != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '$appName v$version',
+                                    style: TextStyle(
+                                      color: dark
+                                          ? AppColors.whiteText
+                                          : AppColors.accentColor,
+                                      fontSize: 12,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
                         ],
                       ),
                     ),

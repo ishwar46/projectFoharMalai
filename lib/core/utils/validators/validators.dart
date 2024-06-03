@@ -22,6 +22,15 @@ class AppValidator {
     return null;
   }
 
+  //validate fullname
+
+  static String? validateFullName(String? value) {
+    if (value!.isEmpty) {
+      return 'Full Name cannot be empty';
+    }
+    return null;
+  }
+
   /// Validates a password.
   ///
   /// [value]: The password string to be validated.

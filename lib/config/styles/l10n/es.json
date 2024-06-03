@@ -17,6 +17,16 @@
     "login_page_title": "¡Bienvenido de nuevo!",
     "login_page_subtitle": "Por favor, inicia sesión para continuar",
     "username_hint": "Introduce tu usuario",
-    "password_hint": "Introduce tu contraseña"
-
+    "password_hint": "Introduce tu contraseña",
+    "register": "Regístrate",
+    "register_page_title": "Crear una cuenta",
+    "fullname": "Nombre completo",
+    "fullname_hint": "Ingrese su nombre completo",
+    "email": "Correo electrónico",
+    "email_hint": "Ingrese su dirección de correo electrónico",
+    "phone_number": "Número de teléfono",
+    "phone_number_hint": "Ingrese su número de teléfono",
+    "address": "Dirección",
+    "address_hint": "Ingrese su dirección",
+    "already_have_account": "¿Ya tienes una cuenta? Iniciar sesión"
 }

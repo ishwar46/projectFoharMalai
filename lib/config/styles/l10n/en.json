@@ -13,9 +13,20 @@
     "password": "Password",
     "remember_me": "Remember Me",
     "forget_password": "Forget Password?",
-    "dont_have_an_account": "Don't have an account? Sign Up",
+    "dont_have_an_account": "Don't have an account? Register Here",
     "login_page_title": "Welcome Back!",
     "login_page_subtitle": "Please sign in to continue",
     "username_hint": "Enter your username",
-    "password_hint": "Enter your password"
+    "password_hint": "Enter your password",
+    "register": "Register",
+    "register_page_title": "Create an Account",
+    "fullname": "Fullname",
+    "fullname_hint": "Enter your fullname",
+    "email": "Email",
+    "email_hint": "Enter your email address",
+    "phone_number": "Phone Number",
+    "phone_number_hint": "Enter your phone number",
+    "address": "Address",
+    "address_hint": "Enter your address",
+    "already_have_account": "Already have an account? Login"
 }

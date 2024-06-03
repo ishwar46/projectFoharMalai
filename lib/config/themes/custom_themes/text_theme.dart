@@ -7,7 +7,7 @@ class CustomTextTheme {
   static TextTheme lightTextTheme = TextTheme(
     //Headlines
     headlineLarge: const TextStyle().copyWith(
-      fontSize: 30.0,
+      fontSize: 25.0,
       fontWeight: FontWeight.bold,
       color: Colors.black,
     ),
@@ -73,7 +73,7 @@ class CustomTextTheme {
   static TextTheme darkTextTheme = TextTheme(
     //Headlines
     headlineLarge: const TextStyle().copyWith(
-      fontSize: 30.0,
+      fontSize: 28.0,
       fontWeight: FontWeight.bold,
       color: Colors.white,
     ),

@@ -10,7 +10,7 @@ class CustomTextFormField {
     errorMaxLines: 2,
     prefixIconColor: Colors.grey,
     suffixIconColor: Colors.grey,
-    constraints: BoxConstraints.expand(height: 55),
+    contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
     labelStyle: const TextStyle().copyWith(
       fontSize: 12,
       color: Colors.black,
@@ -22,8 +22,9 @@ class CustomTextFormField {
     errorStyle: const TextStyle().copyWith(
       fontStyle: FontStyle.normal,
     ),
-    floatingLabelStyle:
-        const TextStyle().copyWith(color: Colors.black.withOpacity(0.8)),
+    floatingLabelStyle: const TextStyle().copyWith(
+      color: Colors.black.withOpacity(0.8),
+    ),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(5),
       borderSide: const BorderSide(width: 1, color: Colors.grey),
@@ -47,12 +48,11 @@ class CustomTextFormField {
   );
 
   //======Dark Mode Input Decoration Theme
-
   static InputDecorationTheme darkInputDecorationTheme = InputDecorationTheme(
     errorMaxLines: 2,
     prefixIconColor: Colors.grey,
     suffixIconColor: Colors.grey,
-    constraints: BoxConstraints.expand(height: 55),
+    contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
     labelStyle: const TextStyle().copyWith(
       fontSize: 12,
       color: Colors.white,
@@ -61,8 +61,9 @@ class CustomTextFormField {
       fontSize: 12,
       color: Colors.white,
     ),
-    floatingLabelStyle:
-        TextStyle().copyWith(color: Colors.white.withOpacity(0.8)),
+    floatingLabelStyle: const TextStyle().copyWith(
+      color: Colors.white.withOpacity(0.8),
+    ),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(5),
       borderSide: const BorderSide(width: 1, color: Colors.grey),

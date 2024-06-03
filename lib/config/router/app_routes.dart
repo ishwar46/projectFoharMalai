@@ -1,4 +1,5 @@
 import '../../features/auth/presentation/view/login_page.dart';
+import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
 
 class MyRoutes {
@@ -36,7 +37,7 @@ class MyRoutes {
     return {
       // // homeRoute: (context) => HomePage(),
       loginRoute: (context) => const LoginView(),
-      // // signupRoute: (context) => RegisterView(),
+      signupRoute: (context) => RegisterView(),
       // // appointmentsRoute: (context) => AppointmentView(),
       // splashRoute: (context) => SplashScreen(),
       // onBoardingRoute: (context) => OnBoardingScreen(),
