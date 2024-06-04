@@ -72,7 +72,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                         child: Hero(
                           tag: 'logo',
                           child: Image(
-                            height: 150,
+                            height: 200,
                             image: AssetImage(
                               dark
                                   ? AppImages.darkAppLogo
@@ -258,10 +258,10 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                                   .textTheme
                                   .titleSmall
                                   ?.copyWith(
-                                    color: dark
-                                        ? AppColors.whiteText
-                                        : AppColors.accentColor,
-                                  ),
+                                      color: dark
+                                          ? AppColors.whiteText
+                                          : AppColors.buttonPrimary,
+                                      fontWeight: FontWeight.w600),
                             ),
                           ),
                         ],

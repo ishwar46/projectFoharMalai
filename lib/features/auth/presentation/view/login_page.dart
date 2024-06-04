@@ -213,9 +213,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: AppSizes.spaceBtnCards,
-                      ),
                       Text(
                         AppLocalizations.of(context).translate('login'),
                         style: Theme.of(context).textTheme.headlineLarge,
@@ -373,10 +370,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   .textTheme
                                   .titleSmall
                                   ?.copyWith(
-                                    color: dark
-                                        ? AppColors.whiteText
-                                        : AppColors.accentColor,
-                                  ),
+                                      color: dark
+                                          ? AppColors.whiteText
+                                          : AppColors.buttonPrimary,
+                                      fontWeight: FontWeight.w600),
                             ),
                           ),
                           if (appName != null && version != null)
@@ -389,7 +386,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                     style: TextStyle(
                                       color: dark
                                           ? AppColors.whiteText
-                                          : AppColors.accentColor,
+                                          : AppColors.darkGrey,
                                       fontSize: 12,
                                     ),
                                   )
