@@ -5,6 +5,7 @@ import '../app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../config/router/app_routes.dart';
 import '../config/themes/app_theme.dart';
+import 'common/provider/language_service.dart';
 
 class App extends ConsumerStatefulWidget {
   const App({super.key});
@@ -32,12 +33,25 @@ class _AppState extends ConsumerState<App> {
   void initState() {
     super.initState();
     App.setInstance(this);
+    _loadLocale();
   }
 
-  void setLocale(Locale locale) {
+  Future<void> _loadLocale() async {
+    LanguageService languageService = LanguageService();
+    String? languageCode = await languageService.getLanguageCode();
+    if (languageCode != null) {
+      setState(() {
+        _locale = Locale(languageCode);
+      });
+    }
+  }
+
+  void setLocale(Locale locale) async {
     setState(() {
       _locale = locale;
     });
+    LanguageService languageService = LanguageService();
+    await languageService.saveLanguageCode(locale.languageCode);
   }
 
   @override
@@ -48,7 +62,7 @@ class _AppState extends ConsumerState<App> {
       themeMode: ThemeMode.system,
       theme: MyAppTheme.lightTheme,
       darkTheme: MyAppTheme.darkTheme,
-      initialRoute: MyRoutes.preloginRoute,
+      initialRoute: MyRoutes.homePageRoute,
       routes: MyRoutes.getApplicationRoute(),
       builder: EasyLoading.init(),
       locale: _locale,

@@ -227,15 +227,17 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                                   borderRadius: BorderRadius.circular(10),
                                 )),
                                 onPressed: () async {
-                                  if (_key.currentState!.validate()) {
-                                    await ref
-                                        .read(authViewModelProvider.notifier)
-                                        .loginUser(
-                                          _usernameController.text,
-                                          _passwordController.text,
-                                          context,
-                                        );
-                                  }
+                                  Navigator.pushNamed(
+                                      context, "/homePageRoute");
+                                  // if (_key.currentState!.validate()) {
+                                  //   await ref
+                                  //       .read(authViewModelProvider.notifier)
+                                  //       .loginUser(
+                                  //         _usernameController.text,
+                                  //         _passwordController.text,
+                                  //         context,
+                                  //       );
+                                  // }
                                 },
                                 child: Text(AppLocalizations.of(context)
                                     .translate('register')
