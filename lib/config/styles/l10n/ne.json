@@ -28,5 +28,15 @@
     "phone_number_hint": "तपाईंको फोन नम्बर लेख्नुहोस्",
     "address": "ठेगाना",
     "address_hint": "तपाईंको ठेगाना लेख्नुहोस्",
-    "already_have_account": "पहिले नै खाता छ? लगइन गर्नुहोस्"
+    "already_have_account": "पहिले नै खाता छ? लगइन गर्नुहोस्",
+    "schedule_pickup": "पिकअप",
+    "special_requests": "विशेष अनुरोधहरू",
+    "locations": "स्थानहरू",
+    "payments": "भुक्तानीहरू",
+    "upcoming_schedule": "आगामी तालिका",
+    "welcome_guest": "स्वागत छ, पाहुना!",
+    "welcome_user": "स्वागत छ, {username}!",
+    "today_is": "आज {date} हो",
+    "logout": "लग आउट",
+    "logout_confirmation": "के तपाई निश्चित रूपमा लग आउट गर्न चाहानुहुन्छ?"
 }

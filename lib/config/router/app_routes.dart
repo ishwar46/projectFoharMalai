@@ -1,5 +1,6 @@
 import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
+import '../../features/home/presentation/view/home_page.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
 
 class MyRoutes {
@@ -49,7 +50,7 @@ class MyRoutes {
       // // viewNotificationRoute: (context) => NotificationView(),
       // // sendOTPRoute: (context) => SendOTPView(),
       // // verifyOTPRoute: (context) => VerifyOTPPage(),
-      // homePageRoute: (context) => HomePageNew(),
+      homePageRoute: (context) => HomePageNew(),
       // // qrCodeRoute: (context) => QRCodeView(),
       // // paymentRoute: (context) => Payment(),
       // // clientRoute: (context) => StaffViewNew(),

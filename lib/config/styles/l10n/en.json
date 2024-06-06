@@ -28,5 +28,15 @@
     "phone_number_hint": "Enter your phone number",
     "address": "Address",
     "address_hint": "Enter your address",
-    "already_have_account": "Already have an account? Login"
+    "already_have_account": "Already have an account? Login",
+    "schedule_pickup": "Schedule a Pickup",
+    "special_requests": "Special Requests",
+    "locations": "Locations",
+    "payments": "Payments",
+    "upcoming_schedule": "Upcoming Schedule",
+    "welcome_guest": "Welcome, Guest!",
+    "welcome_user": "Welcome, {username}!",
+    "today_is": "Today is {date}",
+    "logout": "Logout",
+    "logout_confirmation": "Are you sure you want to logout?"
 }

@@ -28,5 +28,16 @@
     "phone_number_hint": "Ingrese su número de teléfono",
     "address": "Dirección",
     "address_hint": "Ingrese su dirección",
-    "already_have_account": "¿Ya tienes una cuenta? Iniciar sesión"
+    "already_have_account": "¿Ya tienes una cuenta? Iniciar sesión",
+    "schedule_pickup": "Programar una recogida",
+    "special_requests": "Solicitudes especiales",
+    "locations": "Ubicaciones",
+    "payments": "Pagos",
+    "upcoming_schedule": "Horario próximo",
+    "welcome_guest": "¡Bienvenido, Invitado!",
+    "welcome_user": "¡Bienvenido, {username}!",
+    "today_is": "Hoy es {date}",
+    "logout": "Cerrar sesión",
+    "logout_confirmation": "¿Estás seguro de que quieres cerrar sesión?"
+
 }
