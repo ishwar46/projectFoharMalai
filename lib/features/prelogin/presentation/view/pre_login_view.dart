@@ -10,6 +10,7 @@ import '../../../../config/constants/app_colors.dart';
 import '../../../../config/constants/image_strings.dart';
 import '../../../../core/app.dart';
 import '../../../../core/common/provider/biometric_provider.dart';
+import '../../../../core/common/provider/language_service.dart';
 import '../../../../core/common/widgets/explore_more_btn.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../widgets/biometric_button.dart';
@@ -28,6 +29,7 @@ class _PreLoginPageState extends ConsumerState<PreLoginPage> {
 
   String? appName;
   String? version;
+  final LanguageService languageService = LanguageService();
 
   @override
   void initState() {
@@ -43,8 +45,9 @@ class _PreLoginPageState extends ConsumerState<PreLoginPage> {
     });
   }
 
-  void _changeLanguage(Locale locale) {
+  void _changeLanguage(Locale locale) async {
     App.instance.setLocale(locale);
+    await languageService.saveLanguageCode(locale.languageCode);
   }
 
   void _showLanguageBottomSheet(BuildContext context) {
