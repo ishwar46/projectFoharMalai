@@ -38,5 +38,14 @@
     "welcome_user": "स्वागत छ, {username}!",
     "today_is": "आज {date} हो",
     "logout": "लग आउट",
-    "logout_confirmation": "के तपाई निश्चित रूपमा लग आउट गर्न चाहानुहुन्छ?"
+    "logout_confirmation": "के तपाई निश्चित रूपमा लग आउट गर्न चाहानुहुन्छ?",
+    "what_we_buy": "हामी के किन्छौं?",
+    "notifications": "सूचनाहरू",
+    "view_all": "सबै हेर्नुहोस्",
+    "newspaper": "समाचारपत्र",
+    "magazines": "पत्रिकाहरू",
+    "cardboard": "कार्डबोर्ड",
+    "shampoo": "शैम्पू",
+    "beer_bottle": "बियर बोतल",
+    "aluminium": "एलुमिनियम"
 }

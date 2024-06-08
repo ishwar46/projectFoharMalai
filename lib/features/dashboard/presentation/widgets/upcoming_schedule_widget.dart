@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
+import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
 
 class UpComingWidget extends StatelessWidget {
   const UpComingWidget({super.key});
@@ -8,12 +9,14 @@ class UpComingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
+    final isdark = HelperFunctions.isDarkMode(context);
 
     return Padding(
       padding: const EdgeInsets.all(6.0),
       child: Card(
-        surfaceTintColor: AppColors.whiteText,
-        color: AppColors.whiteText,
+        surfaceTintColor:
+            isdark ? AppColors.darkModeOnPrimary : AppColors.whiteText,
+        color: isdark ? AppColors.darkModeOnPrimary : AppColors.whiteText,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),

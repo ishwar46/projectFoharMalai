@@ -119,8 +119,8 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: GoogleFonts.roboto(
-              color: AppColors.primaryColor,
-              fontSize: 15,
+              color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -128,7 +128,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           Text(
             today,
             style: GoogleFonts.roboto(
-              color: AppColors.primaryColor,
+              color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
               fontSize: 12,
               fontWeight: FontWeight.w400,
             ),
@@ -137,7 +137,10 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
       ),
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Iconsax.menu, color: AppColors.primaryColor),
+        icon: Icon(
+          Iconsax.menu,
+          color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
+        ),
         onPressed: () {
           Scaffold.of(context).openDrawer();
         },
@@ -147,16 +150,17 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   }
 
   List<Widget> _buildAppBarActions(BuildContext context) {
+    final isDarkMode = HelperFunctions.isDarkMode(context);
     return [
       IconButton(
-        color: AppColors.primaryColor,
+        color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
         icon: const Icon(Icons.notifications),
         onPressed: () {
           Navigator.pushNamed(context, MyRoutes.viewNotificationRoute);
         },
       ),
       IconButton(
-        color: AppColors.primaryColor,
+        color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
         icon: Icon(MdiIcons.faceAgent),
         onPressed: () {
           Navigator.pushNamed(context, MyRoutes.viewNotificationRoute);

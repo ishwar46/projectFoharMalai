@@ -38,6 +38,15 @@
     "welcome_user": "¡Bienvenido, {username}!",
     "today_is": "Hoy es {date}",
     "logout": "Cerrar sesión",
-    "logout_confirmation": "¿Estás seguro de que quieres cerrar sesión?"
+    "logout_confirmation": "¿Estás seguro de que quieres cerrar sesión?",
+    "what_we_buy": "Lo que compramos",
+    "notifications": "Notificaciones",
+    "view_all": "Ver Todo",
+    "newspaper": "Periódico",
+    "magazines": "Revistas",
+    "cardboard": "Cartón",
+    "shampoo": "Champú",
+    "beer_bottle": "Botella de cerveza",
+    "aluminium": "Aluminio"
 
 }

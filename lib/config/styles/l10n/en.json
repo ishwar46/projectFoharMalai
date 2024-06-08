@@ -38,5 +38,14 @@
     "welcome_user": "Welcome, {username}!",
     "today_is": "Today is {date}",
     "logout": "Logout",
-    "logout_confirmation": "Are you sure you want to logout?"
+    "logout_confirmation": "Are you sure you want to logout?",
+    "what_we_buy": "What We Buy",
+    "notifications": "Notifications",
+    "view_all": "View All",
+    "newspaper": "Newspaper",
+    "magazines": "Magazines",
+    "cardboard": "Cardboard",
+    "shampoo": "Shampoo",
+    "beer_bottle": "Beer Bottle",
+    "aluminium": "Aluminium"
 }

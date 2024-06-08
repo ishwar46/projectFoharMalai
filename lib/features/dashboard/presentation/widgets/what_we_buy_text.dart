@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foharmalai/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WhatWeBuyText extends StatelessWidget {
@@ -8,13 +9,15 @@ class WhatWeBuyText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Container(
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Text(
-              "What We Buy?",
+              localizations.translate('what_we_buy'),
               style: GoogleFonts.roboto(
                 color:
                     isDarkMode ? Colors.white : Theme.of(context).primaryColor,

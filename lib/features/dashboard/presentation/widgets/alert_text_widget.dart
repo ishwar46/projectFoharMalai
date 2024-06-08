@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foharmalai/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AlertText extends StatelessWidget {
@@ -8,6 +9,8 @@ class AlertText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -15,7 +18,7 @@ class AlertText extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Text(
-              "Notifications",
+              localizations.translate('notifications'),
               style: GoogleFonts.roboto(
                 color:
                     isDarkMode ? Colors.white : Theme.of(context).primaryColor,
@@ -29,7 +32,7 @@ class AlertText extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Text(
-              "View All",
+              localizations.translate('view_all'),
               style: GoogleFonts.roboto(
                 color:
                     isDarkMode ? Colors.white : Theme.of(context).primaryColor,
