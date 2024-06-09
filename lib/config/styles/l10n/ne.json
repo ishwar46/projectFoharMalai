@@ -47,5 +47,16 @@
     "cardboard": "कार्डबोर्ड",
     "shampoo": "शैम्पू",
     "beer_bottle": "बियर बोतल",
-    "aluminium": "एलुमिनियम"
+    "aluminium": "एलुमिनियम",
+    "special_requests_desc": "यदि तपाईंसँग सिसा जस्ता फोहोर छ भने, तपाईँले विशेष अनुरोध सिर्जना गर्नुपर्छ।",
+    "select_category": "वर्ग चयन गर्नुहोस्",
+    "estimated_waste_or_pieces": "अनुमानित फोहोर वा टुक्राहरू",
+    "preferred_time": "समय",
+    "preferred_date": "मिति",
+    "additional_instructions": "थप निर्देशनहरू",
+    "select_category_hint": "कृपया श्रेणी चयन गर्नुहोस्",
+    "estimated_waste_or_pieces_hint": "अनुमानित फोहोर वा टुक्राहरू लेख्नुहोस्",
+    "preferred_time_hint": "तपाईंको मनपर्ने समय चयन गर्नुहोस्",
+    "preferred_date_hint": "तपाईंको मनपर्ने मिति चयन गर्नुहोस्",
+    "additional_instructions_hint": "थप निर्देशनहरू थप्नुहोस्"
 }

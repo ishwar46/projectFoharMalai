@@ -2,6 +2,7 @@ import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/home/presentation/view/home_page.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
+import '../../features/special_requests/presentation/view/special_requests_view.dart';
 
 class MyRoutes {
   MyRoutes._();
@@ -26,7 +27,7 @@ class MyRoutes {
   static String clientRoute = "/clientRoute";
   static String notesRoute = "/notesRoute";
   static String dashboardRoute = "/dashboardRoute";
-  static String userInformationRoute = "/userInformation";
+  static String specialRequestsRoute = "/specialRequestsRoute";
   static String exampleRoute = '/exampleRoute';
   static String shiftClockInOutRoute = '/shiftClockInOutRoute';
   static String shiftDetailsMainRoute = '/shiftDetailsMainRoute';
@@ -57,7 +58,7 @@ class MyRoutes {
       // taskViewRoute: (context) => TasksView(),
       // dashboardRoute: (context) => DashboardView(),
       // //userInformationRoute: (context) => UserInformationView(),
-      // userInformationRoute: (context) => StaffProfile(),
+      specialRequestsRoute: (context) => SpecialRequestsPage(),
       // exampleRoute: (context) => DropdownListPage(),
       // shiftClockInOutRoute: (context) => ShiftDetailsView(),
       // shiftDetailsMainRoute: (context) => ShiftDetailsPage(),

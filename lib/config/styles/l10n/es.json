@@ -47,6 +47,17 @@
     "cardboard": "Cartón",
     "shampoo": "Champú",
     "beer_bottle": "Botella de cerveza",
-    "aluminium": "Aluminio"
+    "aluminium": "Aluminio",
+    "special_requests_desc": "i tienes desechos como vidrio, necesitas crear una solicitud especial.",
+    "select_category": "Seleccionar Categoría",
+    "estimated_waste_or_pieces": "Desechos o Piezas Estimadas",
+    "preferred_time": "Hora Preferida",
+    "preferred_date": "Fecha Preferida",
+    "additional_instructions": "Instrucciones Adicionales",
+    "select_category_hint": "Please select a category",
+    "estimated_waste_or_pieces_hint": "Enter the estimated waste or number of pieces",
+    "preferred_time_hint": "Choose your preferred time",
+    "preferred_date_hint": "Choose your preferred date",
+    "additional_instructions_hint": "Add any additional instructions"
 
 }

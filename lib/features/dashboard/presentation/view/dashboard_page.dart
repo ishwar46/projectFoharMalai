@@ -99,7 +99,6 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
         SystemNavigator.pop();
       },
       child: Scaffold(
-        backgroundColor: isDarkMode ? AppColors.dark : AppColors.whiteText,
         appBar: _buildAppBar(context, isDarkMode, appBarTitle, today),
         body: _buildBody(context, isDarkMode),
       ),
