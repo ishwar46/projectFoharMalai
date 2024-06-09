@@ -36,7 +36,7 @@ class ServiceRow extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: DashboardCardWidget(
               title: localizations.translate("special_requests"),
-              routeName: "/clientRoute",
+              routeName: "/specialRequestsRoute",
               imagePath: "assets/images/perks.png",
               isDarkMode: isDarkMode,
             ),

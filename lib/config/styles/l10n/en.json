@@ -47,5 +47,18 @@
     "cardboard": "Cardboard",
     "shampoo": "Shampoo",
     "beer_bottle": "Beer Bottle",
-    "aluminium": "Aluminium"
+    "aluminium": "Aluminium",
+    "special_requests_desc": "If you have any waste such as glass, you need to create a special request.",
+    "select_category": "Select Category",
+    "estimated_waste_or_pieces": "Estimated Waste or Pieces",
+    "preferred_time": "Preffered Time",
+    "preferred_date": "Preferred Date",
+    "additional_instructions": "Additional Instructions",
+    "select_category_hint": "Please select a category",
+    "estimated_waste_or_pieces_hint": "Enter the estimated waste or number of pieces",
+    "preferred_time_hint": "Choose your preferred time",
+    "preferred_date_hint": "Choose your preferred date",
+    "additional_instructions_hint": "Add any additional instructions"
+
+
 }

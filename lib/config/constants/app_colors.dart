@@ -5,6 +5,7 @@ class AppColors {
 //Basic Colors
   static const Color primaryColor = Color(0XFF2C7865);
   static const Color secondaryColor = Colors.pinkAccent;
+  static const Color shadepink = Color.fromARGB(255, 255, 186, 186);
   static const Color accentColor = Color.fromARGB(255, 42, 136, 229);
 
   //Text Colors

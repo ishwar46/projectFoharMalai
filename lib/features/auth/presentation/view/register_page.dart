@@ -13,7 +13,6 @@ import '../../../../../config/router/app_routes.dart';
 import '../../../../../core/utils/validators/validators.dart';
 import '../../../../app_localizations.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
-import '../auth_viewmodel/auth_viewmodel.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
   const RegisterView({super.key});
