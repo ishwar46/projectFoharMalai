@@ -142,6 +142,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                       localizations.translate('additional_instructions_hint'),
                   prefixIcon: Icon(MdiIcons.note),
                 ),
+                maxLines: 2,
               ),
 
               _gapsection,
