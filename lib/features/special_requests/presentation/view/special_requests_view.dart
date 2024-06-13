@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/config/constants/app_sizes.dart';
@@ -148,9 +147,12 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
               _gapsection,
               // Submit Button
               SizedBox(
-                  width: double.infinity,
-                  child:
-                      ElevatedButton(onPressed: () {}, child: Text("Submit")))
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(localizations.translate('submit')),
+                ),
+              )
             ],
           ),
         ),

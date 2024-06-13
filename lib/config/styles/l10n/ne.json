@@ -58,5 +58,6 @@
     "estimated_waste_or_pieces_hint": "अनुमानित फोहोर वा टुक्राहरू लेख्नुहोस्",
     "preferred_time_hint": "तपाईंको मनपर्ने समय चयन गर्नुहोस्",
     "preferred_date_hint": "तपाईंको मनपर्ने मिति चयन गर्नुहोस्",
-    "additional_instructions_hint": "थप निर्देशनहरू थप्नुहोस्"
+    "additional_instructions_hint": "थप निर्देशनहरू थप्नुहोस्",
+    "submit": "पेश गर्नुहोस्"
 }
