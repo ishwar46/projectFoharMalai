@@ -25,7 +25,7 @@ class ServiceRow extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: DashboardCardWidget(
               title: localizations.translate("schedule_pickup"),
-              routeName: "/shiftDetailsMainRoute",
+              routeName: "/shiftClockInOutRoute",
               imagePath: "assets/images/garbage.png",
               isDarkMode: isDarkMode,
             ),

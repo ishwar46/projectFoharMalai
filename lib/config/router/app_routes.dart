@@ -2,6 +2,7 @@ import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/home/presentation/view/home_page.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
+import '../../features/request_pickup/presentation/request_pickup_page.dart';
 import '../../features/special_requests/presentation/view/special_requests_view.dart';
 
 class MyRoutes {
@@ -60,7 +61,7 @@ class MyRoutes {
       // //userInformationRoute: (context) => UserInformationView(),
       specialRequestsRoute: (context) => SpecialRequestsPage(),
       // exampleRoute: (context) => DropdownListPage(),
-      // shiftClockInOutRoute: (context) => ShiftDetailsView(),
+      shiftClockInOutRoute: (context) => ShiftDetailsView(),
       // shiftDetailsMainRoute: (context) => ShiftDetailsPage(),
       // mapSampleRoute: (context) => MapSample(),
       // staffDetailsFormRoute: (context) => StaffDetailsFormView(),

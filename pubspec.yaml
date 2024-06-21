@@ -154,6 +154,7 @@ flutter:
     - assets/maps_custom.json
     - assets/.env
     - assets/images/
+    - assets/animations/
     - lib/config/styles/l10n/
 
   # An image asset can refer to one or more resolution-specific "variants", see
