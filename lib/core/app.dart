@@ -62,7 +62,7 @@ class _AppState extends ConsumerState<App> {
       themeMode: ThemeMode.system,
       theme: MyAppTheme.lightTheme,
       darkTheme: MyAppTheme.darkTheme,
-      initialRoute: MyRoutes.homePageRoute,
+      initialRoute: MyRoutes.splashRoute,
       routes: MyRoutes.getApplicationRoute(),
       builder: EasyLoading.init(),
       locale: _locale,

@@ -4,6 +4,7 @@ import '../../features/home/presentation/view/home_page.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
 import '../../features/request_pickup/presentation/request_pickup_page.dart';
 import '../../features/special_requests/presentation/view/special_requests_view.dart';
+import '../../features/splash_screen/splash_screen_view.dart';
 
 class MyRoutes {
   MyRoutes._();
@@ -42,7 +43,7 @@ class MyRoutes {
       loginRoute: (context) => const LoginView(),
       signupRoute: (context) => RegisterView(),
       // // appointmentsRoute: (context) => AppointmentView(),
-      // splashRoute: (context) => SplashScreen(),
+      splashRoute: (context) => SplashScreen(),
       // onBoardingRoute: (context) => OnBoardingScreen(),
       // // staffDetailsRoute: (context) => AddStaffView(),
       preloginRoute: (context) => const PreLoginPage(),
