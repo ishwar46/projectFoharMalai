@@ -9,6 +9,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nepali_date_picker/nepali_date_picker.dart';
 
+import '../widgets/support_bottom_sheet.dart';
 import '../../../../../config/constants/app_colors.dart';
 import '../../../../../config/router/app_routes.dart';
 import '../../../../../core/utils/helpers/helper_functions.dart';
@@ -70,6 +71,15 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   Future<void> logout(BuildContext context) async {
     await secureStorage.delete(key: "authToken");
     Navigator.pushReplacementNamed(context, MyRoutes.loginRoute);
+  }
+
+  void _showSupportBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SupportBottomSheet();
+      },
+    );
   }
 
   @override
@@ -158,11 +168,12 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           Navigator.pushNamed(context, MyRoutes.viewNotificationRoute);
         },
       ),
+      // Support
       IconButton(
         color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
         icon: Icon(MdiIcons.faceAgent),
         onPressed: () {
-          Navigator.pushNamed(context, MyRoutes.viewNotificationRoute);
+          _showSupportBottomSheet(context); // Show the bottom sheet
         },
       ),
       IconButton(
