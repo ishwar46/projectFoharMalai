@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app_localizations.dart';
 import '../../../config/constants/app_colors.dart';
@@ -32,9 +32,7 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
   GoogleMapController? _mapController;
   StreamSubscription<Position>? _positionStreamSubscription;
   bool isSnackbarShown = false;
-  final LatLng _destinationLocation = LatLng(27.691414, 85.3299142);
   Set<Marker> _markers = {};
-  Set<Polyline> _polylines = {};
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
@@ -48,13 +46,27 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
     _positionStreamSubscription?.cancel();
   }
 
-  void _setInitialCameraPosition() async {
+  Future<void> _setInitialCameraPosition() async {
     Position currentPosition = await Geolocator.getCurrentPosition();
     _initialCameraPosition = CameraPosition(
       target: LatLng(currentPosition.latitude, currentPosition.longitude),
       zoom: 15.0,
     );
+    _updateAddress(LatLng(currentPosition.latitude, currentPosition.longitude));
     setState(() {});
+  }
+
+  Future<void> _updateAddress(LatLng position) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    if (placemarks.isNotEmpty) {
+      Placemark placemark = placemarks.first;
+      String address =
+          '${placemark.name}, ${placemark.street}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea}, ${placemark.country}, ${placemark.postalCode}';
+      setState(() {
+        _addressController.text = address;
+      });
+    }
   }
 
   @override
@@ -103,16 +115,6 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
       case ConnectivityStatus.notDetermined:
         break;
     }
-    _markers.add(
-      Marker(
-        markerId: MarkerId('destination'),
-        position: _destinationLocation,
-        infoWindow: InfoWindow(title: 'Destination'),
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueRose,
-        ),
-      ),
-    );
 
     return Scaffold(
       body: Column(
@@ -122,8 +124,11 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
             child: Stack(
               children: [
                 if (_initialCameraPosition != null)
-                  Builder(
-                    builder: (context) => GoogleMap(
+                  GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: GoogleMap(
                       trafficEnabled: true,
                       myLocationButtonEnabled: true,
                       myLocationEnabled: true,
@@ -131,10 +136,19 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
                       initialCameraPosition: _initialCameraPosition!,
                       onMapCreated: (controller) {
                         _mapController = controller;
-                        _updateMap();
                       },
                       markers: _markers,
-                      polylines: _polylines,
+                      onTap: (LatLng latLng) {
+                        FocusScope.of(context).unfocus();
+                        setState(() {
+                          _markers.clear();
+                          _markers.add(Marker(
+                            markerId: MarkerId('pinned_location'),
+                            position: latLng,
+                          ));
+                          _updateAddress(latLng);
+                        });
+                      },
                     ),
                   ),
                 Positioned(
@@ -149,11 +163,9 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
                     foregroundColor:
                         isDarkMode ? AppColors.white : AppColors.dark,
                     elevation: 5.0,
-                    onPressed: () {
-                      _openMapsDirections();
-                    },
-                    child: Icon(Icons.directions),
-                    tooltip: 'Get Direction',
+                    onPressed: _setInitialCameraPosition,
+                    child: Icon(Icons.my_location),
+                    tooltip: 'Locate Me',
                   ),
                 ),
               ],
@@ -330,49 +342,5 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
         ],
       ),
     );
-  }
-
-  String _formattedTime(DateTime time) {
-    return DateFormat('hh:mm:ss a').format(time);
-  }
-
-  void _updateMap() async {
-    final currentPosition = await Geolocator.getCurrentPosition();
-    LatLng currentLatLng =
-        LatLng(currentPosition.latitude, currentPosition.longitude);
-
-    Set<Polyline> newPolylines = {};
-    newPolylines.add(Polyline(
-      polylineId: PolylineId('route'),
-      points: [currentLatLng, _destinationLocation],
-      color: AppColors.secondaryColor,
-      width: 4,
-    ));
-
-    setState(() {
-      _polylines = newPolylines;
-    });
-  }
-
-  // Open Google Maps app to show directions from the user's location to destination
-  Future<void> _openMapsDirections() async {
-    String googleMapsUrl =
-        'https://www.google.com/maps/dir/?api=1&destination=${_destinationLocation.latitude},${_destinationLocation.longitude}';
-
-    if (await canLaunch(googleMapsUrl)) {
-      await launch(googleMapsUrl);
-    } else {
-      throw 'Could not launch $googleMapsUrl';
-    }
-  }
-
-  // Function to launch a phone call
-  void _launchPhoneCall(String phoneNumber) async {
-    final url = 'tel:$phoneNumber';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      print('Could not launch phone call');
-    }
   }
 }
