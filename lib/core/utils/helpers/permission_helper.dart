@@ -42,7 +42,7 @@ class PermissionHelper {
               SizedBox(height: AppSizes.sm),
               LottieBuilder(
                 lottie: AssetLottie(
-                  'assets/animations/no_location.json',
+                  'assets/animations/location.json',
                 ),
                 width: 150,
                 height: 150,
