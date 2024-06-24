@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -22,7 +21,6 @@ import '../../../core/utils/helpers/permission_helper.dart';
 
 class ShiftDetailsView extends ConsumerStatefulWidget {
   const ShiftDetailsView({Key? key}) : super(key: key);
-
   @override
   _ShiftDetailsViewState createState() => _ShiftDetailsViewState();
 }
@@ -74,6 +72,9 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
     super.initState();
     _requestPermissions();
     _setInitialCameraPosition();
+    // Initialize date and time controllers with current date and time
+    dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    timeController.text = DateFormat('hh:mm a').format(DateTime.now());
   }
 
   @override
@@ -255,8 +256,16 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
                                     );
                                     if (pickedTime != null) {
                                       setState(() {
-                                        timeController.text =
-                                            pickedTime.format(context);
+                                        // Format the picked time to 12-hour format with AM/PM
+                                        final now = DateTime.now();
+                                        final dt = DateTime(
+                                            now.year,
+                                            now.month,
+                                            now.day,
+                                            pickedTime.hour,
+                                            pickedTime.minute);
+                                        final format = DateFormat('hh:mm a');
+                                        timeController.text = format.format(dt);
                                       });
                                     }
                                   },
