@@ -1,20 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: QRCodeScreen(),
-    );
-  }
-}
 
 class QRCodeScreen extends StatefulWidget {
   @override
@@ -32,38 +22,20 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
   }
 
   Future<void> requestStoragePermission() async {
-    PermissionStatus status;
-    if (Platform.isIOS) {
-      status = await Permission.photos.status;
-    } else {
-      status = await Permission.storage.status;
+    PermissionStatus permissionStatus = await Permission.storage.status;
+
+    if (permissionStatus.isDenied) {
+      PermissionStatus result = await Permission.storage.request();
+      if (result.isDenied) {
+        await openAppSettings();
+      }
+    } else if (permissionStatus.isPermanentlyDenied) {
+      await openAppSettings();
     }
 
-    if (!status.isGranted) {
-      PermissionStatus result;
-      if (Platform.isIOS) {
-        result = await Permission.photos.request();
-      } else {
-        result = await Permission.storage.request();
-      }
-
-      if (result.isGranted) {
-        setState(() {
-          _hasPermission = true;
-        });
-      } else {
-        if (result.isPermanentlyDenied) {
-          openAppSettings();
-        }
-        setState(() {
-          _hasPermission = false;
-        });
-      }
-    } else {
-      setState(() {
-        _hasPermission = true;
-      });
-    }
+    setState(() {
+      _hasPermission = permissionStatus.isGranted;
+    });
   }
 
   @override
@@ -111,8 +83,9 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                         await screenshotController.captureAndSave(
                             directory.path,
                             fileName: 'qr_code.png');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('QR Code saved to $path')));
+                        showSnackBar(
+                            message: 'QR Code saved to $path',
+                            context: context);
                       }
                     },
                     icon: Icon(Icons.download),
