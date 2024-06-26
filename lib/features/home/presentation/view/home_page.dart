@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foharmalai/features/settings/settings_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -7,6 +8,7 @@ import '../../../../config/constants/app_colors.dart';
 import '../../../../core/common/widgets/custom_snackbar.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../../../dashboard/presentation/view/dashboard_page.dart';
+import 'bottom_view/my_qr_code.dart';
 
 class HomePageNew extends StatefulWidget {
   const HomePageNew({Key? key, this.firebaseToken}) : super(key: key);
@@ -22,8 +24,8 @@ class _HomePageNewState extends State<HomePageNew>
   int _currentIndex = 0;
   final List _children = [
     const DashboardView(),
-    // const EventsView(),
-    // const SettingsView(),
+    QRCodeScreen(),
+    const SettingsView(),
     // const StaffProfile(),
   ];
 

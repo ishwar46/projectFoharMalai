@@ -108,6 +108,8 @@ dependencies:
     sdk: flutter
   nepali_date_picker: ^6.0.1
   geocoding: ^3.0.0
+  qr_flutter: ^4.1.0
+  screenshot: ^2.5.0
 
 dev_dependencies:
   flutter_test:
