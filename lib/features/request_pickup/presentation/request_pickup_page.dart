@@ -152,23 +152,6 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
                       },
                     ),
                   ),
-                Positioned(
-                  right: 10.0,
-                  bottom: 200,
-                  child: FloatingActionButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    backgroundColor:
-                        isDarkMode ? AppColors.dark : AppColors.white,
-                    foregroundColor:
-                        isDarkMode ? AppColors.white : AppColors.dark,
-                    elevation: 5.0,
-                    onPressed: _setInitialCameraPosition,
-                    child: Icon(Icons.my_location),
-                    tooltip: 'Locate Me',
-                  ),
-                ),
               ],
             ),
           ),
@@ -310,6 +293,7 @@ class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.phone),
                               labelText: 'Mobile Number',
+                              hintText: 'Enter Mobile Number',
                               border: OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.phone,
