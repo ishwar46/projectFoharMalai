@@ -10,8 +10,8 @@ import '../../../../../core/utils/size_config.dart';
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final sizeConfig = SizeConfig(); // Create an instance of SizeConfig
-    sizeConfig.init(context); // Initialize SizeConfig
+    final sizeConfig = SizeConfig();
+    sizeConfig.init(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -71,7 +71,7 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: sizeConfig.safeBlockVertical * 5),
+                  SizedBox(height: sizeConfig.safeBlockVertical * 2),
                   buildInfoSection(
                     icon: Icons.person,
                     title: 'Personal Information',
@@ -83,7 +83,7 @@ class ProfilePage extends StatelessWidget {
                     },
                     sizeConfig: sizeConfig,
                   ),
-                  SizedBox(height: sizeConfig.safeBlockVertical * 2.5),
+                  SizedBox(height: sizeConfig.safeBlockVertical * 2),
                   buildInfoSection(
                     icon: Icons.contact_phone,
                     title: 'Contact Information',
@@ -98,7 +98,7 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: sizeConfig.safeBlockVertical * 2.5),
+            SizedBox(height: sizeConfig.safeBlockVertical),
             Container(
               padding: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 2),
               margin: EdgeInsets.symmetric(
@@ -219,7 +219,7 @@ class ProfilePage extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: sizeConfig.safeBlockVertical * 2.5),
+        SizedBox(height: sizeConfig.safeBlockVertical * 2),
         Container(
           padding: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 2),
           child: Column(
