@@ -67,10 +67,9 @@ dependencies:
   url_launcher: ^6.3.0
   smooth_page_indicator: ^1.1.0
   path_provider: ^2.1.1
-  multi_select_flutter: ^4.1.3
   connectivity_plus: ^5.0.2
   dio: ^5.4.0
-  permission_handler: ^11.1.0
+  permission_handler: ^11.3.1
   image_picker: ^1.0.7
   pretty_dio_logger: ^1.3.1
   json_annotation: ^4.8.1
@@ -83,8 +82,6 @@ dependencies:
   babstrap_settings_screen: ^0.1.6
   table_calendar: ^3.0.9
   numeric_keyboard: ^1.1.0
-  confetti: ^0.7.0
-  showcaseview: ^2.0.3
   package_info_plus: ^8.0.0
   pdf: ^3.10.8
   pdfx:
@@ -108,6 +105,10 @@ dependencies:
     sdk: flutter
   nepali_date_picker: ^6.0.1
   geocoding: ^3.0.0
+  qr_flutter: ^4.1.0
+  screenshot: ^2.5.0
+  image_gallery_saver: ^2.0.3
+  open_file: ^3.3.2
 
 dev_dependencies:
   flutter_test:
