@@ -1,10 +1,13 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:foharmalai/config/constants/app_sizes.dart';
 import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:flutter/services.dart';
+
+import '../../../../../config/constants/app_colors.dart';
 
 class QRCodeScreen extends StatefulWidget {
   @override
@@ -18,14 +21,14 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
   @override
   void initState() {
     super.initState();
-    requestStoragePermission();
+    requestPhotosPermission();
   }
 
-  Future<void> requestStoragePermission() async {
-    PermissionStatus permissionStatus = await Permission.storage.status;
+  Future<void> requestPhotosPermission() async {
+    PermissionStatus permissionStatus = await Permission.photos.status;
 
     if (permissionStatus.isDenied) {
-      PermissionStatus result = await Permission.storage.request();
+      PermissionStatus result = await Permission.photos.request();
       if (result.isDenied) {
         await openAppSettings();
       }
@@ -51,10 +54,11 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                 'My QR Code',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.xl),
               Screenshot(
                 controller: screenshotController,
                 child: QrImageView(
+                  foregroundColor: AppColors.primaryColor,
                   data: 'Ishwar Chaudhary',
                   version: QrVersions.auto,
                   size: 200.0,
@@ -71,21 +75,24 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () async {
-                      Directory? directory;
-                      if (Platform.isAndroid) {
-                        directory = Directory('/storage/emulated/0/Download');
-                      } else if (Platform.isIOS) {
-                        directory = await getApplicationDocumentsDirectory();
-                      }
-
-                      if (directory != null) {
-                        String path = '${directory.path}/qr_code.png';
-                        await screenshotController.captureAndSave(
-                            directory.path,
-                            fileName: 'qr_code.png');
-                        showSnackBar(
-                            message: 'QR Code saved to $path',
-                            context: context);
+                      final image = await screenshotController.capture();
+                      if (image != null) {
+                        final result = await ImageGallerySaver.saveImage(
+                          Uint8List.fromList(image),
+                          quality: 60,
+                          name: "qr_code",
+                        );
+                        if (result["isSuccess"]) {
+                          showSnackBar(
+                            message: 'QR Code saved to gallery',
+                            context: context,
+                          );
+                        } else {
+                          showSnackBar(
+                            message: 'Failed to save QR Code',
+                            context: context,
+                          );
+                        }
                       }
                     },
                     icon: Icon(Icons.download),
@@ -96,8 +103,9 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
                 Column(
                   children: [
                     Text(
-                      'Permission to access storage is required to download the QR code.',
+                      'Permission to access photos is required to download the QR code.',
                       style: TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 16),
                     SizedBox(

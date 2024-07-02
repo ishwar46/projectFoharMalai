@@ -46,7 +46,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
     return AppBar(
       backgroundColor: isDarkMode ? AppColors.dark : AppColors.primaryColor,
       title: Text(
-        "Settings".toUpperCase(),
+        "Settings",
         style: TextStyle(
           color: isDarkMode ? AppColors.whiteText : AppColors.white,
         ),

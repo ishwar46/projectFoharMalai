@@ -1,15 +1,23 @@
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
 
+import '../../../../../core/utils/size_config.dart';
+
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final sizeConfig = SizeConfig(); // Create an instance of SizeConfig
+    sizeConfig.init(context); // Initialize SizeConfig
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Profile",
+          "My Profile",
           style: GoogleFonts.roboto(),
         ),
         elevation: 0,
@@ -18,16 +26,17 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.all(16.0),
-              margin: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 4),
+              margin: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 4),
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(
+                    sizeConfig.safeBlockHorizontal * 1.25),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0, 5),
+                    blurRadius: sizeConfig.safeBlockHorizontal * 2.5,
+                    offset: Offset(0, sizeConfig.safeBlockVertical * 1.25),
                   ),
                 ],
               ),
@@ -37,11 +46,11 @@ class ProfilePage extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         backgroundColor: AppColors.white,
-                        radius: 30,
+                        radius: sizeConfig.safeBlockHorizontal * 7.5,
                         backgroundImage:
                             AssetImage('assets/images/foharmalailogo.png'),
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: sizeConfig.safeBlockHorizontal * 2.5),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -49,7 +58,7 @@ class ProfilePage extends StatelessWidget {
                             'Roj Maharjan',
                             style: GoogleFonts.roboto(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: sizeConfig.safeBlockHorizontal * 3.5,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
@@ -62,7 +71,7 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: sizeConfig.safeBlockVertical * 5),
                   buildInfoSection(
                     icon: Icons.person,
                     title: 'Personal Information',
@@ -72,8 +81,9 @@ class ProfilePage extends StatelessWidget {
                       'Last Name': 'Maharjan',
                       'Preferred Name': 'Pandu',
                     },
+                    sizeConfig: sizeConfig,
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: sizeConfig.safeBlockVertical * 2.5),
                   buildInfoSection(
                     icon: Icons.contact_phone,
                     title: 'Contact Information',
@@ -83,29 +93,32 @@ class ProfilePage extends StatelessWidget {
                       'Alternative Number': 'N/A',
                       'Email': 'N/A',
                     },
+                    sizeConfig: sizeConfig,
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: sizeConfig.safeBlockVertical * 2.5),
             Container(
-              padding: EdgeInsets.all(10.0),
-              margin: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 2),
+              margin: EdgeInsets.symmetric(
+                  horizontal: sizeConfig.safeBlockHorizontal * 4),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(
+                    sizeConfig.safeBlockHorizontal * 1.25),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
-                    blurRadius: 5,
-                    offset: Offset(0, 5),
+                    blurRadius: sizeConfig.safeBlockHorizontal * 1.25,
+                    offset: Offset(0, sizeConfig.safeBlockVertical * 1.25),
                   ),
                 ],
               ),
               child: Row(
                 children: [
                   Icon(Icons.verified, color: Colors.green),
-                  SizedBox(width: 10),
+                  SizedBox(width: sizeConfig.safeBlockHorizontal * 2.5),
                   Expanded(
                     child: Text(
                       'Get Your Recycling Hero Certificate',
@@ -113,7 +126,9 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      generateAndSaveCertificate();
+                    },
                     child: Text(
                       'Click Here',
                       style: GoogleFonts.roboto(color: Colors.blue),
@@ -123,7 +138,7 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             Image.asset(
-              height: 200,
+              height: sizeConfig.safeBlockVertical * 25,
               'assets/images/bgimagefohar.png',
             ),
           ],
@@ -132,35 +147,87 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
+  Future<void> generateAndSaveCertificate() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Recycling Hero Certificate',
+                  style: pw.TextStyle(fontSize: 24),
+                ),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  'This is to certify that',
+                  style: pw.TextStyle(fontSize: 18),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Text(
+                  'Roj Maharjan',
+                  style: pw.TextStyle(
+                      fontSize: 22, fontWeight: pw.FontWeight.bold),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Text(
+                  'has been recognized as a Recycling Hero for his outstanding efforts in waste management and recycling.',
+                  style: pw.TextStyle(fontSize: 16),
+                  textAlign: pw.TextAlign.center,
+                ),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  'Date: ${DateTime.now().toLocal()}',
+                  style: pw.TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    final output = await getTemporaryDirectory();
+    final file = File("${output.path}/recycling_hero_certificate.pdf");
+    await file.writeAsBytes(await pdf.save());
+
+    print("Certificate saved at ${file.path}");
+  }
+
   Widget buildInfoSection(
       {required IconData icon,
       required String title,
-      required Map<String, String> data}) {
+      required Map<String, String> data,
+      required SizeConfig sizeConfig}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             Icon(icon, color: Colors.white),
-            SizedBox(width: 10),
+            SizedBox(width: sizeConfig.safeBlockHorizontal * 2.5),
             Text(
               title,
               style: GoogleFonts.roboto(
                 color: Colors.white,
-                fontSize: 14,
+                fontSize: sizeConfig.safeBlockHorizontal * 3.5,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: sizeConfig.safeBlockVertical * 2.5),
         Container(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: data.entries
                 .map((entry) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      padding: EdgeInsets.symmetric(
+                          vertical: sizeConfig.safeBlockVertical * 1),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -168,14 +235,14 @@ class ProfilePage extends StatelessWidget {
                             entry.key,
                             style: GoogleFonts.roboto(
                               color: AppColors.whiteText,
-                              fontSize: 12,
+                              fontSize: sizeConfig.safeBlockHorizontal * 3,
                             ),
                           ),
                           Text(
                             entry.value,
                             style: GoogleFonts.roboto(
                                 color: AppColors.whiteText,
-                                fontSize: 12,
+                                fontSize: sizeConfig.safeBlockHorizontal * 3,
                                 fontWeight: FontWeight.bold),
                           ),
                         ],

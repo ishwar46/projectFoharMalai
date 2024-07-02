@@ -5,6 +5,7 @@ import '../../features/prelogin/presentation/view/pre_login_view.dart';
 import '../../features/request_pickup/presentation/request_pickup_page.dart';
 import '../../features/special_requests/presentation/view/special_requests_view.dart';
 import '../../features/splash_screen/splash_screen_view.dart';
+import '../../features/what_we_buy/view/what_we_buy_page.dart';
 
 class MyRoutes {
   MyRoutes._();
@@ -13,7 +14,7 @@ class MyRoutes {
   static String homeRoute = "/home";
   static String loginRoute = "/loginpage";
   static String signupRoute = "/registerpage";
-  static String appointmentsRoute = "/appointmentspage";
+  static String whatWeBuyRoute = "/whatwebuyRoute";
   static String onBoardingRoute = "/onboardingpage";
   static String staffDetailsRoute = "/staffdetails";
   static String preloginRoute = "/preloginpage";
@@ -42,7 +43,7 @@ class MyRoutes {
       // // homeRoute: (context) => HomePage(),
       loginRoute: (context) => const LoginView(),
       signupRoute: (context) => RegisterView(),
-      // // appointmentsRoute: (context) => AppointmentView(),
+      whatWeBuyRoute: (context) => WhatWeBuyPage(),
       splashRoute: (context) => SplashScreen(),
       // onBoardingRoute: (context) => OnBoardingScreen(),
       // // staffDetailsRoute: (context) => AddStaffView(),
