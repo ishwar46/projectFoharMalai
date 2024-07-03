@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
+import 'package:foharmalai/features/payment/presentation/esewa_load.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app_localizations.dart';
+import 'khalti_load.dart';
 
 class PaymentPage extends StatefulWidget {
   @override
@@ -19,6 +21,29 @@ class _PaymentPageState extends State<PaymentPage> {
     setState(() {
       _isBalanceVisible = !_isBalanceVisible;
     });
+  }
+
+  void _onPaymentOptionTap(String option) {
+    switch (option) {
+      case 'eSewa':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoadToEsewaPage()),
+        );
+        break;
+      case 'Khalti':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoadToKhaltiPage()),
+        );
+        break;
+      case 'IMEPay':
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => IMEPayPage()),
+        // );
+        break;
+    }
   }
 
   void _scanQRCode() async {
@@ -37,7 +62,9 @@ class _PaymentPageState extends State<PaymentPage> {
         title: Text(localization.translate('payments')),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         elevation: 0,
         foregroundColor: Colors.black,
@@ -110,29 +137,38 @@ class _PaymentPageState extends State<PaymentPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                CachedNetworkImage(
-                  imageUrl:
-                      'https://cdn.esewa.com.np/ui/images/esewa_og.png?111',
-                  height: 50.0,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) =>
-                      Icon(Icons.error_outline_outlined),
+                GestureDetector(
+                  onTap: () => _onPaymentOptionTap('eSewa'),
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        'https://cdn.esewa.com.np/ui/images/esewa_og.png?111',
+                    height: 50.0,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        Icon(Icons.error_outline_outlined),
+                  ),
                 ),
-                CachedNetworkImage(
-                  imageUrl:
-                      'https://upload.wikimedia.org/wikipedia/commons/e/ee/Khalti_Digital_Wallet_Logo.png.jpg',
-                  height: 50.0,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) =>
-                      Icon(Icons.error_outline_outlined),
+                GestureDetector(
+                  onTap: () => _onPaymentOptionTap('Khalti'),
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        'https://upload.wikimedia.org/wikipedia/commons/e/ee/Khalti_Digital_Wallet_Logo.png.jpg',
+                    height: 50.0,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        Icon(Icons.error_outline_outlined),
+                  ),
                 ),
-                CachedNetworkImage(
-                  imageUrl:
-                      'https://play-lh.googleusercontent.com/LzKjYKvzLnyMq9XaRm3RauNI-ni7QwuN4r_IzClSXUNpO6o443SDACRd92ePn03UNHU',
-                  height: 50.0,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) =>
-                      Icon(Icons.error_outline_outlined),
+                GestureDetector(
+                  onTap: () => _onPaymentOptionTap('IMEPay'),
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        'https://play-lh.googleusercontent.com/LzKjYKvzLnyMq9XaRm3RauNI-ni7QwuN4r_IzClSXUNpO6o443SDACRd92ePn03UNHU',
+                    height: 50.0,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        Icon(Icons.error_outline_outlined),
+                  ),
                 ),
               ],
             ),

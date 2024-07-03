@@ -62,6 +62,15 @@
     "submit": "entregar",
     "availableBalance": "Saldo Disponible",
     "paymentOptions": "Opciones de Pago",
-    "scanToPay": "ESCANEAR PARA PAGAR"
+    "scanToPay": "ESCANEAR PARA PAGAR",
+    "loadToEsewa": "CARGAR A ESEWA",
+    "amount": "Cantidad",
+    "receiverEsewaNumber": "Número de E-sewa del Receptor",
+    "purpose": "Propósito",
+    "loadToKhalti": "CARGAR A KHALTI",
+    "receiverKhaltiNumber": "Número de Khalti del Receptor"
+
+
+
 
 }

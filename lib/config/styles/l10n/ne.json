@@ -62,5 +62,14 @@
     "submit": "पेश गर्नुहोस्",
     "availableBalance": "उपलब्ध ब्यालेन्स",
     "paymentOptions": "भुक्तानी विकल्पहरू",
-    "scanToPay": "भुक्तानीको लागि QR स्क्यान गर्नुहोस्"
+    "scanToPay": "भुक्तानीको लागि QR स्क्यान गर्नुहोस्",
+    "loadToEsewa": "ई-सेवा मा लोड गर्नुहोस्",
+    "amount": "रकम",
+    "receiverEsewaNumber": "प्राप्तकर्ताको ई-सेवा नम्बर",
+    "purpose": "उद्देश्य",
+    "loadToKhalti": "खल्तीमा लोड गर्नुहोस्",
+    "receiverKhaltiNumber": "प्राप्तकर्ताको खल्ती नम्बर"
+
+
+
 }

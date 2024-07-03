@@ -1,6 +1,8 @@
 import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/home/presentation/view/home_page.dart';
+import '../../features/payment/presentation/esewa_load.dart';
+import '../../features/payment/presentation/view/khalti_load.dart';
 import '../../features/payment/presentation/view/payments_view.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
 import '../../features/request_pickup/presentation/request_pickup_page.dart';
@@ -28,17 +30,8 @@ class MyRoutes {
   static String homePageRoute = "/homePageRoute";
   static String qrCodeRoute = "/qrCodeRoute";
   static String paymentRoute = "/paymentRoute";
-  static String clientRoute = "/clientRoute";
-  static String notesRoute = "/notesRoute";
-  static String dashboardRoute = "/dashboardRoute";
-  static String specialRequestsRoute = "/specialRequestsRoute";
-  static String exampleRoute = '/exampleRoute';
-  static String shiftClockInOutRoute = '/shiftClockInOutRoute';
-  static String shiftDetailsMainRoute = '/shiftDetailsMainRoute';
-  static String mapSampleRoute = '/MapSample';
-  static String taskViewRoute = '/tasksViewRoute';
-  static String staffDetailsFormRoute = '/staffDetailsFormRoute';
-
+  static String loadEsewaRoute = '/loadEsewaRoute';
+  static String loadKhaltiRoute = "/loadKhaltiRoute";
   static getApplicationRoute() {
     return {
       // // homeRoute: (context) => HomePage(),
@@ -53,17 +46,9 @@ class MyRoutes {
       // // sendOTPRoute: (context) => SendOTPView(),
       // // verifyOTPRoute: (context) => VerifyOTPPage(),
       homePageRoute: (context) => HomePageNew(),
-      // // qrCodeRoute: (context) => QRCodeView(),
+      loadEsewaRoute: (context) => LoadToEsewaPage(),
       paymentRoute: (context) => PaymentPage(),
-      // // clientRoute: (context) => StaffViewNew(),
-      // taskViewRoute: (context) => TasksView(),
-      // dashboardRoute: (context) => DashboardView(),
-      specialRequestsRoute: (context) => SpecialRequestsPage(),
-      // exampleRoute: (context) => DropdownListPage(),
-      shiftClockInOutRoute: (context) => ShiftDetailsView(),
-      // shiftDetailsMainRoute: (context) => ShiftDetailsPage(),
-      // mapSampleRoute: (context) => MapSample(),
-      // staffDetailsFormRoute: (context) => StaffDetailsFormView(),
+      loadKhaltiRoute: (context) => LoadToKhaltiPage(),
     };
   }
 }
