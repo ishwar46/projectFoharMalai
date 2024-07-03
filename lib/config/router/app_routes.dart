@@ -1,6 +1,7 @@
 import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/home/presentation/view/home_page.dart';
+import '../../features/payment/presentation/view/payments_view.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
 import '../../features/request_pickup/presentation/request_pickup_page.dart';
 import '../../features/special_requests/presentation/view/special_requests_view.dart';
@@ -46,21 +47,17 @@ class MyRoutes {
       whatWeBuyRoute: (context) => WhatWeBuyPage(),
       splashRoute: (context) => SplashScreen(),
       // onBoardingRoute: (context) => OnBoardingScreen(),
-      // // staffDetailsRoute: (context) => AddStaffView(),
       preloginRoute: (context) => const PreLoginPage(),
-      // // viewbookedappointment: (context) => ViewBookedAppointments(),
-      // // settingsRoute: (context) => SettingsView(),
       // userProfileRoute: (context) => StaffProfile(),
       // // viewNotificationRoute: (context) => NotificationView(),
       // // sendOTPRoute: (context) => SendOTPView(),
       // // verifyOTPRoute: (context) => VerifyOTPPage(),
       homePageRoute: (context) => HomePageNew(),
       // // qrCodeRoute: (context) => QRCodeView(),
-      // // paymentRoute: (context) => Payment(),
+      paymentRoute: (context) => PaymentPage(),
       // // clientRoute: (context) => StaffViewNew(),
       // taskViewRoute: (context) => TasksView(),
       // dashboardRoute: (context) => DashboardView(),
-      // //userInformationRoute: (context) => UserInformationView(),
       specialRequestsRoute: (context) => SpecialRequestsPage(),
       // exampleRoute: (context) => DropdownListPage(),
       shiftClockInOutRoute: (context) => ShiftDetailsView(),

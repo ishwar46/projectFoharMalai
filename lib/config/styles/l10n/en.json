@@ -59,7 +59,10 @@
     "preferred_time_hint": "Choose your preferred time",
     "preferred_date_hint": "Choose your preferred date",
     "additional_instructions_hint": "Add any additional instructions",
-    "submit": "Submit"
+    "submit": "Submit",
+    "availableBalance": "Available Balance",
+    "paymentOptions": "Payment Options",
+    "scanToPay": "SCAN TO PAY"
 
 
 }

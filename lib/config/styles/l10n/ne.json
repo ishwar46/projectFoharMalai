@@ -59,5 +59,8 @@
     "preferred_time_hint": "तपाईंको मनपर्ने समय चयन गर्नुहोस्",
     "preferred_date_hint": "तपाईंको मनपर्ने मिति चयन गर्नुहोस्",
     "additional_instructions_hint": "थप निर्देशनहरू थप्नुहोस्",
-    "submit": "पेश गर्नुहोस्"
+    "submit": "पेश गर्नुहोस्",
+    "availableBalance": "उपलब्ध ब्यालेन्स",
+    "paymentOptions": "भुक्तानी विकल्पहरू",
+    "scanToPay": "भुक्तानीको लागि QR स्क्यान गर्नुहोस्"
 }

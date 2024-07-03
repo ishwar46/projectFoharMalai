@@ -59,6 +59,9 @@
     "preferred_time_hint": "Choose your preferred time",
     "preferred_date_hint": "Choose your preferred date",
     "additional_instructions_hint": "Add any additional instructions",
-    "submit": "entregar"
+    "submit": "entregar",
+    "availableBalance": "Saldo Disponible",
+    "paymentOptions": "Opciones de Pago",
+    "scanToPay": "ESCANEAR PARA PAGAR"
 
 }
