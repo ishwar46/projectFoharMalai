@@ -74,9 +74,16 @@
     "confirm": "पुष्टि गर्नुहोस्",
     "receipt": "रसीद",
     "paymentSuccessful": "भुक्तानी सफल भयो",
+    "thankYou": "धन्यवाद!",
+    "thankYouMessage": "प्रिय ग्राहक, तपाईंको {amount} रुपैयाँको भुक्तानी {receiver} लाई सफलतापूर्वक गरिएको छ।",
     "transactionDetails": "लेनदेन विवरण",
-    "goToDashboard": "ड्यासबोर्डमा जानुहोस्"
-
-
-
+    "paymentMode": "भुक्तानी मोड",
+    "online": "अनलाइन",
+    "status": "स्थिति",
+    "success": "सफल",
+    "transactionId": "लेनदेन आईडी",
+    "goToDashboard": "ड्यासबोर्डमा जानुहोस्",
+    "reportDispute": "विवाद रिपोर्ट गर्नुहोस्",
+    "date": "मिति",
+    "time": "समय"
 }

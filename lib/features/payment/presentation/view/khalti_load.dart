@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../../app_localizations.dart';
 import 'receipt_page.dart';
 
@@ -19,6 +21,42 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
     setState(() {
       _isBalanceVisible = !_isBalanceVisible;
     });
+  }
+
+  Future<void> _pickContact() async {
+    PermissionStatus permissionStatus = await _getContactPermission();
+    if (permissionStatus == PermissionStatus.granted) {
+      final Contact? contact = await ContactsService.openDeviceContactPicker();
+      if (contact != null &&
+          contact.phones != null &&
+          contact.phones!.isNotEmpty) {
+        setState(() {
+          _receiverKhaltiNumberController.text =
+              contact.phones!.first.value ?? '';
+        });
+      }
+    } else {
+      _handleInvalidPermissions(permissionStatus);
+    }
+  }
+
+  Future<PermissionStatus> _getContactPermission() async {
+    final status = await Permission.contacts.status;
+    if (status != PermissionStatus.granted &&
+        status != PermissionStatus.permanentlyDenied) {
+      final result = await Permission.contacts.request();
+      return result;
+    } else {
+      return status;
+    }
+  }
+
+  void _handleInvalidPermissions(PermissionStatus status) {
+    if (status == PermissionStatus.denied) {
+      // Handle the case when permission is denied.
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      // Handle the case when permission is permanently denied.
+    }
   }
 
   void _showConfirmationBottomSheet(BuildContext context) {
@@ -56,7 +94,8 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    _showReceiptPage(context);
+                    _showReceiptPage(
+                        context, amount, receiverKhaltiNumber, purpose);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
@@ -80,14 +119,25 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
     );
   }
 
-  void _showReceiptPage(BuildContext context) {
+  void _showReceiptPage(BuildContext context, String amount,
+      String receiverKhaltiNumber, String purpose) {
+    final transactionId = 'FMTX-${DateTime.now().millisecondsSinceEpoch}';
+    final transactionDateTime = DateTime.now();
+    final transactionDate =
+        '${transactionDateTime.year}-${transactionDateTime.month}-${transactionDateTime.day}';
+    final transactionTime =
+        '${transactionDateTime.hour}:${transactionDateTime.minute}:${transactionDateTime.second}';
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ReceiptPage(
-          amount: _amountController.text,
-          receiverKhaltiNumber: _receiverKhaltiNumberController.text,
-          purpose: _purposeController.text,
+          amount: amount,
+          receiverKhaltiNumber: receiverKhaltiNumber,
+          purpose: purpose,
+          transactionId: transactionId,
+          transactionDate: transactionDate,
+          transactionTime: transactionTime,
         ),
       ),
     );
@@ -178,7 +228,10 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
               controller: _receiverKhaltiNumberController,
               decoration: InputDecoration(
                 labelText: localization.translate('receiverKhaltiNumber'),
-                suffixIcon: Icon(Icons.contacts),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.contacts),
+                  onPressed: _pickContact,
+                ),
               ),
               keyboardType: TextInputType.phone,
             ),

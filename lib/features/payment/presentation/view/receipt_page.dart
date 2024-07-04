@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import 'package:foharmalai/features/dashboard/presentation/view/dashboard_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:flutter/services.dart';
 import '../../../../app_localizations.dart';
-import '../../../../core/common/widgets/torn_paper.dart';
 
 class ReceiptPage extends StatelessWidget {
   final String amount;
   final String receiverKhaltiNumber;
   final String purpose;
+  final String transactionId;
+  final String transactionDate;
+  final String transactionTime;
 
   ReceiptPage({
     required this.amount,
     required this.receiverKhaltiNumber,
     required this.purpose,
+    required this.transactionId,
+    required this.transactionDate,
+    required this.transactionTime,
   });
 
   final ScreenshotController screenshotController = ScreenshotController();
@@ -26,10 +33,14 @@ class ReceiptPage extends StatelessWidget {
     screenshotController
         .captureAndSave(directory, fileName: 'receipt.png')
         .then((value) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Receipt saved to $path')),
-      );
+      showSnackBar(message: 'Receipt saved to $path', context: context);
     });
+  }
+
+  Future<void> _copyToClipboard(BuildContext context, String text) async {
+    await Clipboard.setData(ClipboardData(text: text));
+    showSnackBar(
+        message: 'Transaction ID copied to clipboard', context: context);
   }
 
   @override
@@ -52,11 +63,17 @@ class ReceiptPage extends StatelessWidget {
           ),
         ],
       ),
-      body: CustomPaint(
-        painter: TornPaperPainter(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey[200]!],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Screenshot(
           controller: screenshotController,
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,82 +84,94 @@ class ReceiptPage extends StatelessWidget {
                       Icon(
                         Icons.check_circle_outline,
                         color: Colors.green,
-                        size: 80.0,
+                        size: 60.0,
                       ),
                       SizedBox(height: 16.0),
                       Text(
                         localization.translate('paymentSuccessful'),
                         style: GoogleFonts.montserrat(
-                          fontSize: 24.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 8.0),
                       Text(
-                        localization.translate('thankYou'),
+                        localization
+                            .translate('thankYouMessage')
+                            .replaceAll('{amount}', amount)
+                            .replaceAll('{receiver}', receiverKhaltiNumber),
                         style: GoogleFonts.montserrat(
-                          fontSize: 16.0,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                      Text(
-                        localization.translate('dearCustomer'),
-                        style: GoogleFonts.montserrat(
-                          fontSize: 16.0,
-                          color: Colors.grey[800],
+                          fontSize: 12.0,
+                          color: Colors.grey[700],
                         ),
                         textAlign: TextAlign.center,
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 32.0),
+                SizedBox(height: 24.0),
                 Text(
                   localization.translate('transactionDetails'),
                   style: GoogleFonts.montserrat(
-                    fontSize: 18.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 16.0),
-                Divider(color: Colors.grey),
-                _buildDetailRow(
+                _buildDetailCard(
                   context,
                   icon: Icons.attach_money,
                   label: localization.translate('amount'),
                   value: 'Rs. $amount',
                 ),
-                Divider(color: Colors.grey),
-                _buildDetailRow(
+                _buildDetailCard(
                   context,
                   icon: Icons.phone_android,
                   label: localization.translate('receiverKhaltiNumber'),
                   value: receiverKhaltiNumber,
                 ),
-                Divider(color: Colors.grey),
-                _buildDetailRow(
+                _buildDetailCard(
                   context,
                   icon: Icons.description,
                   label: localization.translate('purpose'),
                   value: purpose,
                 ),
-                Divider(color: Colors.grey),
-                _buildDetailRow(
+                _buildDetailCard(
                   context,
                   icon: Icons.payment,
                   label: localization.translate('paymentMode'),
                   value: localization.translate('online'),
                 ),
-                Divider(color: Colors.grey),
-                _buildDetailRow(
+                _buildDetailCard(
                   context,
                   icon: Icons.check_circle,
                   label: localization.translate('status'),
                   value: localization.translate('success'),
+                  valueColor: Colors.green,
                 ),
-                Divider(color: Colors.grey),
-                Spacer(),
+                _buildDetailCard(
+                  context,
+                  icon: Icons.date_range,
+                  label: localization.translate('date'),
+                  value: transactionDate,
+                ),
+                _buildDetailCard(
+                  context,
+                  icon: Icons.access_time,
+                  label: localization.translate('time'),
+                  value: transactionTime,
+                ),
+                GestureDetector(
+                  onTap: () => _copyToClipboard(context, transactionId),
+                  child: _buildDetailCard(
+                    context,
+                    icon: Icons.receipt_long,
+                    label: localization.translate('transactionId'),
+                    value: transactionId,
+                    isCopyable: true,
+                  ),
+                ),
+                SizedBox(height: 24.0),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -155,6 +184,7 @@ class ReceiptPage extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
                       backgroundColor: AppColors.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
@@ -173,9 +203,7 @@ class ReceiptPage extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
-                    onPressed: () {
-                      // Handle report a dispute action
-                    },
+                    onPressed: () {},
                     child: Text(
                       localization.translate('reportDispute'),
                       style: GoogleFonts.montserrat(
@@ -193,41 +221,65 @@ class ReceiptPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(
+  Widget _buildDetailCard(
     BuildContext context, {
     required IconData icon,
     required String label,
     required String value,
+    Color? valueColor,
+    bool isCopyable = false,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: AppColors.primaryColor,
-            size: 24.0,
-          ),
-          SizedBox(width: 16.0),
-          Expanded(
-            child: Text(
-              label,
-              style: GoogleFonts.montserrat(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[800],
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      elevation: 1.0,
+      color: AppColors.white,
+      surfaceTintColor: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: AppColors.primaryColor,
+              size: 20.0,
+            ),
+            SizedBox(width: 16.0),
+            Expanded(
+              child: Text(
+                label,
+                style: GoogleFonts.montserrat(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[800],
+                ),
               ),
             ),
-          ),
-          Text(
-            value,
-            style: GoogleFonts.montserrat(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+            Row(
+              children: [
+                Text(
+                  value,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: valueColor ?? Colors.black,
+                  ),
+                ),
+                if (isCopyable)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Icon(
+                      Icons.copy,
+                      size: 16.0,
+                      color: Colors.grey,
+                    ),
+                  ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

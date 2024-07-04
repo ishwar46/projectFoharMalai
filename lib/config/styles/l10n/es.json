@@ -72,10 +72,20 @@
     "confirmation": "Confirmation",
     "confirmPaymentDetails": "Do you confirm the payment details?",
     "confirm": "Confirm",
-    "receipt": "Receipt",
-    "paymentSuccessful": "Payment Successful",
-    "transactionDetails": "Transaction Details",
-    "goToDashboard": "Go to Dashboard"
+    "receipt": "Recibo",
+    "paymentSuccessful": "Pago Exitoso",
+    "thankYou": "¡Gracias!",
+    "thankYouMessage": "Estimado cliente, su pago de Rs. {amount} a {receiver} se ha procesado con éxito.",
+    "transactionDetails": "Detalles de la Transacción",
+    "paymentMode": "Modo de Pago",
+    "online": "En línea",
+    "status": "Estado",
+    "success": "Éxito",
+    "transactionId": "ID de Transacción",
+    "goToDashboard": "Ir al Tablero",
+    "reportDispute": "Reportar una Disputa",
+    "date": "Fecha",
+    "time": "Tiempo"
 
 
 

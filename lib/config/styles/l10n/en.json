@@ -74,8 +74,18 @@
     "confirm": "Confirm",
     "receipt": "Receipt",
     "paymentSuccessful": "Payment Successful",
+    "thankYou": "Thank you!",
+    "thankYouMessage": "Dear Customer, your payment of Rs. {amount} to {receiver} has been successfully processed.",
     "transactionDetails": "Transaction Details",
-    "goToDashboard": "Go to Dashboard"
+    "paymentMode": "Payment Mode",
+    "online": "Online",
+    "status": "Status",
+    "success": "Success",
+    "transactionId": "Transaction ID",
+    "goToDashboard": "Go to Dashboard",
+    "reportDispute": "Report a Dispute",
+    "date": "Date",
+    "time": "Time"
 
 
 }
