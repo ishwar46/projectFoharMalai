@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/home/presentation/view/home_page.dart';
@@ -33,7 +31,7 @@ class MyRoutes {
   static String paymentRoute = "/paymentRoute";
   static String loadEsewaRoute = '/loadEsewaRoute';
   static String loadKhaltiRoute = "/loadKhaltiRoute";
-  static String requestPickupRoute = 'requestPickupRoute';
+  static String requestPickupRoute = '/requestPickupRoute';
 
   static getApplicationRoute() {
     return {

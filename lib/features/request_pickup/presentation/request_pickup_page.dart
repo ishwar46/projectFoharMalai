@@ -1,14 +1,15 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
 import 'package:intl/intl.dart';
+
+import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'dart:async';
 
 import '../../../app_localizations.dart';
 import '../../../config/constants/app_colors.dart';
@@ -21,6 +22,7 @@ import '../../../core/utils/helpers/permission_helper.dart';
 
 class RequestPickUpView extends ConsumerStatefulWidget {
   const RequestPickUpView({Key? key}) : super(key: key);
+
   @override
   _RequestPickUpViewState createState() => _RequestPickUpViewState();
 }
@@ -34,6 +36,8 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
+  TextEditingController _fullNameController = TextEditingController();
+  TextEditingController _phoneNumberController = TextEditingController();
   String? apiKey = dotenv.env['GOOGLE_PLACES_API_KEY'];
 
   Future<void> _requestPermissions() async {
@@ -289,20 +293,29 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                             },
                           ),
                           SizedBox(height: AppSizes.spaceBtwnInputFields),
+                          //Full Name
                           TextFormField(
+                            controller: _fullNameController,
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(MdiIcons.account),
+                                labelText: 'Full Name',
+                                hintText: 'Enter your fullname'),
+                          ),
+                          SizedBox(
+                            height: AppSizes.spaceBtwnInputFields,
+                          ),
+                          TextFormField(
+                            controller: _phoneNumberController,
                             decoration: InputDecoration(
                               prefixIcon: Icon(Icons.phone),
                               labelText: 'Mobile Number',
                               hintText: 'Enter Mobile Number',
-                              border: OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.phone,
                           ),
                           SizedBox(height: AppSizes.spaceBtwnInputFields),
                           ElevatedButton(
-                            onPressed: () {
-                              // Handle button press
-                            },
+                            onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               backgroundColor: isDarkMode
                                   ? AppColors.darkModeSurface
