@@ -65,12 +65,12 @@ class ReceiptPage extends StatelessWidget {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.white, Colors.grey[200]!],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+            // gradient: LinearGradient(
+            //   colors: [Colors.white, Colors.grey[200]!],
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            // ),
+            ),
         child: Screenshot(
           controller: screenshotController,
           child: SingleChildScrollView(
@@ -235,7 +235,7 @@ class ReceiptPage extends StatelessWidget {
       color: AppColors.white,
       surfaceTintColor: AppColors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.circular(4.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),

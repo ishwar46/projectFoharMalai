@@ -16,6 +16,31 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
   final _amountController = TextEditingController();
   final _receiverKhaltiNumberController = TextEditingController();
   final _purposeController = TextEditingController();
+  final ValueNotifier<bool> _isSubmitButtonEnabled = ValueNotifier<bool>(false);
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController.addListener(_updateSubmitButtonState);
+    _receiverKhaltiNumberController.addListener(_updateSubmitButtonState);
+    _purposeController.addListener(_updateSubmitButtonState);
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _receiverKhaltiNumberController.dispose();
+    _purposeController.dispose();
+    _isSubmitButtonEnabled.dispose();
+    super.dispose();
+  }
+
+  void _updateSubmitButtonState() {
+    final isButtonEnabled = _amountController.text.isNotEmpty &&
+        _receiverKhaltiNumberController.text.isNotEmpty &&
+        _purposeController.text.isNotEmpty;
+    _isSubmitButtonEnabled.value = isButtonEnabled;
+  }
 
   void _toggleBalanceVisibility() {
     setState(() {
@@ -53,9 +78,9 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
 
   void _handleInvalidPermissions(PermissionStatus status) {
     if (status == PermissionStatus.denied) {
-      // Handle the case when permission is denied.
+      // Handle denied permission
     } else if (status == PermissionStatus.permanentlyDenied) {
-      // Handle the case when permission is permanently denied.
+      // Handle permanently denied permission
     }
   }
 
@@ -67,6 +92,9 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
 
     showModalBottomSheet(
       context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+      ),
       builder: (context) {
         return Padding(
           padding: const EdgeInsets.all(16.0),
@@ -77,17 +105,52 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
               Text(
                 localization.translate('confirmation'),
                 style: GoogleFonts.montserrat(
-                  fontSize: 20.0,
+                  fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 16.0),
-              Text(localization.translate('confirmPaymentDetails')),
-              SizedBox(height: 16.0),
-              Text('${localization.translate('amount')}: $amount'),
               Text(
-                  '${localization.translate('receiverKhaltiNumber')}: $receiverKhaltiNumber'),
-              Text('${localization.translate('purpose')}: $purpose'),
+                localization.translate('confirmPaymentDetails'),
+                style: GoogleFonts.montserrat(
+                  fontSize: 16.0,
+                  color: Colors.grey[700],
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+                color: AppColors.white,
+                surfaceTintColor: AppColors.white,
+                elevation: 1.0,
+                margin: EdgeInsets.symmetric(vertical: 4.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildConfirmationDetail(
+                        context,
+                        label: localization.translate('amount'),
+                        value: amount,
+                      ),
+                      Divider(),
+                      _buildConfirmationDetail(
+                        context,
+                        label: localization.translate('receiverKhaltiNumber'),
+                        value: receiverKhaltiNumber,
+                      ),
+                      Divider(),
+                      _buildConfirmationDetail(
+                        context,
+                        label: localization.translate('purpose'),
+                        value: purpose,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(height: 16.0),
               SizedBox(
                 width: double.infinity,
@@ -98,6 +161,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                         context, amount, receiverKhaltiNumber, purpose);
                   },
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 14.0),
                     backgroundColor: AppColors.primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -108,6 +172,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                     style: GoogleFonts.montserrat(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
                     ),
                   ),
                 ),
@@ -116,6 +181,30 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildConfirmationDetail(BuildContext context,
+      {required String label, required String value}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.montserrat(
+            fontSize: 12.0,
+            color: Colors.grey[800],
+          ),
+        ),
+        Text(
+          value,
+          style: GoogleFonts.montserrat(
+            fontSize: 12.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ],
     );
   }
 
@@ -243,26 +332,33 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
               ),
             ),
             Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  _showConfirmationBottomSheet(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+            ValueListenableBuilder<bool>(
+              valueListenable: _isSubmitButtonEnabled,
+              builder: (context, isEnabled, child) {
+                return SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: isEnabled
+                        ? () {
+                            _showConfirmationBottomSheet(context);
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text(
+                      localization.translate('submit'),
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-                child: Text(
-                  localization.translate('submit'),
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+                );
+              },
             ),
           ],
         ),

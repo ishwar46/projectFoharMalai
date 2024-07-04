@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/home/presentation/view/home_page.dart';
@@ -5,6 +7,7 @@ import '../../features/payment/presentation/esewa_load.dart';
 import '../../features/payment/presentation/view/khalti_load.dart';
 import '../../features/payment/presentation/view/payments_view.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
+import '../../features/request_pickup/presentation/request_pickup_page.dart';
 import '../../features/splash_screen/splash_screen_view.dart';
 import '../../features/what_we_buy/view/what_we_buy_page.dart';
 
@@ -30,6 +33,8 @@ class MyRoutes {
   static String paymentRoute = "/paymentRoute";
   static String loadEsewaRoute = '/loadEsewaRoute';
   static String loadKhaltiRoute = "/loadKhaltiRoute";
+  static String requestPickupRoute = 'requestPickupRoute';
+
   static getApplicationRoute() {
     return {
       // // homeRoute: (context) => HomePage(),
@@ -47,6 +52,7 @@ class MyRoutes {
       loadEsewaRoute: (context) => LoadToEsewaPage(),
       paymentRoute: (context) => PaymentPage(),
       loadKhaltiRoute: (context) => LoadToKhaltiPage(),
+      requestPickupRoute: (context) => RequestPickUpView(),
     };
   }
 }
