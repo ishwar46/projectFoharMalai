@@ -19,13 +19,13 @@ import '../../../core/common/widgets/custom_snackbar.dart';
 import '../../../core/utils/helpers/helper_functions.dart';
 import '../../../core/utils/helpers/permission_helper.dart';
 
-class ShiftDetailsView extends ConsumerStatefulWidget {
-  const ShiftDetailsView({Key? key}) : super(key: key);
+class RequestPickUpView extends ConsumerStatefulWidget {
+  const RequestPickUpView({Key? key}) : super(key: key);
   @override
-  _ShiftDetailsViewState createState() => _ShiftDetailsViewState();
+  _RequestPickUpViewState createState() => _RequestPickUpViewState();
 }
 
-class _ShiftDetailsViewState extends ConsumerState<ShiftDetailsView> {
+class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
   CameraPosition? _initialCameraPosition;
   GoogleMapController? _mapController;
   StreamSubscription<Position>? _positionStreamSubscription;

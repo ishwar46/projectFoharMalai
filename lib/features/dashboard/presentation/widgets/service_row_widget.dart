@@ -25,7 +25,7 @@ class ServiceRow extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: DashboardCardWidget(
               title: localizations.translate("schedule_pickup"),
-              routeName: "/shiftClockInOutRoute",
+              routeName: "/requestPickupRoute",
               imagePath: "assets/images/garbage.png",
               isDarkMode: isDarkMode,
             ),
@@ -58,7 +58,7 @@ class ServiceRow extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: DashboardCardWidget(
               title: localizations.translate("payments"),
-              routeName: "/staffDetailsFormRoute",
+              routeName: "/paymentRoute",
               imagePath: "assets/images/cash-payment.png",
               isDarkMode: isDarkMode,
             ),

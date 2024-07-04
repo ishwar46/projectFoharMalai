@@ -59,6 +59,35 @@
     "preferred_time_hint": "Choose your preferred time",
     "preferred_date_hint": "Choose your preferred date",
     "additional_instructions_hint": "Add any additional instructions",
-    "submit": "entregar"
+    "submit": "entregar",
+    "availableBalance": "Saldo Disponible",
+    "paymentOptions": "Opciones de Pago",
+    "scanToPay": "ESCANEAR PARA PAGAR",
+    "loadToEsewa": "CARGAR A ESEWA",
+    "amount": "Cantidad",
+    "receiverEsewaNumber": "Número de E-sewa del Receptor",
+    "purpose": "Propósito",
+    "loadToKhalti": "CARGAR A KHALTI",
+    "receiverKhaltiNumber": "Número de Khalti del Receptor",
+    "confirmation": "Confirmation",
+    "confirmPaymentDetails": "Do you confirm the payment details?",
+    "confirm": "Confirm",
+    "receipt": "Recibo",
+    "paymentSuccessful": "Pago Exitoso",
+    "thankYou": "¡Gracias!",
+    "thankYouMessage": "Estimado cliente, su pago de Rs. {amount} a {receiver} se ha procesado con éxito.",
+    "transactionDetails": "Detalles de la Transacción",
+    "paymentMode": "Modo de Pago",
+    "online": "En línea",
+    "status": "Estado",
+    "success": "Éxito",
+    "transactionId": "ID de Transacción",
+    "goToDashboard": "Ir al Tablero",
+    "reportDispute": "Reportar una Disputa",
+    "date": "Fecha",
+    "time": "Tiempo"
+
+
+
 
 }

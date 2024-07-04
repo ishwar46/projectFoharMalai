@@ -109,6 +109,8 @@ dependencies:
   screenshot: ^2.5.0
   image_gallery_saver: ^2.0.3
   open_file: ^3.3.2
+  qr_code_scanner: ^1.0.1
+  contacts_service: ^0.6.3
 
 dev_dependencies:
   flutter_test:
