@@ -68,7 +68,14 @@
     "receiverEsewaNumber": "प्राप्तकर्ताको ई-सेवा नम्बर",
     "purpose": "उद्देश्य",
     "loadToKhalti": "खल्तीमा लोड गर्नुहोस्",
-    "receiverKhaltiNumber": "प्राप्तकर्ताको खल्ती नम्बर"
+    "receiverKhaltiNumber": "प्राप्तकर्ताको खल्ती नम्बर",
+    "confirmation": "पुष्टि",
+    "confirmPaymentDetails": "के तपाईँले भुक्तानी विवरण पुष्टि गर्नुभयो?",
+    "confirm": "पुष्टि गर्नुहोस्",
+    "receipt": "रसीद",
+    "paymentSuccessful": "भुक्तानी सफल भयो",
+    "transactionDetails": "लेनदेन विवरण",
+    "goToDashboard": "ड्यासबोर्डमा जानुहोस्"
 
 
 

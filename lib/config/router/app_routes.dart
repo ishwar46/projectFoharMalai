@@ -5,8 +5,6 @@ import '../../features/payment/presentation/esewa_load.dart';
 import '../../features/payment/presentation/view/khalti_load.dart';
 import '../../features/payment/presentation/view/payments_view.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
-import '../../features/request_pickup/presentation/request_pickup_page.dart';
-import '../../features/special_requests/presentation/view/special_requests_view.dart';
 import '../../features/splash_screen/splash_screen_view.dart';
 import '../../features/what_we_buy/view/what_we_buy_page.dart';
 

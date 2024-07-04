@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
-import 'package:foharmalai/features/payment/presentation/esewa_load.dart';
+import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app_localizations.dart';
-import 'khalti_load.dart';
 
 class PaymentPage extends StatefulWidget {
   @override
@@ -26,22 +25,16 @@ class _PaymentPageState extends State<PaymentPage> {
   void _onPaymentOptionTap(String option) {
     switch (option) {
       case 'eSewa':
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoadToEsewaPage()),
-        );
+        Navigator.pushNamed(context, '/loadEsewaRoute');
         break;
       case 'Khalti':
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoadToKhaltiPage()),
-        );
+        Navigator.pushNamed(context, '/loadKhaltiRoute');
         break;
       case 'IMEPay':
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => IMEPayPage()),
-        // );
+        showSnackBar(
+            message: 'IME Pay is coming soon! Stay Tuned.',
+            context: context,
+            color: AppColors.error);
         break;
     }
   }
@@ -90,7 +83,7 @@ class _PaymentPageState extends State<PaymentPage> {
                         _isBalanceVisible ? 'Rs. XXX.XX' : 'Rs. 13579.55',
                         style: GoogleFonts.montserrat(
                           color: AppColors.whiteText,
-                          fontSize: 20.0,
+                          fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -99,7 +92,7 @@ class _PaymentPageState extends State<PaymentPage> {
                         localization.translate('availableBalance'),
                         style: GoogleFonts.montserrat(
                           color: AppColors.whiteText,
-                          fontSize: 16.0,
+                          fontSize: 14.0,
                         ),
                       ),
                     ],

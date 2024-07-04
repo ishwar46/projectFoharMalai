@@ -68,7 +68,14 @@
     "purpose": "Purpose",
     "submit": "Submit",
     "loadToKhalti": "LOAD TO KHALTI",
-    "receiverKhaltiNumber": "Receiver’s Khalti Number"
+    "receiverKhaltiNumber": "Receiver’s Khalti Number",
+    "confirmation": "Confirmation",
+    "confirmPaymentDetails": "Do you confirm the payment details?",
+    "confirm": "Confirm",
+    "receipt": "Receipt",
+    "paymentSuccessful": "Payment Successful",
+    "transactionDetails": "Transaction Details",
+    "goToDashboard": "Go to Dashboard"
 
 
 }

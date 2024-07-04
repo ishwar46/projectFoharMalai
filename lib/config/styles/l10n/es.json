@@ -68,7 +68,14 @@
     "receiverEsewaNumber": "Número de E-sewa del Receptor",
     "purpose": "Propósito",
     "loadToKhalti": "CARGAR A KHALTI",
-    "receiverKhaltiNumber": "Número de Khalti del Receptor"
+    "receiverKhaltiNumber": "Número de Khalti del Receptor",
+    "confirmation": "Confirmation",
+    "confirmPaymentDetails": "Do you confirm the payment details?",
+    "confirm": "Confirm",
+    "receipt": "Receipt",
+    "paymentSuccessful": "Payment Successful",
+    "transactionDetails": "Transaction Details",
+    "goToDashboard": "Go to Dashboard"
 
 
 
