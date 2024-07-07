@@ -350,7 +350,7 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                                       context: context,
                                       color: AppColors.success);
                                   Navigator.pushNamed(
-                                      context, '/homePageRoute');
+                                      context, '/pickupListRoute');
                                 } else {
                                   showSnackBar(
                                       message:
