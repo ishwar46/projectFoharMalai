@@ -13,7 +13,6 @@ class MyRoutes {
   MyRoutes._();
 
   static const String splashRoute = '/splash';
-  static String homeRoute = "/home";
   static String loginRoute = "/loginpage";
   static String signupRoute = "/registerpage";
   static String whatWeBuyRoute = "/whatwebuyRoute";

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
 import 'package:intl/intl.dart';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geocoding/geocoding.dart';
@@ -19,6 +19,8 @@ import '../../../core/common/provider/connection.dart';
 import '../../../core/common/widgets/custom_snackbar.dart';
 import '../../../core/utils/helpers/helper_functions.dart';
 import '../../../core/utils/helpers/permission_helper.dart';
+import '../data/pickup_service.dart';
+import '../model/PickupRequest.dart';
 
 class RequestPickUpView extends ConsumerStatefulWidget {
   const RequestPickUpView({Key? key}) : super(key: key);
@@ -38,7 +40,9 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
   TextEditingController _addressController = TextEditingController();
   TextEditingController _fullNameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
+  LatLng? selectedCoordinates;
   String? apiKey = dotenv.env['GOOGLE_PLACES_API_KEY'];
+  final PickupService _pickupService = PickupService();
 
   Future<void> _requestPermissions() async {
     await PermissionHelper.requestLocationPermission(context);
@@ -67,6 +71,7 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
           '${placemark.name}, ${placemark.street}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea}, ${placemark.country}, ${placemark.postalCode}';
       setState(() {
         _addressController.text = address;
+        selectedCoordinates = position;
       });
     }
   }
@@ -76,7 +81,6 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
     super.initState();
     _requestPermissions();
     _setInitialCameraPosition();
-    // Initialize date and time controllers with current date and time
     dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     timeController.text = DateFormat('hh:mm a').format(DateTime.now());
   }
@@ -243,7 +247,6 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                                     );
                                     if (pickedTime != null) {
                                       setState(() {
-                                        // Format the picked time to 12-hour format with AM/PM
                                         final now = DateTime.now();
                                         final dt = DateTime(
                                             now.year,
@@ -277,6 +280,12 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                             getPlaceDetailWithLatLng: (prediction) {
                               print(
                                   "Coordinates: (${prediction.lat},${prediction.lng})");
+                              setState(() {
+                                selectedCoordinates = LatLng(
+                                  double.parse(prediction.lat.toString()),
+                                  double.parse(prediction.lng.toString()),
+                                );
+                              });
                             },
                             itmClick: (prediction) {
                               if (prediction.description != null) {
@@ -315,7 +324,47 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                           ),
                           SizedBox(height: AppSizes.spaceBtwnInputFields),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              // Handle the submission logic here
+                              if (selectedCoordinates != null) {
+                                EasyLoading.show(status: 'Processing...');
+                                PickupRequest pickupRequest = PickupRequest(
+                                  fullName: _fullNameController.text,
+                                  phoneNumber: _phoneNumberController.text,
+                                  address: _addressController.text,
+                                  date: dateController.text,
+                                  time: timeController.text,
+                                  coordinates: {
+                                    'lat': selectedCoordinates!.latitude,
+                                    'lng': selectedCoordinates!.longitude,
+                                  },
+                                );
+
+                                bool success = await _pickupService
+                                    .createPickup(pickupRequest);
+                                EasyLoading.dismiss();
+                                if (success) {
+                                  showSnackBar(
+                                      message:
+                                          ' Pickup request created successfully',
+                                      context: context,
+                                      color: AppColors.success);
+                                  Navigator.pushNamed(
+                                      context, '/homePageRoute');
+                                } else {
+                                  showSnackBar(
+                                      message:
+                                          'Failed to create pickup request',
+                                      context: context,
+                                      color: AppColors.error);
+                                }
+                              } else {
+                                showSnackBar(
+                                    message: 'Coordinates not selected',
+                                    context: context,
+                                    color: AppColors.error);
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: isDarkMode
                                   ? AppColors.darkModeSurface
