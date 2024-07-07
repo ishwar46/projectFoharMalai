@@ -1,3 +1,5 @@
+import 'package:foharmalai/features/request_pickup/presentation/pickup_list_page.dart';
+
 import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/home/presentation/view/home_page.dart';
@@ -31,6 +33,7 @@ class MyRoutes {
   static String loadEsewaRoute = '/loadEsewaRoute';
   static String loadKhaltiRoute = "/loadKhaltiRoute";
   static String requestPickupRoute = '/requestPickupRoute';
+  static String pickUpListRoute = '/pickupListRoute';
 
   static getApplicationRoute() {
     return {
@@ -50,6 +53,7 @@ class MyRoutes {
       paymentRoute: (context) => PaymentPage(),
       loadKhaltiRoute: (context) => LoadToKhaltiPage(),
       requestPickupRoute: (context) => RequestPickUpView(),
+      pickUpListRoute: (context) => PickupListPage(),
     };
   }
 }

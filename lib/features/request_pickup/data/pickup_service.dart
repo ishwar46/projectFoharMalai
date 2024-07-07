@@ -26,10 +26,10 @@ class PickupService {
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body)['data'];
-      return data.map((pickup) => PickupRequest.fromJson(pickup)).toList();
+      var data = jsonDecode(response.body)['data'] as List;
+      return data.map((json) => PickupRequest.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to load pickups');
+      throw Exception('Failed to load pickups: ${response.body}');
     }
   }
 }
