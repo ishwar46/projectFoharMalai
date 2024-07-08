@@ -1,77 +1,51 @@
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import '../model/PickupRequest.dart';
-// import '../../../config/constants/api_constants.dart';
+import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-// class PickupService {
-//   Future<bool> createPickup(PickupRequest pickupRequest) async {
-//     final String apiUrl = ApiEndpoints.baseUrl + ApiEndpoints.createPickup;
-//     final response = await http.post(
-//       Uri.parse(apiUrl),
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'Authorization': 'Bearer your_token_here'
-//       },
-//       body: jsonEncode(pickupRequest.toJson()),
-//     );
-
-//     if (response.statusCode == 201) {
-//       return true;
-//     } else {
-//       print('Failed to create pickup request: ${response.reasonPhrase}');
-//       return false;
-//     }
-//   }
-
-//   Future<List<PickupRequest>> getPickupsByUserIdOrSessionId(
-//       String? userId) async {
-//     final prefs = await SharedPreferences.getInstance();
-//     String sessionId = prefs.getString('sessionId') ?? '';
-
-//     final String apiUrl = ApiEndpoints.baseUrl + ApiEndpoints.getAllPickups;
-//     final response = await http.get(
-//       Uri.parse(apiUrl).replace(queryParameters: {
-//         if (userId != null) 'userId': userId,
-//         'sessionId': sessionId,
-//       }),
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'Authorization': 'Bearer your_token_here',
-//       },
-//     );
-
-//     if (response.statusCode == 200) {
-//       List<dynamic> jsonData = jsonDecode(response.body)['data'];
-//       return jsonData.map((data) => PickupRequest.fromJson(data)).toList();
-//     } else {
-//       throw Exception(
-//           'Failed to load pickups: ${response.statusCode} - ${response.reasonPhrase}');
-//     }
-//   }
-// }
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import '../model/PickupRequest.dart';
 import '../../../config/constants/api_constants.dart';
+import '../../../core/network/remote/dio_error_interceptor.dart';
 import '../../../core/utils/helpers/user_sessions.dart';
+import '../model/PickupRequest.dart';
 
 class PickupService {
-  Future<bool> createPickup(PickupRequest pickupRequest) async {
-    final String apiUrl = ApiEndpoints.baseUrl + ApiEndpoints.createPickup;
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer your_token_here'
-      },
-      body: jsonEncode(pickupRequest.toJson()),
-    );
+  final Dio dio;
 
-    if (response.statusCode == 201) {
-      return true;
-    } else {
-      print('Failed to create pickup request: ${response.reasonPhrase}');
+  PickupService()
+      : dio = Dio(
+          BaseOptions(
+            baseUrl: ApiEndpoints.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer your_token_here',
+            },
+          ),
+        ) {
+    dio.interceptors.add(PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: true,
+      responseBody: true,
+      error: true,
+      compact: true,
+      maxWidth: 90,
+    ));
+    dio.interceptors.add(DioErrorInterceptor());
+  }
+
+  Future<bool> createPickup(PickupRequest pickupRequest) async {
+    try {
+      final response = await dio.post(
+        ApiEndpoints.createPickup,
+        data: pickupRequest.toJson(),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        print('Failed to create pickup request: ${response.statusMessage}');
+        return false;
+      }
+    } on DioException catch (e) {
+      print('Failed to create pickup request: ${e.message}');
       return false;
     }
   }
@@ -80,24 +54,24 @@ class PickupService {
       String? userId) async {
     String sessionId = await UserSession.getSessionId();
 
-    final String apiUrl = ApiEndpoints.baseUrl + ApiEndpoints.getAllPickups;
-    final response = await http.get(
-      Uri.parse(apiUrl).replace(queryParameters: {
-        if (userId != null) 'userId': userId,
-        'sessionId': sessionId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer your_token_here',
-      },
-    );
+    try {
+      final response = await dio.get(
+        ApiEndpoints.getAllPickups,
+        queryParameters: {
+          if (userId != null) 'userId': userId,
+          'sessionId': sessionId,
+        },
+      );
 
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = jsonDecode(response.body)['data'];
-      return jsonData.map((data) => PickupRequest.fromJson(data)).toList();
-    } else {
-      throw Exception(
-          'Failed to load pickups: ${response.statusCode} - ${response.reasonPhrase}');
+      if (response.statusCode == 200) {
+        List<dynamic> jsonData = response.data['data'];
+        return jsonData.map((data) => PickupRequest.fromJson(data)).toList();
+      } else {
+        throw Exception(
+            'Failed to load pickups: ${response.statusCode} - ${response.statusMessage}');
+      }
+    } on DioException catch (e) {
+      throw Exception('Failed to load pickups: ${e.message}');
     }
   }
 }
