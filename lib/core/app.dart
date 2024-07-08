@@ -68,7 +68,6 @@ class _AppState extends ConsumerState<App> {
       locale: _locale,
       supportedLocales: [
         Locale('en', ''),
-        Locale('es', ''),
         Locale('ne', ''),
       ],
       localizationsDelegates: [

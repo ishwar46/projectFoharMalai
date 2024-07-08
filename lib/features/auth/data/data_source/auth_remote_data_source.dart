@@ -22,7 +22,7 @@ class AuthRemoteDataSource {
 
   AuthRemoteDataSource(this.dio, this.secureStorage);
 
-  //Login Staff
+  // Login User
   Future<Either<Failure, bool>> loginUser(
       String username, String password) async {
     try {
@@ -47,6 +47,8 @@ class AuthRemoteDataSource {
           final tokenUsername = decodedToken['username'];
 
           if (username == tokenUsername) {
+            await secureStorage.write(
+                key: "username", value: username); // Save the username
             return const Right(true);
           } else {
             return Left(

@@ -99,21 +99,6 @@ class _PreLoginPageState extends ConsumerState<PreLoginPage> {
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                leading: CountryCodePicker(
-                  onInit: (_) {},
-                  initialSelection: 'ES',
-                  showCountryOnly: true,
-                  showOnlyCountryWhenClosed: true,
-                  alignLeft: true,
-                  hideMainText: true,
-                ),
-                title: const Text('Español'),
-                onTap: () {
-                  _changeLanguage(Locale('es'));
-                  Navigator.pop(context);
-                },
-              ),
             ],
           ),
         );
