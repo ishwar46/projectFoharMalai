@@ -70,6 +70,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
 
   Future<void> logout(BuildContext context) async {
     await secureStorage.delete(key: "authToken");
+    await secureStorage.delete(key: "username");
     Navigator.pushReplacementNamed(context, MyRoutes.loginRoute);
   }
 
@@ -175,13 +176,22 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           _showSupportBottomSheet(context);
         },
       ),
-      IconButton(
-        color: AppColors.error,
-        icon: const Icon(Icons.logout),
-        onPressed: () {
-          _showLogoutDialog(context);
-        },
-      ),
+      if (username == null)
+        IconButton(
+          color: AppColors.primaryColor,
+          icon: const Icon(Icons.login),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, MyRoutes.loginRoute);
+          },
+        )
+      else
+        IconButton(
+          color: AppColors.error,
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            _showLogoutDialog(context);
+          },
+        ),
     ];
   }
 
