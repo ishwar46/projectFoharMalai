@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import '../../../app_localizations.dart';
@@ -19,6 +20,7 @@ import '../../../core/common/provider/connection.dart';
 import '../../../core/common/widgets/custom_snackbar.dart';
 import '../../../core/utils/helpers/helper_functions.dart';
 import '../../../core/utils/helpers/permission_helper.dart';
+import '../../../core/utils/helpers/user_sessions.dart';
 import '../data/pickup_service.dart';
 import '../model/PickupRequest.dart';
 
@@ -74,6 +76,11 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
         selectedCoordinates = position;
       });
     }
+  }
+
+  Future<String?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userId'); // Ensure this is stored during login
   }
 
   @override
@@ -325,44 +332,58 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                           SizedBox(height: AppSizes.spaceBtwnInputFields),
                           ElevatedButton(
                             onPressed: () async {
-                              // Handle the submission logic here
                               if (selectedCoordinates != null) {
                                 EasyLoading.show(status: 'Processing...');
-                                PickupRequest pickupRequest = PickupRequest(
-                                  fullName: _fullNameController.text,
-                                  phoneNumber: _phoneNumberController.text,
-                                  address: _addressController.text,
-                                  date: dateController.text,
-                                  time: timeController.text,
-                                  coordinates: {
-                                    'lat': selectedCoordinates!.latitude,
-                                    'lng': selectedCoordinates!.longitude,
-                                  },
-                                );
+                                try {
+                                  String? userId = await getUserId();
+                                  String sessionId =
+                                      await UserSession.getSessionId();
 
-                                bool success = await _pickupService
-                                    .createPickup(pickupRequest);
-                                EasyLoading.dismiss();
-                                if (success) {
-                                  showSnackBar(
+                                  PickupRequest pickupRequest = PickupRequest(
+                                    fullName: _fullNameController.text,
+                                    phoneNumber: _phoneNumberController.text,
+                                    address: _addressController.text,
+                                    date: dateController.text,
+                                    time: timeController.text,
+                                    coordinates: {
+                                      'lat': selectedCoordinates!.latitude,
+                                      'lng': selectedCoordinates!.longitude,
+                                    },
+                                    userId: userId,
+                                    sessionId:
+                                        userId == null ? sessionId : null,
+                                  );
+
+                                  bool success = await _pickupService
+                                      .createPickup(pickupRequest);
+                                  EasyLoading.dismiss();
+                                  if (success) {
+                                    showSnackBar(
                                       message:
-                                          ' Pickup request created successfully',
+                                          'Pickup request created successfully',
                                       context: context,
-                                      color: AppColors.success);
-                                  Navigator.pushNamed(
-                                      context, '/pickupListRoute');
-                                } else {
-                                  showSnackBar(
+                                      color: AppColors.success,
+                                    );
+                                    Navigator.pushNamed(
+                                        context, '/pickupListRoute');
+                                  } else {
+                                    showSnackBar(
                                       message:
                                           'Failed to create pickup request',
                                       context: context,
-                                      color: AppColors.error);
+                                      color: AppColors.error,
+                                    );
+                                  }
+                                } catch (e) {
+                                  EasyLoading.dismiss();
+                                  print("Error occurred: $e");
                                 }
                               } else {
                                 showSnackBar(
-                                    message: 'Coordinates not selected',
-                                    context: context,
-                                    color: AppColors.error);
+                                  message: 'Coordinates not selected',
+                                  context: context,
+                                  color: AppColors.error,
+                                );
                               }
                             },
                             style: ElevatedButton.styleFrom(

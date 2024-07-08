@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/utils/helpers/user_sessions.dart';
 import '../data/pickup_service.dart';
 import '../model/PickupRequest.dart';
 
@@ -14,7 +16,13 @@ class _PickupListPageState extends State<PickupListPage> {
   @override
   void initState() {
     super.initState();
-    _futurePickups = _pickupService.getAllPickups();
+    _futurePickups = _loadPickupRequests();
+  }
+
+  Future<List<PickupRequest>> _loadPickupRequests() async {
+    String? userId =
+        await getUserId(); // Retrieve user ID from storage, if logged in
+    return _pickupService.getPickupsByUserIdOrSessionId(userId);
   }
 
   @override
@@ -22,6 +30,7 @@ class _PickupListPageState extends State<PickupListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Requests'),
+        backgroundColor: Colors.teal,
       ),
       body: FutureBuilder<List<PickupRequest>>(
         future: _futurePickups,
@@ -30,17 +39,17 @@ class _PickupListPageState extends State<PickupListPage> {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return ListView.builder(
               padding: EdgeInsets.all(8.0),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var pickup = snapshot.data![index];
                 return Card(
-                  elevation: 1,
+                  elevation: 3,
                   margin: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: ListTile(
                     contentPadding: EdgeInsets.all(10.0),
@@ -101,4 +110,9 @@ class _PickupListPageState extends State<PickupListPage> {
       ),
     );
   }
+}
+
+Future<String?> getUserId() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('userId');
 }
