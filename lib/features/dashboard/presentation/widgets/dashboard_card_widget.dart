@@ -8,6 +8,7 @@ class DashboardCardWidget extends StatelessWidget {
   final String routeName;
   final String imagePath;
   final bool isDarkMode;
+  final VoidCallback onTap;
 
   const DashboardCardWidget({
     Key? key,
@@ -15,14 +16,13 @@ class DashboardCardWidget extends StatelessWidget {
     required this.routeName,
     required this.imagePath,
     required this.isDarkMode,
+    required this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, routeName);
-      },
+      onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
@@ -47,9 +47,7 @@ class DashboardCardWidget extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, routeName);
-            },
+            onTap: onTap,
             borderRadius: BorderRadius.circular(8),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
