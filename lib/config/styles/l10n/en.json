@@ -84,8 +84,12 @@
     "transactionId": "Transaction ID",
     "goToDashboard": "Go to Dashboard",
     "reportDispute": "Report a Dispute",
+    "my_requests": "My Requests",
+    "error": "Error",
     "date": "Date",
-    "time": "Time"
+    "time": "Time",
+    "phone": "Phone",
+    "no_pickups_found": "No pickups found"
 
 
 }

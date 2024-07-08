@@ -1,4 +1,5 @@
 import 'package:foharmalai/features/request_pickup/presentation/pickup_list_page.dart';
+import 'package:foharmalai/features/special_requests/presentation/view/special_requests_view.dart';
 
 import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
@@ -34,6 +35,7 @@ class MyRoutes {
   static String loadKhaltiRoute = "/loadKhaltiRoute";
   static String requestPickupRoute = '/requestPickupRoute';
   static String pickUpListRoute = '/pickupListRoute';
+  static String specialRequestRoute = '/speacialRequestRoute';
 
   static getApplicationRoute() {
     return {
@@ -54,6 +56,7 @@ class MyRoutes {
       loadKhaltiRoute: (context) => LoadToKhaltiPage(),
       requestPickupRoute: (context) => RequestPickUpView(),
       pickUpListRoute: (context) => PickupListPage(),
+      specialRequestRoute: (context) => SpecialRequestsPage(),
     };
   }
 }

@@ -36,7 +36,7 @@ class ServiceRow extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: DashboardCardWidget(
               title: localizations.translate("special_requests"),
-              routeName: "/specialRequestsRoute",
+              routeName: "/speacialRequestRoute",
               imagePath: "assets/images/perks.png",
               isDarkMode: isDarkMode,
             ),
@@ -47,7 +47,7 @@ class ServiceRow extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: DashboardCardWidget(
               title: localizations.translate("locations"),
-              routeName: "/availableJobsRoute",
+              routeName: "/pickupListRoute",
               imagePath: "assets/images/map.png",
               isDarkMode: isDarkMode,
             ),
