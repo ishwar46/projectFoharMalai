@@ -42,9 +42,14 @@ class AuthViewModel extends StateNotifier<AuthState> {
             status: 'Please wait...',
             maskType: EasyLoadingMaskType.black,
           );
-          Future.delayed(const Duration(seconds: 1), () {
-            Navigator.pushReplacementNamed(context, MyRoutes.homePageRoute);
+          Future.delayed(const Duration(seconds: 2), () {
             EasyLoading.dismiss();
+            showSnackBar(
+              message: 'User logged in successfully',
+              context: context,
+              color: AppColors.success,
+            );
+            Navigator.pushReplacementNamed(context, MyRoutes.homePageRoute);
           });
         } else {
           showSnackBar(
