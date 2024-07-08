@@ -1,20 +1,24 @@
 class PickupRequest {
-  String? id; // Make ID nullable
+  String? id;
   String fullName;
   String phoneNumber;
   String address;
   String date;
   String time;
   Map<String, double> coordinates;
+  String? userId;
+  String? sessionId;
 
   PickupRequest({
-    this.id, // Now optional
+    this.id,
     required this.fullName,
     required this.phoneNumber,
     required this.address,
     required this.date,
     required this.time,
     required this.coordinates,
+    this.userId,
+    this.sessionId,
   });
 
   Map<String, dynamic> toJson() {
@@ -25,9 +29,11 @@ class PickupRequest {
       'date': date,
       'time': time,
       'coordinates': coordinates,
+      'userId': userId,
+      'sessionId': sessionId,
     };
     if (id != null) {
-      data['_id'] = id; // Only include ID if it's not null
+      data['_id'] = id;
     }
     return data;
   }
@@ -44,6 +50,8 @@ class PickupRequest {
         'lat': (json['coordinates']['lat'] as num).toDouble(),
         'lng': (json['coordinates']['lng'] as num).toDouble(),
       },
+      userId: json['userId'],
+      sessionId: json['sessionId'],
     );
   }
 }

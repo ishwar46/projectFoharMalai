@@ -165,15 +165,14 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
         color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
         icon: const Icon(Icons.notifications),
         onPressed: () {
-          Navigator.pushNamed(context, MyRoutes.viewNotificationRoute);
+          Navigator.pushNamed(context, MyRoutes.pickUpListRoute);
         },
       ),
-      // Support
       IconButton(
         color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
         icon: Icon(MdiIcons.faceAgent),
         onPressed: () {
-          _showSupportBottomSheet(context); // Show the bottom sheet
+          _showSupportBottomSheet(context);
         },
       ),
       IconButton(

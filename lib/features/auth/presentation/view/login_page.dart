@@ -276,11 +276,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                             ).applyDefaults(
                                 CustomTextFormField.lightInputDecorationTheme),
-                            validator: (value) {
-                              final error =
-                                  AppValidator.validatePassword(value);
-                              return error;
-                            },
+                            // validator: (value) {
+                            //   final error =
+                            //       AppValidator.validatePassword(value);
+                            //   return error;
+                            // },
                           ),
                           const SizedBox(
                               height: AppSizes.spaceBtwnInputFields / 2),
