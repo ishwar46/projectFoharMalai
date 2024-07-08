@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -121,6 +122,8 @@ class _PickupListPageState extends State<PickupListPage> {
 }
 
 Future<String?> getUserId() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('userId');
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  String? userId = await secureStorage.read(key: 'userId');
+  print("Retrieved userId from secure storage: $userId");
+  return userId;
 }

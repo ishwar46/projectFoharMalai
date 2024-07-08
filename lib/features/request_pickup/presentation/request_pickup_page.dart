@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
@@ -79,8 +80,10 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
   }
 
   Future<String?> getUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userId'); // Ensure this is stored during login
+    final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    String? userId = await secureStorage.read(key: 'userId');
+    print("Retrieved userId from secure storage: $userId");
+    return userId;
   }
 
   @override
@@ -336,6 +339,8 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                                 EasyLoading.show(status: 'Processing...');
                                 try {
                                   String? userId = await getUserId();
+                                  print(
+                                      "Using userId for request: $userId"); // Debug output
                                   String sessionId =
                                       await UserSession.getSessionId();
 
