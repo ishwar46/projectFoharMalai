@@ -59,7 +59,7 @@ class PickupService {
         ApiEndpoints.getAllPickups,
         queryParameters: {
           if (userId != null) 'userId': userId,
-          'sessionId': sessionId,
+          if (userId == null) 'sessionId': sessionId,
         },
       );
 
