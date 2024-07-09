@@ -1,15 +1,22 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../config/constants/api_constants.dart';
+import '../../../core/common/provider/secure_storage_provide.dart';
+import '../../../core/network/remote/dio_config.dart';
 import '../domain/special_request.dart';
 
-final specialRequestServiceProvider =
-    Provider((ref) => SpecialRequestService());
+final specialRequestServiceProvider = Provider<SpecialRequestService>((ref) {
+  final dio = ref.watch(dioProvider);
+  final secureStorage = ref.read(flutterSecureStorageProvider);
+  return SpecialRequestService(dio, secureStorage);
+});
 
 class SpecialRequestService {
-  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  final Dio dio;
+  final FlutterSecureStorage secureStorage;
+
+  SpecialRequestService(this.dio, this.secureStorage);
 
   Future<String?> _getToken() async {
     return await secureStorage.read(key: "authToken");
@@ -17,55 +24,40 @@ class SpecialRequestService {
 
   Future<List<SpecialRequest>> fetchSpecialRequests() async {
     final token = await _getToken();
-    if (token == null) {
-      throw Exception('You are not authorized to view this.');
-    }
+    if (token == null) throw Exception('Authorization token is not available.');
 
     try {
-      final response = await http.get(
-        Uri.parse(ApiEndpoints.getSpecialRequests),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
+      final response = await dio.get(
+        ApiEndpoints.getSpecialRequests,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> body = json.decode(response.body)['data'];
-        return body
-            .map((dynamic item) => SpecialRequest.fromJson(item))
-            .toList();
+        List<dynamic> jsonData = response.data['data'];
+        return jsonData.map((data) => SpecialRequest.fromJson(data)).toList();
       } else {
-        throw Exception('Failed to load special requests: ${response.body}');
+        throw Exception(
+            'Failed to fetch special requests: ${response.statusMessage}');
       }
-    } catch (error) {
-      throw Exception('Failed to load special requests: $error');
+    } catch (e) {
+      throw Exception('Network error occurred: $e');
     }
   }
 
-  Future<SpecialRequest> createSpecialRequest(
-      SpecialRequest request, String token) async {
+  Future<bool> createSpecialRequest(SpecialRequest request) async {
     final token = await _getToken();
-    if (token == null) {
-      throw Exception('You are not authorized to view this.');
-    }
+    if (token == null) throw Exception('Authorization token is not available.');
 
     try {
-      final response = await http.post(
-        Uri.parse(ApiEndpoints.createSpecialRequest),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode(request.toJson()),
+      final response = await dio.post(
+        ApiEndpoints.createSpecialRequest,
+        data: request.toJson(),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
-      if (response.statusCode == 201) {
-        return SpecialRequest.fromJson(json.decode(response.body)['data']);
-      } else {
-        throw Exception('Failed to create special request: ${response.body}');
-      }
-    } catch (error) {
-      throw Exception('Failed to create special request: $error');
+      return response.statusCode == 201;
+    } catch (e) {
+      throw Exception('Failed to create special request: $e');
     }
   }
 }

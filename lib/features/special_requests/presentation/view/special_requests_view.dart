@@ -9,6 +9,7 @@ import '../../../../config/constants/app_colors.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../../data/special_req_serivce.dart';
 import '../../domain/special_request.dart';
+import 'special_request_view.dart';
 
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return FlutterSecureStorage();
@@ -57,14 +58,8 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
 
   void _submitSpecialRequest(WidgetRef ref) async {
     final specialRequestService = ref.read(specialRequestServiceProvider);
-    final secureStorage = ref.read(secureStorageProvider);
 
     try {
-      final token = await secureStorage.read(key: "authToken");
-      if (token == null) {
-        throw Exception('No authentication token found');
-      }
-
       final specialRequest = SpecialRequest(
         id: '', // This will be set by the server
         user: '', // This will be set by the server
@@ -75,14 +70,27 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
         additionalInstructions: _additionalInstructionsController.text,
       );
 
-      await specialRequestService.createSpecialRequest(specialRequest, token);
-      showSnackBar(
-          message: 'Special request created successfully', context: context);
+      bool success =
+          await specialRequestService.createSpecialRequest(specialRequest);
+      if (success) {
+        showSnackBar(
+          context: context,
+          message: 'Special request created successfully',
+          color: Colors.green,
+        );
+      } else {
+        showSnackBar(
+          context: context,
+          message: 'Failed to create special request',
+          color: AppColors.error,
+        );
+      }
     } catch (error) {
       showSnackBar(
-          message: "Failed to create special request: $error'",
-          context: context,
-          color: AppColors.error);
+        context: context,
+        message: "Failed to create special request: $error",
+        color: AppColors.error,
+      );
     }
   }
 
@@ -179,6 +187,19 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                 child: ElevatedButton(
                   onPressed: () => _submitSpecialRequest(ref),
                   child: Text(localizations.translate('submit')),
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SpecialRequestsViewPage()),
+                    );
+                  },
+                  child: Text('View Requests'),
                 ),
               ),
             ],
