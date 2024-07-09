@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/config/constants/app_sizes.dart';
+import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../../config/constants/app_colors.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
+import '../../data/special_req_serivce.dart';
+import '../../domain/special_request.dart';
+
+final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
+  return FlutterSecureStorage();
+});
 
 class SpecialRequestsPage extends ConsumerStatefulWidget {
   const SpecialRequestsPage({super.key});
@@ -17,12 +25,9 @@ class SpecialRequestsPage extends ConsumerStatefulWidget {
 class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
   final _timeController = TextEditingController();
   final _dateController = TextEditingController();
-  final _gap = SizedBox(
-    height: AppSizes.spaceBtwnInputFields,
-  );
-  final _gapsection = SizedBox(
-    height: AppSizes.spaceBtwItems,
-  );
+  final _categoryController = TextEditingController();
+  final _estimatedWasteController = TextEditingController();
+  final _additionalInstructionsController = TextEditingController();
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
@@ -47,6 +52,37 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
       setState(() {
         _dateController.text = "${pickedDate.toLocal()}".split(' ')[0];
       });
+    }
+  }
+
+  void _submitSpecialRequest(WidgetRef ref) async {
+    final specialRequestService = ref.read(specialRequestServiceProvider);
+    final secureStorage = ref.read(secureStorageProvider);
+
+    try {
+      final token = await secureStorage.read(key: "authToken");
+      if (token == null) {
+        throw Exception('No authentication token found');
+      }
+
+      final specialRequest = SpecialRequest(
+        id: '', // This will be set by the server
+        user: '', // This will be set by the server
+        category: _categoryController.text,
+        estimatedWaste: _estimatedWasteController.text,
+        preferredTime: _timeController.text,
+        preferredDate: _dateController.text,
+        additionalInstructions: _additionalInstructionsController.text,
+      );
+
+      await specialRequestService.createSpecialRequest(specialRequest, token);
+      showSnackBar(
+          message: 'Special request created successfully', context: context);
+    } catch (error) {
+      showSnackBar(
+          message: "Failed to create special request: $error'",
+          context: context,
+          color: AppColors.error);
     }
   }
 
@@ -80,26 +116,18 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                 height: AppSizes.spaceBtwSections,
               ),
               // Waste Category Dropdown
-              DropdownButtonFormField(
-                items: [
-                  DropdownMenuItem(
-                    value: 'category1',
-                    child: Text(localizations.translate('category1')),
-                  ),
-                  DropdownMenuItem(
-                    value: 'category2',
-                    child: Text(localizations.translate('category2')),
-                  ),
-                ],
-                onChanged: (value) {},
+              TextFormField(
+                controller: _categoryController,
                 decoration: InputDecoration(
-                    labelText: localizations.translate('select_category'),
-                    prefixIcon: Icon(MdiIcons.shape),
-                    hintText: localizations.translate('select_category_hint')),
+                  labelText: localizations.translate('select_category'),
+                  prefixIcon: Icon(MdiIcons.shape),
+                  hintText: localizations.translate('select_category_hint'),
+                ),
               ),
-              _gap,
+              const SizedBox(height: AppSizes.spaceBtwnInputFields),
               // Estimated Waste or Pieces
               TextFormField(
+                controller: _estimatedWasteController,
                 decoration: InputDecoration(
                   labelText:
                       localizations.translate('estimated_waste_or_pieces'),
@@ -108,7 +136,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                       localizations.translate('estimated_waste_or_pieces_hint'),
                 ),
               ),
-              _gap,
+              const SizedBox(height: AppSizes.spaceBtwnInputFields),
               // Preferred Time
               TextFormField(
                 controller: _timeController,
@@ -120,7 +148,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                 readOnly: true,
                 onTap: () => _selectTime(context),
               ),
-              _gap,
+              const SizedBox(height: AppSizes.spaceBtwnInputFields),
               // Preferred Date
               TextFormField(
                 controller: _dateController,
@@ -132,9 +160,10 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                 readOnly: true,
                 onTap: () => _selectDate(context),
               ),
-              _gap,
+              const SizedBox(height: AppSizes.spaceBtwnInputFields),
               // Additional Instructions
               TextFormField(
+                controller: _additionalInstructionsController,
                 decoration: InputDecoration(
                   labelText: localizations.translate('additional_instructions'),
                   hintText:
@@ -143,16 +172,15 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                 ),
                 maxLines: 2,
               ),
-
-              _gapsection,
+              const SizedBox(height: AppSizes.spaceBtwItems),
               // Submit Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => _submitSpecialRequest(ref),
                   child: Text(localizations.translate('submit')),
                 ),
-              )
+              ),
             ],
           ),
         ),
