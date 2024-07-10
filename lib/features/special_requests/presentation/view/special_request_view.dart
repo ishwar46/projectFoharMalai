@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foharmalai/app_localizations.dart';
-import 'package:foharmalai/config/constants/app_sizes.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../../data/special_req_serivce.dart';
 import '../../domain/special_request.dart';
@@ -40,23 +40,154 @@ class _SpecialRequestsViewPageState
           itemBuilder: (context, index) {
             final request = requests[index];
             return Card(
-              color: AppColors.shadepink,
+              color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
               margin:
-                  const EdgeInsets.symmetric(vertical: AppSizes.spaceBtwItems),
-              child: ListTile(
-                title: Text(request.category),
-                subtitle: Column(
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+                side:
+                    BorderSide(color: Theme.of(context).primaryColor, width: 1),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        '${localizations.translate('estimated_waste')}: ${request.estimatedWaste}'),
-                    Text(
-                        '${localizations.translate('preferred_time')}: ${request.preferredTime}'),
-                    Text(
-                        '${localizations.translate('preferred_date')}: ${request.preferredDate}'),
-                    if (request.additionalInstructions.isNotEmpty)
-                      Text(
-                          '${localizations.translate('additional_instructions')}: ${request.additionalInstructions}'),
+                      request.category,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color:
+                                isDarkMode ? AppColors.white : AppColors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Iconsax.weight,
+                            color:
+                                isDarkMode ? Colors.white70 : Colors.black54),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      '${localizations.translate('estimated_waste')}: ',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                TextSpan(
+                                  text: request.estimatedWaste,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Iconsax.clock,
+                            color:
+                                isDarkMode ? Colors.white70 : Colors.black54),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      '${localizations.translate('preferred_time')}: ',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                TextSpan(
+                                  text: request.preferredTime,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Iconsax.calendar,
+                            color:
+                                isDarkMode ? Colors.white70 : Colors.black54),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      '${localizations.translate('preferred_date')}: ',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                TextSpan(
+                                  text: request.preferredDate,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (request.additionalInstructions.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Iconsax.note,
+                              color:
+                                  isDarkMode ? Colors.white70 : Colors.black54),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        '${localizations.translate('additional_instructions')}: ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  TextSpan(
+                                    text: request.additionalInstructions,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),

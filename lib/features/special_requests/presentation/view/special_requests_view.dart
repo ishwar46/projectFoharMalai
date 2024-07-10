@@ -189,6 +189,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                   child: Text(localizations.translate('submit')),
                 ),
               ),
+              SizedBox(height: AppSizes.spaceBtwItems),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
