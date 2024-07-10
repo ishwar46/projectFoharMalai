@@ -339,8 +339,7 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                                 EasyLoading.show(status: 'Processing...');
                                 try {
                                   String? userId = await getUserId();
-                                  print(
-                                      "Using userId for request: $userId"); // Debug output
+                                  print("Using userId for request: $userId");
                                   String sessionId =
                                       await UserSession.getSessionId();
 

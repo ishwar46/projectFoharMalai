@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/config/constants/app_sizes.dart';
-import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:iconsax/iconsax.dart'; // Make sure Iconsax is correctly imported
 import '../../../../config/constants/app_colors.dart';
+import '../../../../core/common/widgets/custom_snackbar.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../../data/special_req_serivce.dart';
 import '../../domain/special_request.dart';
@@ -26,9 +26,10 @@ class SpecialRequestsPage extends ConsumerStatefulWidget {
 class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
   final _timeController = TextEditingController();
   final _dateController = TextEditingController();
-  final _categoryController = TextEditingController();
   final _estimatedWasteController = TextEditingController();
   final _additionalInstructionsController = TextEditingController();
+  String? _selectedCategory;
+  final List<String> _categories = ['Category 1', 'Category 2', 'Category 3'];
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
@@ -63,7 +64,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
       final specialRequest = SpecialRequest(
         id: '', // This will be set by the server
         user: '', // This will be set by the server
-        category: _categoryController.text,
+        category: _selectedCategory ?? 'Not specified',
         estimatedWaste: _estimatedWasteController.text,
         preferredTime: _timeController.text,
         preferredDate: _dateController.text,
@@ -120,17 +121,25 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                 ),
                 child: Text(localizations.translate('special_requests_desc')),
               ),
-              const SizedBox(
-                height: AppSizes.spaceBtwSections,
-              ),
-              // Waste Category Dropdown
-              TextFormField(
-                controller: _categoryController,
+              const SizedBox(height: AppSizes.spaceBtwSections),
+              DropdownButtonFormField<String>(
+                value: _selectedCategory,
                 decoration: InputDecoration(
                   labelText: localizations.translate('select_category'),
-                  prefixIcon: Icon(MdiIcons.shape),
-                  hintText: localizations.translate('select_category_hint'),
+                  prefixIcon: Icon(Iconsax.category),
                 ),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedCategory = newValue;
+                  });
+                },
+                items:
+                    _categories.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
               const SizedBox(height: AppSizes.spaceBtwnInputFields),
               // Estimated Waste or Pieces
@@ -139,7 +148,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                 decoration: InputDecoration(
                   labelText:
                       localizations.translate('estimated_waste_or_pieces'),
-                  prefixIcon: Icon(MdiIcons.bottleWine),
+                  prefixIcon: Icon(Iconsax.barcode),
                   hintText:
                       localizations.translate('estimated_waste_or_pieces_hint'),
                 ),
@@ -150,7 +159,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                 controller: _timeController,
                 decoration: InputDecoration(
                   labelText: localizations.translate('preferred_time'),
-                  prefixIcon: Icon(MdiIcons.clock),
+                  prefixIcon: Icon(Iconsax.clock),
                   hintText: localizations.translate('preferred_time_hint'),
                 ),
                 readOnly: true,
@@ -162,7 +171,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                 controller: _dateController,
                 decoration: InputDecoration(
                   labelText: localizations.translate('preferred_date'),
-                  prefixIcon: Icon(MdiIcons.calendar),
+                  prefixIcon: Icon(Iconsax.calendar),
                   hintText: localizations.translate('preferred_date_hint'),
                 ),
                 readOnly: true,
@@ -176,7 +185,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                   labelText: localizations.translate('additional_instructions'),
                   hintText:
                       localizations.translate('additional_instructions_hint'),
-                  prefixIcon: Icon(MdiIcons.note),
+                  prefixIcon: Icon(Iconsax.note),
                 ),
                 maxLines: 2,
               ),
