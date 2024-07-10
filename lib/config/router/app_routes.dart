@@ -35,7 +35,7 @@ class MyRoutes {
   static String loadKhaltiRoute = "/loadKhaltiRoute";
   static String requestPickupRoute = '/requestPickupRoute';
   static String pickUpListRoute = '/pickupListRoute';
-  static String specialRequestRoute = '/speacialRequestRoute';
+  static String specialRequestRoute = '/specialRequestRoute';
 
   static getApplicationRoute() {
     return {

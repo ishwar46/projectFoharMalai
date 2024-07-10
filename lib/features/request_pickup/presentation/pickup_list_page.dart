@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../app_localizations.dart';
 import '../data/pickup_service.dart';
 import '../model/PickupRequest.dart';
@@ -30,7 +30,7 @@ class _PickupListPageState extends State<PickupListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isdark = HelperFunctions.isDarkMode(context);
+    final isDarkMode = HelperFunctions.isDarkMode(context);
     final localizations = AppLocalizations.of(context);
 
     return Scaffold(
@@ -49,29 +49,21 @@ class _PickupListPageState extends State<PickupListPage> {
                     '${localizations.translate('error')}: ${snapshot.error}'));
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return ListView.builder(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(20.0),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var pickup = snapshot.data![index];
-                return Container(
-                  margin: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    color: isdark ? AppColors.cardDarkMode : AppColors.white,
-                    borderRadius: BorderRadius.circular(5.0),
-                    border: Border.all(
-                      color: isdark ? AppColors.white : AppColors.primaryColor,
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 3,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
+                return Card(
+                  color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 4.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    side: BorderSide(
+                        color: Theme.of(context).primaryColor, width: 1),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -83,26 +75,105 @@ class _PickupListPageState extends State<PickupListPage> {
                             color: AppColors.primaryColor,
                           ),
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          pickup.address,
-                          style: GoogleFonts.roboto(fontSize: 14),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(Iconsax.location,
+                                color: isDarkMode
+                                    ? Colors.white70
+                                    : Colors.black54),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                pickup.address,
+                                style: GoogleFonts.roboto(fontSize: 14),
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          '${localizations.translate('date')}: ${pickup.date} ${localizations.translate('time')}: ${pickup.time}',
-                          style: GoogleFonts.roboto(
-                            fontSize: 12,
-                            color: Colors.grey[700],
-                          ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(Iconsax.calendar,
+                                color: isDarkMode
+                                    ? Colors.white70
+                                    : Colors.black54),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${localizations.translate('date')}: ',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: pickup.date,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          ' ${localizations.translate('time')}: ',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: pickup.time,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 10),
-                        Text(
-                          '${localizations.translate('phone')}: ${pickup.phoneNumber}',
-                          style: GoogleFonts.roboto(
-                            fontSize: 12,
-                            color: Colors.grey[700],
-                          ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(Iconsax.call,
+                                color: isDarkMode
+                                    ? Colors.white70
+                                    : Colors.black54),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${localizations.translate('phone')}: ',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: pickup.phoneNumber,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
