@@ -119,7 +119,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
     } catch (error) {
       showSnackBar(
         context: context,
-        message: "Failed to create special request: $error",
+        message: "Failed to create special request. All fields are required.",
         color: AppColors.error,
       );
     }

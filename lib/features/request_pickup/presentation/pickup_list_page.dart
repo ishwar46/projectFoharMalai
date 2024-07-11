@@ -78,7 +78,7 @@ class _PickupListPageState extends State<PickupListPage> {
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
       decoration: BoxDecoration(
         color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -96,8 +96,8 @@ class _PickupListPageState extends State<PickupListPage> {
               decoration: BoxDecoration(
                 color: isDarkMode ? AppColors.white : AppColors.secondaryColor,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
+                  topLeft: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
                 ),
               ),
               child: Center(
@@ -126,7 +126,7 @@ class _PickupListPageState extends State<PickupListPage> {
                 ),
               ),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 5.0),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -172,16 +172,13 @@ class _PickupListPageState extends State<PickupListPage> {
   }
 
   Widget buildIconText(IconData icon, String text, bool isDarkMode) {
-    List<String> parts = text.split(
-        ': '); // Split the text by the colon to separate the key and value
+    List<String> parts = text.split(': ');
     return Row(
-      crossAxisAlignment: CrossAxisAlignment
-          .start, // Align items at the start in case text wraps
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, color: isDarkMode ? Colors.white70 : Colors.black54),
         const SizedBox(width: 8),
         Expanded(
-          // Use Expanded to allow text to fill the row
           child: RichText(
             text: TextSpan(
               children: [

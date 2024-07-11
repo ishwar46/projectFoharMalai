@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
+import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +41,17 @@ class _SpecialRequestsViewPageState
     'Wood',
     'Mixed Waste'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => ref.refresh(specialRequestsProvider));
+  }
+
+  Future<void> refreshData() async {
+    await ref.refresh(specialRequestsProvider.future);
+    showSnackBar(message: 'Refresh successful!', context: context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +96,7 @@ class _SpecialRequestsViewPageState
           ),
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () async {
-                ref.refresh(specialRequestsProvider);
-              },
+              onRefresh: refreshData,
               child: specialRequests.when(
                 data: (requests) {
                   List<SpecialRequest> filteredRequests = requests;
