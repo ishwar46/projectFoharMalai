@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foharmalai/app_localizations.dart';
 import 'package:lottie/lottie.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../config/constants/app_colors.dart';
 
 class NoRequestFoundWidget extends StatelessWidget {
@@ -31,9 +32,10 @@ class NoRequestFoundWidget extends StatelessWidget {
           SizedBox(height: 16),
           Text(
             noRequestText,
-            style: TextStyle(
+            style: GoogleFonts.roboto(
               color: AppColors.error,
-              fontSize: 18,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,
           ),
@@ -45,6 +47,7 @@ class NoRequestFoundWidget extends StatelessWidget {
               icon: Icon(Icons.refresh),
               label: Text(
                 localizations.translate('retry'),
+                style: GoogleFonts.roboto(),
               ),
             ),
           ),

@@ -100,7 +100,9 @@ class _SpecialRequestsViewPageState
                     return Center(
                       child: Text(
                         localizations.translate('no_special_req'),
-                        style: GoogleFonts.roboto(color: AppColors.error),
+                        style: GoogleFonts.roboto(
+                            color: AppColors.error,
+                            fontWeight: FontWeight.bold),
                       ),
                     );
                   }
