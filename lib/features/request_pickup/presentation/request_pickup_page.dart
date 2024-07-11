@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import '../../../app_localizations.dart';
@@ -19,6 +21,7 @@ import '../../../core/common/provider/connection.dart';
 import '../../../core/common/widgets/custom_snackbar.dart';
 import '../../../core/utils/helpers/helper_functions.dart';
 import '../../../core/utils/helpers/permission_helper.dart';
+import '../../../core/utils/helpers/user_sessions.dart';
 import '../data/pickup_service.dart';
 import '../model/PickupRequest.dart';
 
@@ -74,6 +77,13 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
         selectedCoordinates = position;
       });
     }
+  }
+
+  Future<String?> getUserId() async {
+    final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    String? userId = await secureStorage.read(key: 'userId');
+    print("Retrieved userId from secure storage: $userId");
+    return userId;
   }
 
   @override
@@ -191,10 +201,9 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    color: isDarkMode
-                        ? AppColors.darkModeSurface
-                        : AppColors.white,
-                    surfaceTintColor: AppColors.white,
+                    color: isDarkMode ? AppColors.dark : AppColors.white,
+                    surfaceTintColor:
+                        isDarkMode ? AppColors.dark : AppColors.white,
                     elevation: 4.0,
                     shadowColor: Colors.black.withOpacity(0.2),
                     child: Padding(
@@ -325,50 +334,62 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                           SizedBox(height: AppSizes.spaceBtwnInputFields),
                           ElevatedButton(
                             onPressed: () async {
-                              // Handle the submission logic here
                               if (selectedCoordinates != null) {
                                 EasyLoading.show(status: 'Processing...');
-                                PickupRequest pickupRequest = PickupRequest(
-                                  fullName: _fullNameController.text,
-                                  phoneNumber: _phoneNumberController.text,
-                                  address: _addressController.text,
-                                  date: dateController.text,
-                                  time: timeController.text,
-                                  coordinates: {
-                                    'lat': selectedCoordinates!.latitude,
-                                    'lng': selectedCoordinates!.longitude,
-                                  },
-                                );
+                                try {
+                                  String? userId = await getUserId();
+                                  print("Using userId for request: $userId");
+                                  String sessionId =
+                                      await UserSession.getSessionId();
 
-                                bool success = await _pickupService
-                                    .createPickup(pickupRequest);
-                                EasyLoading.dismiss();
-                                if (success) {
-                                  showSnackBar(
+                                  PickupRequest pickupRequest = PickupRequest(
+                                    fullName: _fullNameController.text,
+                                    phoneNumber: _phoneNumberController.text,
+                                    address: _addressController.text,
+                                    date: dateController.text,
+                                    time: timeController.text,
+                                    coordinates: {
+                                      'lat': selectedCoordinates!.latitude,
+                                      'lng': selectedCoordinates!.longitude,
+                                    },
+                                    userId: userId,
+                                    sessionId:
+                                        userId == null ? sessionId : null,
+                                  );
+
+                                  bool success = await _pickupService
+                                      .createPickup(pickupRequest);
+                                  EasyLoading.dismiss();
+                                  if (success) {
+                                    showSnackBar(
                                       message:
-                                          ' Pickup request created successfully',
+                                          'Pickup request created successfully',
                                       context: context,
-                                      color: AppColors.success);
-                                  Navigator.pushNamed(
-                                      context, '/pickupListRoute');
-                                } else {
-                                  showSnackBar(
+                                      color: AppColors.success,
+                                    );
+                                    Navigator.pushNamed(
+                                        context, '/pickupListRoute');
+                                  } else {
+                                    showSnackBar(
                                       message:
                                           'Failed to create pickup request',
                                       context: context,
-                                      color: AppColors.error);
+                                      color: AppColors.error,
+                                    );
+                                  }
+                                } catch (e) {
+                                  EasyLoading.dismiss();
+                                  print("Error occurred: $e");
                                 }
                               } else {
                                 showSnackBar(
-                                    message: 'Coordinates not selected',
-                                    context: context,
-                                    color: AppColors.error);
+                                  message: 'Coordinates not selected',
+                                  context: context,
+                                  color: AppColors.error,
+                                );
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: isDarkMode
-                                  ? AppColors.darkModeSurface
-                                  : AppColors.primaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
@@ -378,9 +399,6 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                               child: Text(
                                 'Submit',
                                 style: TextStyle(
-                                  color: isDarkMode
-                                      ? AppColors.whiteText
-                                      : AppColors.whiteText,
                                   fontSize: 16.0,
                                 ),
                               ),

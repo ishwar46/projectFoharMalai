@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foharmalai/config/constants/app_colors.dart';
+import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
+import '../../../app_localizations.dart';
 import '../data/pickup_service.dart';
 import '../model/PickupRequest.dart';
 
@@ -14,14 +20,23 @@ class _PickupListPageState extends State<PickupListPage> {
   @override
   void initState() {
     super.initState();
-    _futurePickups = _pickupService.getAllPickups();
+    _futurePickups = _loadPickupRequests();
+  }
+
+  Future<List<PickupRequest>> _loadPickupRequests() async {
+    String? userId = await getUserId();
+    return _pickupService.getPickupsByUserIdOrSessionId(userId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = HelperFunctions.isDarkMode(context);
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Requests'),
+        title: Text(localizations.translate('my_requests'),
+            style: GoogleFonts.roboto()),
       ),
       body: FutureBuilder<List<PickupRequest>>(
         future: _futurePickups,
@@ -29,76 +44,157 @@ class _PickupListPageState extends State<PickupListPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
+            return Center(
+                child: Text(
+                    '${localizations.translate('error')}: ${snapshot.error}'));
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return ListView.builder(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(20.0),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var pickup = snapshot.data![index];
                 return Card(
-                  elevation: 1,
-                  margin: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+                  color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 4.0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+                    borderRadius: BorderRadius.circular(5),
+                    side: BorderSide(
+                        color: Theme.of(context).primaryColor, width: 1),
                   ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(10.0),
-                    leading: Icon(
-                      Icons.person,
-                      size: 30,
-                      color: Colors.teal,
-                    ),
-                    title: Text(
-                      pickup.fullName,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal,
-                      ),
-                    ),
-                    subtitle: Column(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 5),
                         Text(
-                          pickup.address,
-                          style: TextStyle(fontSize: 14),
+                          pickup.fullName,
+                          style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Date: ${pickup.date} Time: ${pickup.time}',
-                          style:
-                              TextStyle(fontSize: 12, color: Colors.grey[700]),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(Iconsax.location,
+                                color: isDarkMode
+                                    ? Colors.white70
+                                    : Colors.black54),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                pickup.address,
+                                style: GoogleFonts.roboto(fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(Iconsax.calendar,
+                                color: isDarkMode
+                                    ? Colors.white70
+                                    : Colors.black54),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${localizations.translate('date')}: ',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: pickup.date,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          ' ${localizations.translate('time')}: ',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: pickup.time,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(Iconsax.call,
+                                color: isDarkMode
+                                    ? Colors.white70
+                                    : Colors.black54),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${localizations.translate('phone')}: ',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: pickup.phoneNumber,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.phone,
-                          size: 20,
-                          color: Colors.teal,
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          pickup.phoneNumber,
-                          style:
-                              TextStyle(fontSize: 12, color: Colors.grey[700]),
-                        ),
-                      ],
-                    ),
-                    isThreeLine: true,
                   ),
                 );
               },
             );
           } else {
-            return Center(child: Text('No pickups found'));
+            return Center(
+                child: Text(localizations.translate('no_pickups_found'),
+                    style: GoogleFonts.roboto()));
           }
         },
       ),
     );
   }
+}
+
+Future<String?> getUserId() async {
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  String? userId = await secureStorage.read(key: 'userId');
+  print("Retrieved userId from secure storage: $userId");
+  return userId;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foharmalai/features/settings/settings_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconsax/iconsax.dart';
@@ -29,12 +30,18 @@ class _HomePageNewState extends State<HomePageNew>
     ProfilePage(),
   ];
 
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   bool _isBackButtonDisabled = false;
   DateTime? _lastPressedAt;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<bool> _isUserLoggedIn() async {
+    final storedUsername = await secureStorage.read(key: "username");
+    return storedUsername != null;
   }
 
   @override
@@ -127,10 +134,17 @@ class _HomePageNewState extends State<HomePageNew>
                       ),
                     ],
                     selectedIndex: _currentIndex,
-                    onTabChange: (index) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
+                    onTabChange: (index) async {
+                      if (index != 0 && !await _isUserLoggedIn()) {
+                        showSnackBar(
+                            message: 'You must login to use this feature.',
+                            context: context,
+                            color: AppColors.error);
+                      } else {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      }
                     },
                   ),
                 ),

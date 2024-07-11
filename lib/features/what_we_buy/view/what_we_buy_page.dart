@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../config/constants/app_colors.dart';
@@ -7,12 +8,15 @@ class WhatWeBuyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = HelperFunctions.isDarkMode(context);
+    final localizations = AppLocalizations.of(context);
 
     return DefaultTabController(
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('What we buy'),
+          title: Text(
+            localizations.translate('what_we_buy'),
+          ),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(100.0),
             child: Container(
@@ -27,19 +31,19 @@ class WhatWeBuyPage extends StatelessWidget {
                 ),
                 tabs: [
                   Tab(
-                    text: 'Paper',
+                    text: localizations.translate('paper'),
                     icon: Icon(Icons.description),
                   ),
                   Tab(
-                    text: 'Metal & Steel',
+                    text: localizations.translate('metal&steel'),
                     icon: Icon(Icons.build),
                   ),
                   Tab(
-                    text: 'Glass & Plastic',
+                    text: localizations.translate('glass&plastic'),
                     icon: Icon(Icons.local_drink),
                   ),
                   Tab(
-                    text: 'E-waste',
+                    text: localizations.translate('ewaste'),
                     icon: Icon(Icons.memory),
                   ),
                 ],

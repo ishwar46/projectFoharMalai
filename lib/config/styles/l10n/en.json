@@ -84,8 +84,21 @@
     "transactionId": "Transaction ID",
     "goToDashboard": "Go to Dashboard",
     "reportDispute": "Report a Dispute",
+    "my_requests": "My Requests",
+    "error": "Error",
     "date": "Date",
-    "time": "Time"
+    "time": "Time",
+    "phone": "Phone",
+    "no_pickups_found": "No pickups found",
+    "error_fetching_requests": "Error Fetching Requests",
+    "retry": "Retry",
+    "no_special_req": "No special requests found for the user. Please request one.",
+    "view_req": "View Requests",
+    "paper": "Paper",
+    "metal&steel": "Metal & Steel",
+    "glass&plastic": "Glass & Plastic",
+    "ewaste": "E-waste"
+
 
 
 }

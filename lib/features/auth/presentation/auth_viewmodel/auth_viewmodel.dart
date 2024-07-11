@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../config/constants/app_colors.dart';
+import '../../../../config/router/app_routes.dart';
 import '../../../../core/common/widgets/custom_snackbar.dart';
 import '../../domain/use_case/login_usecase.dart';
 import '../state/state.dart';
@@ -41,10 +42,15 @@ class AuthViewModel extends StateNotifier<AuthState> {
             status: 'Please wait...',
             maskType: EasyLoadingMaskType.black,
           );
-          // Future.delayed(const Duration(seconds: 1), () {
-          //   Navigator.pushReplacementNamed(context, MyRoutes.homePageRoute);
-          //   EasyLoading.dismiss();
-          // });
+          Future.delayed(const Duration(seconds: 2), () {
+            EasyLoading.dismiss();
+            showSnackBar(
+              message: 'User logged in successfully',
+              context: context,
+              color: AppColors.success,
+            );
+            Navigator.pushReplacementNamed(context, MyRoutes.homePageRoute);
+          });
         } else {
           showSnackBar(
             message: 'Login failed. Please try again.',
