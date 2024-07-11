@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/common/widgets/no_request_found_widget.dart';
+import '../../../../core/common/widgets/shimmer_loading_widget.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../../data/special_req_serivce.dart';
 import '../../domain/special_request.dart';
@@ -117,7 +118,7 @@ class _SpecialRequestsViewPageState
                     },
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: ShimmerLoadingEffect()),
                 error: (error, _) => NoRequestFoundWidget(
                   onRetry: () {
                     ref.refresh(specialRequestsProvider);
@@ -153,97 +154,99 @@ class _SpecialRequestsViewPageState
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 60,
-            height: 165,
-            padding: EdgeInsets.symmetric(vertical: 14),
-            decoration: BoxDecoration(
-              color: isDarkMode ? AppColors.white : AppColors.secondaryColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5),
-                bottomLeft: Radius.circular(5),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Container(
+              width: 60,
+              padding: EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                color: isDarkMode ? AppColors.white : AppColors.secondaryColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                ),
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  day,
-                  style: GoogleFonts.roboto(
-                    color:
-                        isDarkMode ? AppColors.secondaryColor : AppColors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  month,
-                  style: GoogleFonts.roboto(
-                    color:
-                        isDarkMode ? AppColors.secondaryColor : AppColors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 5.0),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    request.category,
+                    day,
                     style: GoogleFonts.roboto(
-                      textStyle: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(
-                            color:
-                                isDarkMode ? AppColors.white : AppColors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      color: isDarkMode
+                          ? AppColors.secondaryColor
+                          : AppColors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  buildDetailRow(
-                      context,
-                      Iconsax.weight,
-                      localizations.translate('estimated_waste_or_pieces'),
-                      request.estimatedWaste,
-                      isDarkMode),
-                  const SizedBox(height: 4),
-                  buildDetailRow(
-                      context,
-                      Iconsax.clock,
-                      localizations.translate('preferred_time'),
-                      request.preferredTime,
-                      isDarkMode),
-                  const SizedBox(height: 4),
-                  buildDetailRow(
-                      context,
-                      Iconsax.calendar,
-                      localizations.translate('preferred_date'),
-                      request.preferredDate,
-                      isDarkMode),
-                  if (request.additionalInstructions.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    buildDetailRow(
-                        context,
-                        Iconsax.note,
-                        localizations.translate('additional_instructions'),
-                        request.additionalInstructions,
-                        isDarkMode),
-                  ],
+                  Text(
+                    month,
+                    style: GoogleFonts.roboto(
+                      color: isDarkMode
+                          ? AppColors.secondaryColor
+                          : AppColors.white,
+                      fontSize: 16,
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-        ],
+            SizedBox(width: 5.0),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      request.category,
+                      style: GoogleFonts.roboto(
+                        textStyle:
+                            Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  color: isDarkMode
+                                      ? AppColors.white
+                                      : AppColors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    buildDetailRow(
+                        context,
+                        Iconsax.weight,
+                        localizations.translate('estimated_waste_or_pieces'),
+                        request.estimatedWaste,
+                        isDarkMode),
+                    const SizedBox(height: 4),
+                    buildDetailRow(
+                        context,
+                        Iconsax.clock,
+                        localizations.translate('preferred_time'),
+                        request.preferredTime,
+                        isDarkMode),
+                    const SizedBox(height: 4),
+                    buildDetailRow(
+                        context,
+                        Iconsax.calendar,
+                        localizations.translate('preferred_date'),
+                        request.preferredDate,
+                        isDarkMode),
+                    if (request.additionalInstructions.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      buildDetailRow(
+                          context,
+                          Iconsax.note,
+                          localizations.translate('additional_instructions'),
+                          request.additionalInstructions,
+                          isDarkMode),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

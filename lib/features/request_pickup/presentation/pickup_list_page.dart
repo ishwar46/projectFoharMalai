@@ -4,6 +4,7 @@ import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import '../../../app_localizations.dart';
 import '../data/pickup_service.dart';
 import '../model/PickupRequest.dart';
@@ -53,132 +54,8 @@ class _PickupListPageState extends State<PickupListPage> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var pickup = snapshot.data![index];
-                return Card(
-                  color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 4.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    side: BorderSide(
-                        color: Theme.of(context).primaryColor, width: 1),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          pickup.fullName,
-                          style: GoogleFonts.roboto(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(Iconsax.location,
-                                color: isDarkMode
-                                    ? Colors.white70
-                                    : Colors.black54),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                pickup.address,
-                                style: GoogleFonts.roboto(fontSize: 14),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Icon(Iconsax.calendar,
-                                color: isDarkMode
-                                    ? Colors.white70
-                                    : Colors.black54),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          '${localizations.translate('date')}: ',
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: pickup.date,
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 12,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          ' ${localizations.translate('time')}: ',
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: pickup.time,
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 12,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Icon(Iconsax.call,
-                                color: isDarkMode
-                                    ? Colors.white70
-                                    : Colors.black54),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          '${localizations.translate('phone')}: ',
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: pickup.phoneNumber,
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 12,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+                return buildPickupCard(
+                    context, pickup, localizations, isDarkMode);
               },
             );
           } else {
@@ -188,6 +65,146 @@ class _PickupListPageState extends State<PickupListPage> {
           }
         },
       ),
+    );
+  }
+
+  Widget buildPickupCard(BuildContext context, PickupRequest pickup,
+      AppLocalizations localizations, bool isDarkMode) {
+    final pickupDate = DateTime.parse(pickup.date);
+    final day = pickupDate.day.toString();
+    final month = DateFormat('MMM').format(pickupDate);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Container(
+              width: 60,
+              decoration: BoxDecoration(
+                color: isDarkMode ? AppColors.white : AppColors.secondaryColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                ),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        day,
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        month,
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      pickup.fullName,
+                      style: GoogleFonts.roboto(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    buildIconText(
+                        Iconsax.location,
+                        '${localizations.translate('address')}: ${pickup.address}',
+                        isDarkMode),
+                    const SizedBox(height: 4),
+                    buildIconText(
+                        Iconsax.clock,
+                        '${localizations.translate('time')}: ${pickup.time}',
+                        isDarkMode),
+                    const SizedBox(height: 4),
+                    buildIconText(
+                        Iconsax.calendar,
+                        '${localizations.translate('date')}: ${pickup.date}',
+                        isDarkMode),
+                    const SizedBox(height: 4),
+                    buildIconText(
+                        Iconsax.call,
+                        '${localizations.translate('phone')}: ${pickup.phoneNumber}',
+                        isDarkMode),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildIconText(IconData icon, String text, bool isDarkMode) {
+    List<String> parts = text.split(
+        ': '); // Split the text by the colon to separate the key and value
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment
+          .start, // Align items at the start in case text wraps
+      children: [
+        Icon(icon, color: isDarkMode ? Colors.white70 : Colors.black54),
+        const SizedBox(width: 8),
+        Expanded(
+          // Use Expanded to allow text to fill the row
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '${parts[0]}: ', // Key part
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+                TextSpan(
+                  text: parts.length > 1 ? parts[1] : '', // Value part
+                  style: GoogleFonts.roboto(
+                    fontSize: 14,
+                    color: isDarkMode ? Colors.white70 : Colors.black54,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
