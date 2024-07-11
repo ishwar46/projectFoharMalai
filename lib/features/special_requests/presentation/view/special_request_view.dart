@@ -83,7 +83,6 @@ class _SpecialRequestsViewPageState
           ),
           Expanded(
             child: RefreshIndicator(
-              backgroundColor: AppColors.whiteText,
               onRefresh: () async {
                 ref.refresh(specialRequestsProvider);
               },
@@ -141,7 +140,7 @@ class _SpecialRequestsViewPageState
     final month = DateFormat('MMM').format(preferredDate);
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
       decoration: BoxDecoration(
         color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
         borderRadius: BorderRadius.circular(5),
@@ -159,11 +158,9 @@ class _SpecialRequestsViewPageState
           Container(
             width: 60,
             height: 165,
-            padding: EdgeInsets.symmetric(vertical: 16),
+            padding: EdgeInsets.symmetric(vertical: 14),
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? AppColors.cardDarkMode
-                  : AppColors.secondaryColor,
+              color: isDarkMode ? AppColors.white : AppColors.secondaryColor,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(5),
                 bottomLeft: Radius.circular(5),
@@ -175,7 +172,8 @@ class _SpecialRequestsViewPageState
                 Text(
                   day,
                   style: GoogleFonts.roboto(
-                    color: AppColors.white,
+                    color:
+                        isDarkMode ? AppColors.secondaryColor : AppColors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -183,14 +181,15 @@ class _SpecialRequestsViewPageState
                 Text(
                   month,
                   style: GoogleFonts.roboto(
-                    color: AppColors.white,
+                    color:
+                        isDarkMode ? AppColors.secondaryColor : AppColors.white,
                     fontSize: 16,
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(width: 16),
+          SizedBox(width: 5.0),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),

@@ -151,7 +151,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.shadepink,
+                  color: isDarkMode ? AppColors.dark : AppColors.shadepink,
                   borderRadius: BorderRadius.circular(2),
                   border: Border.all(
                     color: isDarkMode ? AppColors.warning : AppColors.error,
@@ -239,22 +239,24 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
               ),
               SizedBox(height: AppSizes.spaceBtwItems),
               SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        AppColors.secondaryColor),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SpecialRequestsViewPage()),
-                    );
-                  },
-                  child: Text(localizations.translate('view_req')),
-                ),
-              ),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll(AppColors.secondaryColor),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SpecialRequestsViewPage()),
+                      );
+                    },
+                    child: Text(
+                      localizations.translate('view_req'),
+                      style: TextStyle(color: AppColors.white),
+                    ),
+                  )),
             ],
           ),
         ),

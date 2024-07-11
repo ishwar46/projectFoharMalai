@@ -201,10 +201,9 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    color: isDarkMode
-                        ? AppColors.darkModeSurface
-                        : AppColors.white,
-                    surfaceTintColor: AppColors.white,
+                    color: isDarkMode ? AppColors.dark : AppColors.white,
+                    surfaceTintColor:
+                        isDarkMode ? AppColors.dark : AppColors.white,
                     elevation: 4.0,
                     shadowColor: Colors.black.withOpacity(0.2),
                     child: Padding(
@@ -391,9 +390,6 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: isDarkMode
-                                  ? AppColors.darkModeSurface
-                                  : AppColors.primaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
@@ -403,9 +399,6 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                               child: Text(
                                 'Submit',
                                 style: TextStyle(
-                                  color: isDarkMode
-                                      ? AppColors.whiteText
-                                      : AppColors.whiteText,
                                   fontSize: 16.0,
                                 ),
                               ),
