@@ -35,6 +35,8 @@ class SpecialRequestService {
       if (response.statusCode == 200) {
         List<dynamic> jsonData = response.data['data'];
         return jsonData.map((data) => SpecialRequest.fromJson(data)).toList();
+      } else if (response.statusCode == 404) {
+        throw Exception('No special requests found for the user');
       } else {
         throw Exception(
             'Failed to fetch special requests: ${response.statusMessage}');

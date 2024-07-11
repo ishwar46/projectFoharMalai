@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/config/constants/app_sizes.dart';
-import 'package:iconsax/iconsax.dart'; // Make sure Iconsax is correctly imported
+import 'package:iconsax/iconsax.dart';
 import '../../../../config/constants/app_colors.dart';
 import '../../../../core/common/widgets/custom_snackbar.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
@@ -29,7 +29,32 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
   final _estimatedWasteController = TextEditingController();
   final _additionalInstructionsController = TextEditingController();
   String? _selectedCategory;
-  final List<String> _categories = ['Category 1', 'Category 2', 'Category 3'];
+  final List<String> _categories = [
+    'Paper Products',
+    'Plastics',
+    'Glass',
+    'Metals',
+    'Electronic Waste (E-Waste)',
+    'Textiles',
+    'Organic Waste (Compostable)',
+    'Batteries and Hazardous Waste',
+    'Wood',
+    'Mixed Waste'
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _clearControllers();
+  }
+
+  void _clearControllers() {
+    _timeController.clear();
+    _dateController.clear();
+    _estimatedWasteController.clear();
+    _additionalInstructionsController.clear();
+    _selectedCategory = null;
+  }
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
@@ -62,8 +87,8 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
 
     try {
       final specialRequest = SpecialRequest(
-        id: '', // This will be set by the server
-        user: '', // This will be set by the server
+        id: '',
+        user: '',
         category: _selectedCategory ?? 'Not specified',
         estimatedWaste: _estimatedWasteController.text,
         preferredTime: _timeController.text,
@@ -79,6 +104,11 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
           message: 'Special request created successfully',
           color: Colors.green,
         );
+        _clearControllers();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SpecialRequestsViewPage()),
+        );
       } else {
         showSnackBar(
           context: context,
@@ -93,6 +123,15 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
         color: AppColors.error,
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _timeController.dispose();
+    _dateController.dispose();
+    _estimatedWasteController.dispose();
+    _additionalInstructionsController.dispose();
+    super.dispose();
   }
 
   @override
@@ -202,6 +241,10 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        AppColors.secondaryColor),
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -209,7 +252,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                           builder: (context) => SpecialRequestsViewPage()),
                     );
                   },
-                  child: Text('View Requests'),
+                  child: Text(localizations.translate('view_req')),
                 ),
               ),
             ],

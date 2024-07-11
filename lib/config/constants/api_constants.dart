@@ -12,8 +12,8 @@ class ApiEndpoints {
 
   //Base URL:
 
-  // static const String baseUrl = "http://172.25.10.54:5500/api/";
-  static const String baseUrl = "http://192.168.10.68:5500/api/";
+  static const String baseUrl = "http://172.25.10.82:5500/api/";
+  // static const String baseUrl = "http://192.168.10.68:5500/api/";
 
   // Auth Routes
   static const String login = "v1/auth/user/login";

@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import '../../../../core/common/widgets/no_request_found_widget.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../../data/special_req_serivce.dart';
 import '../../domain/special_request.dart';
 
 final specialRequestsProvider =
     FutureProvider<List<SpecialRequest>>((ref) async {
-  final specialRequestService = ref.read(specialRequestServiceProvider);
+  final specialRequestService = ref.watch(specialRequestServiceProvider);
   return await specialRequestService.fetchSpecialRequests();
 });
 
@@ -25,7 +26,18 @@ class SpecialRequestsViewPage extends ConsumerStatefulWidget {
 class _SpecialRequestsViewPageState
     extends ConsumerState<SpecialRequestsViewPage> {
   String? _selectedCategory;
-  final List<String> categories = ['Category 1', 'Category 2', 'Category 3'];
+  final List<String> categories = [
+    'Paper Products',
+    'Plastics',
+    'Glass',
+    'Metals',
+    'Electronic Waste (E-Waste)',
+    'Textiles',
+    'Organic Waste (Compostable)',
+    'Batteries and Hazardous Waste',
+    'Wood',
+    'Mixed Waste'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +47,10 @@ class _SpecialRequestsViewPageState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(localizations.translate('special_requests')),
+        title: Text(
+          localizations.translate('special_requests'),
+          style: GoogleFonts.roboto(),
+        ),
       ),
       body: Column(
         children: [
@@ -45,7 +60,8 @@ class _SpecialRequestsViewPageState
               value: _selectedCategory,
               decoration: InputDecoration(
                 labelText: localizations.translate('select_category'),
-                prefixIcon: Icon(MdiIcons.filter),
+                labelStyle: GoogleFonts.roboto(),
+                prefixIcon: Icon(Iconsax.category),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -59,36 +75,53 @@ class _SpecialRequestsViewPageState
                   categories.map<DropdownMenuItem<String>>((String category) {
                 return DropdownMenuItem<String>(
                   value: category,
-                  child: Text(category),
+                  child: Text(category, style: GoogleFonts.roboto()),
                 );
               }).toList(),
             ),
           ),
           Expanded(
-            child: specialRequests.when(
-              data: (requests) {
-                List<SpecialRequest> filteredRequests = requests;
-                if (_selectedCategory != null) {
-                  filteredRequests = requests
-                      .where((request) => request.category == _selectedCategory)
-                      .toList();
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.all(20.0),
-                  itemCount: filteredRequests.length,
-                  itemBuilder: (context, index) {
-                    final request = filteredRequests[index];
-                    return buildRequestCard(
-                        context, request, localizations, isDarkMode);
-                  },
-                );
+            child: RefreshIndicator(
+              backgroundColor: AppColors.whiteText,
+              onRefresh: () async {
+                ref.refresh(specialRequestsProvider);
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => Center(
-                child: Text(
-                  localizations.translate('error_fetching_requests'),
-                  style: TextStyle(color: AppColors.error),
+              child: specialRequests.when(
+                data: (requests) {
+                  List<SpecialRequest> filteredRequests = requests;
+                  if (_selectedCategory != null) {
+                    filteredRequests = requests
+                        .where(
+                            (request) => request.category == _selectedCategory)
+                        .toList();
+                  }
+
+                  if (filteredRequests.isEmpty) {
+                    return Center(
+                      child: Text(
+                        localizations.translate('no_special_req'),
+                        style: GoogleFonts.roboto(color: AppColors.error),
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(20.0),
+                    itemCount: filteredRequests.length,
+                    itemBuilder: (context, index) {
+                      final request = filteredRequests[index];
+                      return buildRequestCard(
+                          context, request, localizations, isDarkMode);
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) => NoRequestFoundWidget(
+                  onRetry: () {
+                    ref.refresh(specialRequestsProvider);
+                  },
+                  noRequestText: localizations.translate('no_special_req'),
+                  lottieAnimationPath: 'assets/animations/not_found.json',
                 ),
               ),
             ),
@@ -114,16 +147,18 @@ class _SpecialRequestsViewPageState
           children: [
             Text(
               request.category,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: isDarkMode ? AppColors.white : AppColors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: GoogleFonts.roboto(
+                textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: isDarkMode ? AppColors.white : AppColors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
             ),
             const SizedBox(height: 8),
             buildDetailRow(
                 context,
                 Iconsax.weight,
-                localizations.translate('estimated_waste'),
+                localizations.translate('estimated_waste_or_pieces'),
                 request.estimatedWaste,
                 isDarkMode),
             const SizedBox(height: 4),
@@ -167,14 +202,18 @@ class _SpecialRequestsViewPageState
               children: [
                 TextSpan(
                   text: '$label: ',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: GoogleFonts.roboto(
+                    textStyle: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 TextSpan(
                   text: value,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: GoogleFonts.roboto(
+                    textStyle: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ],
             ),
