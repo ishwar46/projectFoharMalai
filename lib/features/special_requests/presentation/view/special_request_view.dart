@@ -4,6 +4,7 @@ import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/common/widgets/no_request_found_widget.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../../data/special_req_serivce.dart';
@@ -135,59 +136,115 @@ class _SpecialRequestsViewPageState
 
   Widget buildRequestCard(BuildContext context, SpecialRequest request,
       AppLocalizations localizations, bool isDarkMode) {
-    return Card(
-      color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
+    final preferredDate = DateTime.parse(request.preferredDate);
+    final day = preferredDate.day.toString();
+    final month = DateFormat('MMM').format(preferredDate);
+
+    return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-      shape: RoundedRectangleBorder(
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
         borderRadius: BorderRadius.circular(5),
-        side: BorderSide(color: Theme.of(context).primaryColor, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              request.category,
-              style: GoogleFonts.roboto(
-                textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: isDarkMode ? AppColors.white : AppColors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+      child: Row(
+        children: [
+          Container(
+            width: 60,
+            height: 165,
+            padding: EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: isDarkMode
+                  ? AppColors.cardDarkMode
+                  : AppColors.secondaryColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(5),
+                bottomLeft: Radius.circular(5),
               ),
             ),
-            const SizedBox(height: 8),
-            buildDetailRow(
-                context,
-                Iconsax.weight,
-                localizations.translate('estimated_waste_or_pieces'),
-                request.estimatedWaste,
-                isDarkMode),
-            const SizedBox(height: 4),
-            buildDetailRow(
-                context,
-                Iconsax.clock,
-                localizations.translate('preferred_time'),
-                request.preferredTime,
-                isDarkMode),
-            const SizedBox(height: 4),
-            buildDetailRow(
-                context,
-                Iconsax.calendar,
-                localizations.translate('preferred_date'),
-                request.preferredDate,
-                isDarkMode),
-            if (request.additionalInstructions.isNotEmpty) ...[
-              const SizedBox(height: 4),
-              buildDetailRow(
-                  context,
-                  Iconsax.note,
-                  localizations.translate('additional_instructions'),
-                  request.additionalInstructions,
-                  isDarkMode),
-            ],
-          ],
-        ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  day,
+                  style: GoogleFonts.roboto(
+                    color: AppColors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  month,
+                  style: GoogleFonts.roboto(
+                    color: AppColors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    request.category,
+                    style: GoogleFonts.roboto(
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(
+                            color:
+                                isDarkMode ? AppColors.white : AppColors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  buildDetailRow(
+                      context,
+                      Iconsax.weight,
+                      localizations.translate('estimated_waste_or_pieces'),
+                      request.estimatedWaste,
+                      isDarkMode),
+                  const SizedBox(height: 4),
+                  buildDetailRow(
+                      context,
+                      Iconsax.clock,
+                      localizations.translate('preferred_time'),
+                      request.preferredTime,
+                      isDarkMode),
+                  const SizedBox(height: 4),
+                  buildDetailRow(
+                      context,
+                      Iconsax.calendar,
+                      localizations.translate('preferred_date'),
+                      request.preferredDate,
+                      isDarkMode),
+                  if (request.additionalInstructions.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    buildDetailRow(
+                        context,
+                        Iconsax.note,
+                        localizations.translate('additional_instructions'),
+                        request.additionalInstructions,
+                        isDarkMode),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
