@@ -93,7 +93,11 @@
     "error_fetching_requests": "Error Fetching Requests",
     "retry": "Retry",
     "no_special_req": "No special requests found for the user. Please requst one.",
-    "view_req": "View Requests"
+    "view_req": "View Requests",
+    "paper": "Paper",
+    "metal&steel": "Metal & Steel",
+    "glass&plastic": "Glass & Plastic",
+    "ewaste": "E-waste"
 
 
 
