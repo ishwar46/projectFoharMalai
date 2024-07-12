@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
+import 'package:foharmalai/core/common/widgets/shimmer_loading_widget.dart';
 import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
@@ -16,7 +17,10 @@ class PickupListPage extends StatefulWidget {
 
 class _PickupListPageState extends State<PickupListPage> {
   final PickupService _pickupService = PickupService();
+  final TextEditingController _searchController = TextEditingController();
   late Future<List<PickupRequest>> _futurePickups;
+  List<PickupRequest> _pickupRequests = [];
+  List<PickupRequest> _filteredRequests = [];
 
   @override
   void initState() {
@@ -26,7 +30,31 @@ class _PickupListPageState extends State<PickupListPage> {
 
   Future<List<PickupRequest>> _loadPickupRequests() async {
     String? userId = await getUserId();
-    return _pickupService.getPickupsByUserIdOrSessionId(userId);
+    List<PickupRequest> pickups =
+        await _pickupService.getPickupsByUserIdOrSessionId(userId);
+    setState(() {
+      _pickupRequests = pickups;
+      _filteredRequests = pickups;
+    });
+    return pickups;
+  }
+
+  void _filterRequests(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        _filteredRequests = _pickupRequests;
+      });
+    } else {
+      setState(() {
+        _filteredRequests = _pickupRequests
+            .where((pickup) =>
+                pickup.fullName.toLowerCase().contains(query.toLowerCase()) ||
+                pickup.address.toLowerCase().contains(query.toLowerCase()) ||
+                pickup.date.toLowerCase().contains(query.toLowerCase()) ||
+                pickup.time.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      });
+    }
   }
 
   @override
@@ -39,31 +67,52 @@ class _PickupListPageState extends State<PickupListPage> {
         title: Text(localizations.translate('my_requests'),
             style: GoogleFonts.roboto()),
       ),
-      body: FutureBuilder<List<PickupRequest>>(
-        future: _futurePickups,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-                child: Text(
-                    '${localizations.translate('error')}: ${snapshot.error}'));
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ListView.builder(
-              padding: const EdgeInsets.all(20.0),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                var pickup = snapshot.data![index];
-                return buildPickupCard(
-                    context, pickup, localizations, isDarkMode);
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: localizations.translate('search_by_name'),
+                labelStyle: GoogleFonts.roboto(),
+                prefixIcon: Icon(Iconsax.search_normal),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: _filterRequests,
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<PickupRequest>>(
+              future: _futurePickups,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: ShimmerLoadingEffect());
+                } else if (snapshot.hasError) {
+                  return Center(
+                      child: Text(
+                          '${localizations.translate('error')}: ${snapshot.error}'));
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(20.0),
+                    itemCount: _filteredRequests.length,
+                    itemBuilder: (context, index) {
+                      var pickup = _filteredRequests[index];
+                      return buildPickupCard(
+                          context, pickup, localizations, isDarkMode);
+                    },
+                  );
+                } else {
+                  return Center(
+                      child: Text(localizations.translate('no_pickups_found'),
+                          style: GoogleFonts.roboto()));
+                }
               },
-            );
-          } else {
-            return Center(
-                child: Text(localizations.translate('no_pickups_found'),
-                    style: GoogleFonts.roboto()));
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -75,7 +124,7 @@ class _PickupListPageState extends State<PickupListPage> {
     final month = DateFormat('MMM').format(pickupDate);
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
       decoration: BoxDecoration(
         color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
         borderRadius: BorderRadius.circular(5),
@@ -183,7 +232,7 @@ class _PickupListPageState extends State<PickupListPage> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: '${parts[0]}: ', // Key part
+                  text: '${parts[0]}: ',
                   style: GoogleFonts.roboto(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -191,7 +240,7 @@ class _PickupListPageState extends State<PickupListPage> {
                   ),
                 ),
                 TextSpan(
-                  text: parts.length > 1 ? parts[1] : '', // Value part
+                  text: parts.length > 1 ? parts[1] : '',
                   style: GoogleFonts.roboto(
                     fontSize: 14,
                     color: isDarkMode ? Colors.white70 : Colors.black54,
