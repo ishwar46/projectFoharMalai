@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
@@ -6,7 +7,6 @@ import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-
 import '../../../../../app_localizations.dart';
 import '../../../../../core/common/widgets/user_profile_shimmer.dart';
 import '../../../model/user_model.dart';
@@ -295,10 +295,17 @@ class _ProfilePageState extends State<ProfilePage> {
             CircleAvatar(
               backgroundColor: AppColors.white,
               radius: 30,
-              backgroundImage: user.image != null
-                  ? NetworkImage(user.image!)
-                  : AssetImage('assets/images/foharmalailogo.png')
-                      as ImageProvider,
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: user.image ?? '',
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) =>
+                      Image.asset('assets/images/foharmalailogo.png'),
+                  fit: BoxFit.cover,
+                  width: 60,
+                  height: 60,
+                ),
+              ),
             ),
             SizedBox(width: 16.0),
             Column(
