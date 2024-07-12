@@ -1,18 +1,83 @@
+import 'package:flutter/material.dart';
+import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:foharmalai/config/constants/app_colors.dart';
 
-import '../../../../../core/utils/size_config.dart';
+import '../../../../../core/common/widgets/user_profile_shimmer.dart';
+import '../../../model/user_model.dart';
+import '../../../service/user_service.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  late Future<User> userFuture;
+  bool isEditing = false;
+
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController fullNameController;
+  late TextEditingController emailController;
+  late TextEditingController usernameController;
+  late TextEditingController addressController;
+  late TextEditingController mobileNoController;
+
+  @override
+  void initState() {
+    super.initState();
+    userFuture = UserService().getUserProfile();
+  }
+
+  void enableEditing(User user) {
+    setState(() {
+      isEditing = true;
+      fullNameController = TextEditingController(text: user.fullName);
+      emailController = TextEditingController(text: user.email);
+      usernameController = TextEditingController(text: user.username);
+      addressController = TextEditingController(text: user.address ?? '');
+      mobileNoController = TextEditingController(text: user.mobileNo ?? '');
+    });
+  }
+
+  void saveChanges() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        User updatedUser = User(
+          id: '',
+          fullName: fullNameController.text,
+          email: emailController.text,
+          username: usernameController.text,
+          address: addressController.text,
+          mobileNo: mobileNoController.text,
+          isAdmin: false,
+        );
+        bool success = await UserService().updateUserProfile(updatedUser);
+        if (success) {
+          setState(() {
+            isEditing = false;
+            userFuture = UserService().getUserProfile();
+          });
+          showSnackBar(
+              message: 'Profile updated successfully', context: context);
+        } else {
+          showSnackBar(
+              message: 'Failed to update profile',
+              context: context,
+              color: AppColors.error);
+        }
+      } catch (e) {
+        showSnackBar(
+            message: ('Error: $e'), context: context, color: AppColors.error);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final sizeConfig = SizeConfig();
-    sizeConfig.init(context);
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -21,133 +86,214 @@ class ProfilePage extends StatelessWidget {
           style: GoogleFonts.roboto(),
         ),
         elevation: 0,
+        actions: [
+          if (!isEditing)
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () async {
+                User user = await userFuture;
+                enableEditing(user);
+              },
+            ),
+        ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 4),
-              margin: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 4),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(
-                    sizeConfig.safeBlockHorizontal * 1.25),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: sizeConfig.safeBlockHorizontal * 2.5,
-                    offset: Offset(0, sizeConfig.safeBlockVertical * 1.25),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: AppColors.white,
-                        radius: sizeConfig.safeBlockHorizontal * 7.5,
-                        backgroundImage:
-                            AssetImage('assets/images/foharmalailogo.png'),
-                      ),
-                      SizedBox(width: sizeConfig.safeBlockHorizontal * 2.5),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Roj Maharjan',
-                            style: GoogleFonts.roboto(
-                                color: Colors.white,
-                                fontSize: sizeConfig.safeBlockHorizontal * 3.5,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            '@panduhomoh',
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+      body: FutureBuilder<User>(
+        future: userFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: UserProfileShimmer());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else if (!snapshot.hasData) {
+            return Center(child: Text("No data found"));
+          }
+
+          User user = snapshot.data!;
+
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16.0),
+                  margin: EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
                       ),
                     ],
                   ),
-                  SizedBox(height: sizeConfig.safeBlockVertical * 2),
-                  buildInfoSection(
-                    icon: Icons.person,
-                    title: 'Personal Information',
-                    data: {
-                      'Given Name': 'Roj',
-                      'Middle Name': 'N/A',
-                      'Last Name': 'Maharjan',
-                      'Preferred Name': 'Pandu',
-                    },
-                    sizeConfig: sizeConfig,
+                  child:
+                      isEditing ? buildEditForm(user) : buildProfileInfo(user),
+                ),
+                SizedBox(height: 16.0),
+                Container(
+                  padding: EdgeInsets.all(16.0),
+                  margin: EdgeInsets.symmetric(horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 5,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: sizeConfig.safeBlockVertical * 2),
-                  buildInfoSection(
-                    icon: Icons.contact_phone,
-                    title: 'Contact Information',
-                    data: {
-                      'Address': 'Kirtipur, Kathmandu',
-                      'Mobile Number': '9812123131',
-                      'Alternative Number': 'N/A',
-                      'Email': 'N/A',
-                    },
-                    sizeConfig: sizeConfig,
+                  child: Row(
+                    children: [
+                      Icon(Icons.verified, color: Colors.green),
+                      SizedBox(width: 10.0),
+                      Expanded(
+                        child: Text(
+                          'Get Your Recycling Hero Certificate',
+                          style: GoogleFonts.roboto(color: Colors.black),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          generateAndSaveCertificate(user.fullName);
+                        },
+                        child: Text(
+                          'Click Here',
+                          style: GoogleFonts.roboto(color: Colors.blue),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                Image.asset(
+                  height: 200,
+                  'assets/images/bgimagefohar.png',
+                ),
+              ],
             ),
-            SizedBox(height: sizeConfig.safeBlockVertical),
-            Container(
-              padding: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 2),
-              margin: EdgeInsets.symmetric(
-                  horizontal: sizeConfig.safeBlockHorizontal * 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(
-                    sizeConfig.safeBlockHorizontal * 1.25),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: sizeConfig.safeBlockHorizontal * 1.25,
-                    offset: Offset(0, sizeConfig.safeBlockVertical * 1.25),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.verified, color: Colors.green),
-                  SizedBox(width: sizeConfig.safeBlockHorizontal * 2.5),
-                  Expanded(
-                    child: Text(
-                      'Get Your Recycling Hero Certificate',
-                      style: GoogleFonts.roboto(color: Colors.black),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      generateAndSaveCertificate();
-                    },
-                    child: Text(
-                      'Click Here',
-                      style: GoogleFonts.roboto(color: Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Image.asset(
-              height: sizeConfig.safeBlockVertical * 25,
-              'assets/images/bgimagefohar.png',
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Future<void> generateAndSaveCertificate() async {
+  Widget buildEditForm(User user) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          buildTextField('Full Name', fullNameController),
+          buildTextField('Email', emailController),
+          buildTextField('Username', usernameController),
+          buildTextField('Address', addressController),
+          buildTextField('Mobile No', mobileNoController),
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    isEditing = false;
+                  });
+                },
+                child: Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: saveChanges,
+                child: Text('Save'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTextField(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter $label';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget buildProfileInfo(User user) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: AppColors.white,
+              radius: 30,
+              backgroundImage: user.image != null
+                  ? NetworkImage(user.image!)
+                  : AssetImage('assets/images/foharmalailogo.png')
+                      as ImageProvider,
+            ),
+            SizedBox(width: 16.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.fullName,
+                  style: GoogleFonts.roboto(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '@${user.username}',
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(height: 16.0),
+        buildInfoSection(
+          icon: Icons.person,
+          title: 'Personal Information',
+          data: {
+            'Given Name': user.fullName.split(' ')[0],
+            'Middle Name': user.fullName.split(' ').length > 2
+                ? user.fullName.split(' ')[1]
+                : 'N/A',
+            'Last Name': user.fullName.split(' ').last,
+            'Preferred Name': user.username,
+          },
+        ),
+        SizedBox(height: 16.0),
+        buildInfoSection(
+          icon: Icons.contact_phone,
+          title: 'Contact Information',
+          data: {
+            'Address': user.address ?? 'N/A',
+            'Mobile Number': user.mobileNo ?? 'N/A',
+            'Alternative Number': 'N/A',
+            'Email': user.email,
+          },
+        ),
+      ],
+    );
+  }
+
+  Future<void> generateAndSaveCertificate(String fullName) async {
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -168,7 +314,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 pw.SizedBox(height: 10),
                 pw.Text(
-                  'Roj Maharjan',
+                  fullName,
                   style: pw.TextStyle(
                       fontSize: 22, fontWeight: pw.FontWeight.bold),
                 ),
@@ -197,37 +343,36 @@ class ProfilePage extends StatelessWidget {
     print("Certificate saved at ${file.path}");
   }
 
-  Widget buildInfoSection(
-      {required IconData icon,
-      required String title,
-      required Map<String, String> data,
-      required SizeConfig sizeConfig}) {
+  Widget buildInfoSection({
+    required IconData icon,
+    required String title,
+    required Map<String, String> data,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             Icon(icon, color: Colors.white),
-            SizedBox(width: sizeConfig.safeBlockHorizontal * 2.5),
+            SizedBox(width: 10),
             Text(
               title,
               style: GoogleFonts.roboto(
                 color: Colors.white,
-                fontSize: sizeConfig.safeBlockHorizontal * 3.5,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
-        SizedBox(height: sizeConfig.safeBlockVertical * 2),
+        SizedBox(height: 16.0),
         Container(
-          padding: EdgeInsets.all(sizeConfig.safeBlockHorizontal * 2),
+          padding: EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: data.entries
                 .map((entry) => Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: sizeConfig.safeBlockVertical * 1),
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -235,14 +380,14 @@ class ProfilePage extends StatelessWidget {
                             entry.key,
                             style: GoogleFonts.roboto(
                               color: AppColors.whiteText,
-                              fontSize: sizeConfig.safeBlockHorizontal * 3,
+                              fontSize: 14,
                             ),
                           ),
                           Text(
                             entry.value,
                             style: GoogleFonts.roboto(
                                 color: AppColors.whiteText,
-                                fontSize: sizeConfig.safeBlockHorizontal * 3,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
                         ],

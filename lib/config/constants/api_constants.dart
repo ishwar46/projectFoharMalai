@@ -27,4 +27,10 @@ class ApiEndpoints {
       "${baseUrl}v1/special-requests/create-special-req";
   static const String getSpecialRequests =
       "${baseUrl}v1/special-requests/get-special-req";
+
+  // User Routes
+  static const String userProfile = "${baseUrl}v1/user/profile";
+  static const String updateUserProfile = "${baseUrl}v1/user/profile";
+  static const String deleteUser = "${baseUrl}v1/user";
+  static const String getAllUsers = "${baseUrl}v1/user";
 }
