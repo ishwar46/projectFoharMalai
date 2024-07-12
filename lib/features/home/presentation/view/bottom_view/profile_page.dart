@@ -1,11 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
+import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-
+import '../../../../../app_localizations.dart';
 import '../../../../../core/common/widgets/user_profile_shimmer.dart';
 import '../../../model/user_model.dart';
 import '../../../service/user_service.dart';
@@ -62,27 +64,33 @@ class _ProfilePageState extends State<ProfilePage> {
             userFuture = UserService().getUserProfile();
           });
           showSnackBar(
-              message: 'Profile updated successfully', context: context);
+              message: AppLocalizations.of(context)
+                  .translate('profile_updated_successfully'),
+              context: context);
         } else {
           showSnackBar(
-              message: 'Failed to update profile',
+              message: AppLocalizations.of(context)
+                  .translate('failed_to_update_profile'),
               context: context,
               color: AppColors.error);
         }
       } catch (e) {
         showSnackBar(
-            message: ('Error: $e'), context: context, color: AppColors.error);
+            message: '${AppLocalizations.of(context).translate('error')}: $e',
+            context: context,
+            color: AppColors.error);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = HelperFunctions.isDarkMode(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "My Profile",
+          AppLocalizations.of(context).translate('my_profile'),
           style: GoogleFonts.roboto(),
         ),
         elevation: 0,
@@ -103,9 +111,13 @@ class _ProfilePageState extends State<ProfilePage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: UserProfileShimmer());
           } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
+            return Center(
+                child: Text(
+                    "${AppLocalizations.of(context).translate('error')}: ${snapshot.error}"));
           } else if (!snapshot.hasData) {
-            return Center(child: Text("No data found"));
+            return Center(
+                child: Text(
+                    AppLocalizations.of(context).translate('no_data_found')));
           }
 
           User user = snapshot.data!;
@@ -117,7 +129,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: EdgeInsets.all(16.0),
                   margin: EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
+                    color: isDark
+                        ? AppColors.darkModeOnPrimary
+                        : AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: [
                       BoxShadow(
@@ -135,7 +149,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: EdgeInsets.all(16.0),
                   margin: EdgeInsets.symmetric(horizontal: 16.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color:
+                        isDark ? AppColors.darkModeOnPrimary : AppColors.white,
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: [
                       BoxShadow(
@@ -151,8 +166,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(width: 10.0),
                       Expanded(
                         child: Text(
-                          'Get Your Recycling Hero Certificate',
-                          style: GoogleFonts.roboto(color: Colors.black),
+                          AppLocalizations.of(context)
+                              .translate('get_recycling_hero_certificate'),
+                          style: GoogleFonts.roboto(
+                            color: isDark ? AppColors.white : AppColors.dark,
+                          ),
                         ),
                       ),
                       TextButton(
@@ -160,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           generateAndSaveCertificate(user.fullName);
                         },
                         child: Text(
-                          'Click Here',
+                          AppLocalizations.of(context).translate('click_here'),
                           style: GoogleFonts.roboto(color: Colors.blue),
                         ),
                       ),
@@ -184,26 +202,52 @@ class _ProfilePageState extends State<ProfilePage> {
       key: _formKey,
       child: Column(
         children: [
-          buildTextField('Full Name', fullNameController),
-          buildTextField('Email', emailController),
-          buildTextField('Username', usernameController),
-          buildTextField('Address', addressController),
-          buildTextField('Mobile No', mobileNoController),
+          buildTextField(AppLocalizations.of(context).translate('full_name'),
+              fullNameController),
+          buildTextField(
+              AppLocalizations.of(context).translate('email'), emailController),
+          buildTextField(AppLocalizations.of(context).translate('username'),
+              usernameController),
+          buildTextField(AppLocalizations.of(context).translate('address'),
+              addressController),
+          buildTextField(AppLocalizations.of(context).translate('mobile_no'),
+              mobileNoController),
           SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isEditing = false;
-                  });
-                },
-                child: Text('Cancel'),
+              Expanded(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isEditing = false;
+                    });
+                  },
+                  child: Text(
+                    AppLocalizations.of(context).translate('cancel'),
+                    style: TextStyle(
+                        color:
+                            Colors.white), // Set the button text color to white
+                  ),
+                ),
               ),
-              ElevatedButton(
-                onPressed: saveChanges,
-                child: Text('Save'),
+              SizedBox(width: 10),
+              Expanded(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                  ),
+                  onPressed: saveChanges,
+                  child: Text(
+                    AppLocalizations.of(context).translate('save'),
+                    style: TextStyle(
+                        color:
+                            Colors.white), // Set the button text color to white
+                  ),
+                ),
               ),
             ],
           ),
@@ -217,13 +261,25 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         controller: controller,
+        style: TextStyle(color: Colors.white),
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(),
+          labelStyle: TextStyle(color: Colors.white),
+          floatingLabelStyle: TextStyle(color: Colors.white),
+          hintStyle: TextStyle(color: Colors.white),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+          ),
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter $label';
+            return '${AppLocalizations.of(context).translate('please_enter')} $label';
           }
           return null;
         },
@@ -239,10 +295,17 @@ class _ProfilePageState extends State<ProfilePage> {
             CircleAvatar(
               backgroundColor: AppColors.white,
               radius: 30,
-              backgroundImage: user.image != null
-                  ? NetworkImage(user.image!)
-                  : AssetImage('assets/images/foharmalailogo.png')
-                      as ImageProvider,
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: user.image ?? '',
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) =>
+                      Image.asset('assets/images/foharmalailogo.png'),
+                  fit: BoxFit.cover,
+                  width: 60,
+                  height: 60,
+                ),
+              ),
             ),
             SizedBox(width: 16.0),
             Column(
@@ -268,25 +331,31 @@ class _ProfilePageState extends State<ProfilePage> {
         SizedBox(height: 16.0),
         buildInfoSection(
           icon: Icons.person,
-          title: 'Personal Information',
+          title: AppLocalizations.of(context).translate('personal_information'),
           data: {
-            'Given Name': user.fullName.split(' ')[0],
-            'Middle Name': user.fullName.split(' ').length > 2
-                ? user.fullName.split(' ')[1]
-                : 'N/A',
-            'Last Name': user.fullName.split(' ').last,
-            'Preferred Name': user.username,
+            AppLocalizations.of(context).translate('given_name'):
+                user.fullName.split(' ')[0],
+            AppLocalizations.of(context).translate('middle_name'):
+                user.fullName.split(' ').length > 2
+                    ? user.fullName.split(' ')[1]
+                    : 'N/A',
+            AppLocalizations.of(context).translate('last_name'):
+                user.fullName.split(' ').last,
+            AppLocalizations.of(context).translate('preferred_name'):
+                user.username,
           },
         ),
         SizedBox(height: 16.0),
         buildInfoSection(
           icon: Icons.contact_phone,
-          title: 'Contact Information',
+          title: AppLocalizations.of(context).translate('contact_information'),
           data: {
-            'Address': user.address ?? 'N/A',
-            'Mobile Number': user.mobileNo ?? 'N/A',
-            'Alternative Number': 'N/A',
-            'Email': user.email,
+            AppLocalizations.of(context).translate('address'):
+                user.address ?? 'N/A',
+            AppLocalizations.of(context).translate('mobile_number'):
+                user.mobileNo ?? 'N/A',
+            AppLocalizations.of(context).translate('alternative_number'): 'N/A',
+            AppLocalizations.of(context).translate('email'): user.email,
           },
         ),
       ],

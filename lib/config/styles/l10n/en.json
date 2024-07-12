@@ -98,8 +98,25 @@
     "metal&steel": "Metal & Steel",
     "glass&plastic": "Glass & Plastic",
     "ewaste": "E-waste",
-    "search_by_name": "Search by name, address, time, date, phone."
-
-
+    "search_by_name": "Search by name, address, time, date, phone.",
+    "my_profile": "My Profile",
+    "profile_updated_successfully": "Profile updated successfully",
+    "failed_to_update_profile": "Failed to update profile",
+    "no_data_found": "No data found",
+    "get_recycling_hero_certificate": "Get Your Recycling Hero Certificate",
+    "click_here": "Click Here",
+    "full_name": "Full Name",
+    "mobile_no": "Mobile No",
+    "please_enter": "Please enter",
+    "cancel": "Cancel",
+    "save": "Save",
+    "personal_information": "Personal Information",
+    "given_name": "Given Name",
+    "middle_name": "Middle Name",
+    "last_name": "Last Name",
+    "preferred_name": "Preferred Name",
+    "contact_information": "Contact Information",
+    "mobile_number": "Mobile Number",
+    "alternative_number": "Alternative Number"
 
 }

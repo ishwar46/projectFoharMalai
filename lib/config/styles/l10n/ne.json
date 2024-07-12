@@ -98,7 +98,26 @@
     "metal&steel": "धातु र स्टील",
     "glass&plastic": "काँच र प्लास्टिक",
     "ewaste": "इ-फोहोर",
-    "search_by_name": "नाम, ठेगाना, समय, मिति, फोन अनुसार खोज्नुहोस्"
+    "search_by_name": "नाम, ठेगाना, समय, मिति, फोन अनुसार खोज्नुहोस्",
+    "my_profile": "मेरो प्रोफाइल",
+    "profile_updated_successfully": "प्रोफाइल सफलतापूर्वक अपडेट भयो",
+    "failed_to_update_profile": "प्रोफाइल अपडेट गर्न असफल",
+    "no_data_found": "कुनै डाटा फेला परेन",
+    "get_recycling_hero_certificate": "आफ्नो रीसाइक्लिंग हीरो प्रमाणपत्र प्राप्त गर्नुहोस्",
+    "click_here": "यहाँ क्लिक गर्नुहोस्",
+    "full_name": "पुरा नाम",
+    "mobile_no": "मोबाइल नम्बर",
+    "please_enter": "कृपया प्रवेश गर्नुहोस्",
+    "cancel": "रद्द गर्नुहोस्",
+    "save": "सवे गर्नुहोस्",
+    "personal_information": "व्यक्तिगत जानकारी",
+    "given_name": "प्रदान गरिएको नाम",
+    "middle_name": "बीचको नाम",
+    "last_name": "थर",
+    "preferred_name": "रुचाइएको नाम",
+    "contact_information": "सम्पर्क जानकारी",
+    "mobile_number": "मोबाइल नम्बर",
+    "alternative_number": "वैकल्पिक नम्बर"
 
 
 
