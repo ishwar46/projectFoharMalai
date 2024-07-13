@@ -7,6 +7,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../config/constants/app_colors.dart';
 import '../../../../core/common/widgets/custom_snackbar.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
+import '../../../../core/utils/validators/validators.dart';
 import '../../data/special_req_serivce.dart';
 import '../../domain/special_request.dart';
 import 'special_request_view.dart';
@@ -28,6 +29,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
   final _dateController = TextEditingController();
   final _estimatedWasteController = TextEditingController();
   final _additionalInstructionsController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   String? _selectedCategory;
   final List<String> _categories = [
     'Paper Products',
@@ -83,6 +85,10 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
   }
 
   void _submitSpecialRequest(WidgetRef ref) async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     final specialRequestService = ref.read(specialRequestServiceProvider);
 
     try {
@@ -146,99 +152,116 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: isDarkMode ? AppColors.dark : AppColors.shadepink,
-                  borderRadius: BorderRadius.circular(2),
-                  border: Border.all(
-                    color: isDarkMode ? AppColors.warning : AppColors.error,
-                    width: 1,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: isDarkMode ? AppColors.dark : AppColors.shadepink,
+                    borderRadius: BorderRadius.circular(2),
+                    border: Border.all(
+                      color: isDarkMode ? AppColors.warning : AppColors.error,
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(localizations.translate('special_requests_desc')),
+                ),
+                const SizedBox(height: AppSizes.spaceBtwSections),
+                DropdownButtonFormField<String>(
+                  value: _selectedCategory,
+                  decoration: InputDecoration(
+                    labelText: localizations.translate('select_category'),
+                    prefixIcon: Icon(Iconsax.category),
+                  ),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedCategory = newValue;
+                    });
+                  },
+                  items:
+                      _categories.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a category';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: AppSizes.spaceBtwnInputFields),
+                // Estimated Waste or Pieces
+                TextFormField(
+                  controller: _estimatedWasteController,
+                  decoration: InputDecoration(
+                    labelText:
+                        localizations.translate('estimated_waste_or_pieces'),
+                    prefixIcon: Icon(Iconsax.barcode),
+                    hintText: localizations
+                        .translate('estimated_waste_or_pieces_hint'),
+                  ),
+                  validator: (value) =>
+                      AppValidator.validateField(value, 'Estimated Waste'),
+                ),
+                const SizedBox(height: AppSizes.spaceBtwnInputFields),
+                // Preferred Time
+                TextFormField(
+                  controller: _timeController,
+                  decoration: InputDecoration(
+                    labelText: localizations.translate('preferred_time'),
+                    prefixIcon: Icon(Iconsax.clock),
+                    hintText: localizations.translate('preferred_time_hint'),
+                  ),
+                  readOnly: true,
+                  onTap: () => _selectTime(context),
+                  validator: (value) =>
+                      AppValidator.validateField(value, 'Preferred Time'),
+                ),
+                const SizedBox(height: AppSizes.spaceBtwnInputFields),
+                // Preferred Date
+                TextFormField(
+                  controller: _dateController,
+                  decoration: InputDecoration(
+                    labelText: localizations.translate('preferred_date'),
+                    prefixIcon: Icon(Iconsax.calendar),
+                    hintText: localizations.translate('preferred_date_hint'),
+                  ),
+                  readOnly: true,
+                  onTap: () => _selectDate(context),
+                  validator: (value) =>
+                      AppValidator.validateField(value, 'Preferred Date'),
+                ),
+                const SizedBox(height: AppSizes.spaceBtwnInputFields),
+                // Additional Instructions
+                TextFormField(
+                  controller: _additionalInstructionsController,
+                  decoration: InputDecoration(
+                    labelText:
+                        localizations.translate('additional_instructions'),
+                    hintText:
+                        localizations.translate('additional_instructions_hint'),
+                    prefixIcon: Icon(Iconsax.note),
+                  ),
+                  maxLines: 2,
+                  validator: (value) => AppValidator.validateField(
+                      value, 'Additional Instructions'),
+                ),
+                const SizedBox(height: AppSizes.spaceBtwItems),
+                // Submit Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => _submitSpecialRequest(ref),
+                    child: Text(localizations.translate('submit')),
                   ),
                 ),
-                child: Text(localizations.translate('special_requests_desc')),
-              ),
-              const SizedBox(height: AppSizes.spaceBtwSections),
-              DropdownButtonFormField<String>(
-                value: _selectedCategory,
-                decoration: InputDecoration(
-                  labelText: localizations.translate('select_category'),
-                  prefixIcon: Icon(Iconsax.category),
-                ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedCategory = newValue;
-                  });
-                },
-                items:
-                    _categories.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: AppSizes.spaceBtwnInputFields),
-              // Estimated Waste or Pieces
-              TextFormField(
-                controller: _estimatedWasteController,
-                decoration: InputDecoration(
-                  labelText:
-                      localizations.translate('estimated_waste_or_pieces'),
-                  prefixIcon: Icon(Iconsax.barcode),
-                  hintText:
-                      localizations.translate('estimated_waste_or_pieces_hint'),
-                ),
-              ),
-              const SizedBox(height: AppSizes.spaceBtwnInputFields),
-              // Preferred Time
-              TextFormField(
-                controller: _timeController,
-                decoration: InputDecoration(
-                  labelText: localizations.translate('preferred_time'),
-                  prefixIcon: Icon(Iconsax.clock),
-                  hintText: localizations.translate('preferred_time_hint'),
-                ),
-                readOnly: true,
-                onTap: () => _selectTime(context),
-              ),
-              const SizedBox(height: AppSizes.spaceBtwnInputFields),
-              // Preferred Date
-              TextFormField(
-                controller: _dateController,
-                decoration: InputDecoration(
-                  labelText: localizations.translate('preferred_date'),
-                  prefixIcon: Icon(Iconsax.calendar),
-                  hintText: localizations.translate('preferred_date_hint'),
-                ),
-                readOnly: true,
-                onTap: () => _selectDate(context),
-              ),
-              const SizedBox(height: AppSizes.spaceBtwnInputFields),
-              // Additional Instructions
-              TextFormField(
-                controller: _additionalInstructionsController,
-                decoration: InputDecoration(
-                  labelText: localizations.translate('additional_instructions'),
-                  hintText:
-                      localizations.translate('additional_instructions_hint'),
-                  prefixIcon: Icon(Iconsax.note),
-                ),
-                maxLines: 2,
-              ),
-              const SizedBox(height: AppSizes.spaceBtwItems),
-              // Submit Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => _submitSpecialRequest(ref),
-                  child: Text(localizations.translate('submit')),
-                ),
-              ),
-              SizedBox(height: AppSizes.spaceBtwItems),
-              SizedBox(
+                SizedBox(height: AppSizes.spaceBtwItems),
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ButtonStyle(
@@ -256,8 +279,10 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                       localizations.translate('view_req'),
                       style: TextStyle(color: AppColors.white),
                     ),
-                  )),
-            ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
