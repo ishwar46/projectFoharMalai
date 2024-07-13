@@ -240,10 +240,16 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             controller: _usernameController,
                             decoration: InputDecoration(
                               prefixIcon: Icon(Iconsax.user),
-                              labelText: AppLocalizations.of(context)
-                                  .translate('username'),
+                              labelText: AppLocalizations.of(context).translate(
+                                'username',
+                              ),
+                              labelStyle:
+                                  Theme.of(context).textTheme.labelSmall,
                               hintText: AppLocalizations.of(context)
                                   .translate('username_hint'),
+                              hintStyle: Theme.of(context).textTheme.labelSmall,
+                              floatingLabelStyle:
+                                  Theme.of(context).textTheme.labelSmall,
                             ).applyDefaults(
                                 CustomTextFormField.lightInputDecorationTheme),
                             validator: (value) {
@@ -262,8 +268,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               prefixIcon: const Icon(Iconsax.password_check),
                               labelText: AppLocalizations.of(context)
                                   .translate('password'),
+                              labelStyle:
+                                  Theme.of(context).textTheme.labelSmall,
                               hintText: AppLocalizations.of(context)
                                   .translate('password_hint'),
+                              hintStyle: Theme.of(context).textTheme.labelSmall,
+                              floatingLabelStyle:
+                                  Theme.of(context).textTheme.labelSmall,
                               suffixIcon: IconButton(
                                 icon: Icon(isObscure
                                     ? Iconsax.eye
@@ -276,11 +287,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                             ).applyDefaults(
                                 CustomTextFormField.lightInputDecorationTheme),
-                            // validator: (value) {
-                            //   final error =
-                            //       AppValidator.validatePassword(value);
-                            //   return error;
-                            // },
+                            validator: (value) {
+                              final error =
+                                  AppValidator.validatePassword(value);
+                              return error;
+                            },
                           ),
                           const SizedBox(
                               height: AppSizes.spaceBtwnInputFields / 2),
@@ -314,19 +325,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             ],
                           ),
                           const SizedBox(height: AppSizes.spaceBtwSections),
-                          // if (Platform.isAndroid && _isBiometricAvailable)
-                          //   ElevatedButton(
-                          //     onPressed: _authenticateUser,
-                          //     child:
-                          //         const Text('Login with Biometrics (Android)'),
-                          //   ),
-                          // if (Platform.isIOS && _isBiometricAvailable)
-                          //   ElevatedButton(
-                          //     onPressed: _authenticateUser,
-                          //     child: const Text('Login with Biometrics (iOS)'),
-                          //   ),
-
-                          //Sign in Button
                           Hero(
                             tag: 'loginbutton',
                             child: SizedBox(
