@@ -63,7 +63,9 @@ class AuthRemoteDataSource {
         ));
       }
     } on DioException catch (e) {
-      return Left(Failure(error: "Network error: ${e.message}"));
+      final errorMessage =
+          e.response?.data['message'] ?? "Network error: ${e.message}";
+      return Left(Failure(error: errorMessage));
     } catch (e) {
       return Left(
           Failure(error: "An unexpected error occurred: ${e.toString()}"));
