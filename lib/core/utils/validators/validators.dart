@@ -131,4 +131,11 @@ class AppValidator {
 
     return null;
   }
+
+  static String? validateAddress(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your address';
+    }
+    return null;
+  }
 }

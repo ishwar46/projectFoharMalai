@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../../../../config/constants/app_colors.dart';
 import '../../../../../config/constants/app_sizes.dart';
@@ -13,6 +14,7 @@ import '../../../../../config/router/app_routes.dart';
 import '../../../../../core/utils/validators/validators.dart';
 import '../../../../app_localizations.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
+import '../auth_viewmodel/auth_viewmodel.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
   const RegisterView({super.key});
@@ -42,14 +44,21 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
   @override
   void initState() {
     super.initState();
-
+    SmsAutoFill().listenForCode();
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    SmsAutoFill().unregisterListener();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final dark = HelperFunctions.isDarkMode(context);
     return Consumer(builder: (context, watch, child) {
+      final authViewModel = ref.read(authViewModelProvider.notifier);
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarColor: dark ? AppColors.dark : Colors.white,
@@ -133,6 +142,23 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                               hintText: AppLocalizations.of(context)
                                   .translate('email_hint'),
                             ),
+                            validator: (value) {
+                              final error = AppValidator.validateEmail(value);
+                              return error;
+                            },
+                          ),
+                          _gap,
+                          //Mobile
+                          PhoneFieldHint(
+                            key: const ValueKey('phone'),
+                            controller: _phoneController,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(MdiIcons.phone),
+                              labelText: AppLocalizations.of(context)
+                                  .translate('phone_number'),
+                              hintText: AppLocalizations.of(context)
+                                  .translate('phone_number_hint'),
+                            ),
                           ),
                           _gap,
                           //address
@@ -164,6 +190,10 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                               } else {
                                 _addressController.clear();
                               }
+                            },
+                            validator: (value) {
+                              final error = AppValidator.validateAddress(value);
+                              return error;
                             },
                           ),
                           _gap,
@@ -214,29 +244,29 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                             },
                           ),
                           const SizedBox(height: AppSizes.spaceBtwSections),
-                          //Sign in Button
+                          //Register Button
                           Hero(
-                            tag: 'loginbutton',
+                            tag: 'registerButton',
                             child: SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                key: const ValueKey('loginbutton'),
+                                key: const ValueKey('registerButton'),
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 )),
                                 onPressed: () async {
-                                  Navigator.pushNamed(
-                                      context, "/homePageRoute");
-                                  // if (_key.currentState!.validate()) {
-                                  //   await ref
-                                  //       .read(authViewModelProvider.notifier)
-                                  //       .loginUser(
-                                  //         _usernameController.text,
-                                  //         _passwordController.text,
-                                  //         context,
-                                  //       );
-                                  // }
+                                  if (_key.currentState!.validate()) {
+                                    await authViewModel.registerUser(
+                                      _fullnameController.text,
+                                      _emailController.text,
+                                      _passwordController.text,
+                                      _addressController.text,
+                                      _usernameController.text,
+                                      _phoneController.text,
+                                      context,
+                                    );
+                                  }
                                 },
                                 child: Text(AppLocalizations.of(context)
                                     .translate('register')

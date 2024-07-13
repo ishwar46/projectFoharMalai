@@ -71,4 +71,38 @@ class AuthRemoteDataSource {
           Failure(error: "An unexpected error occurred: ${e.toString()}"));
     }
   }
+
+  // Register User
+  Future<Either<Failure, bool>> registerUser(String fullName, String email,
+      String password, String address, String username, String mobileNo) async {
+    try {
+      Response response = await dio.post(
+        ApiEndpoints.register,
+        data: {
+          "fullName": fullName,
+          "email": email,
+          "password": password,
+          "address": address,
+          "username": username,
+          "mobileNo": mobileNo,
+        },
+      );
+
+      if (response.statusCode == 201) {
+        return const Right(true);
+      } else {
+        return Left(Failure(
+          error: response.data?['message'] ?? "Unknown error",
+          statusCode: response.statusCode.toString(),
+        ));
+      }
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data['message'] ?? "Network error: ${e.message}";
+      return Left(Failure(error: errorMessage));
+    } catch (e) {
+      return Left(
+          Failure(error: "An unexpected error occurred: ${e.toString()}"));
+    }
+  }
 }

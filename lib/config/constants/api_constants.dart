@@ -18,6 +18,7 @@ class ApiEndpoints {
 
   // Auth Routes
   static const String login = "v1/auth/user/login";
+  static const String register = "v1/auth/user/register";
   //PICKUP ROUTES
   static const String createPickup = "v1/pickup/create-pickup";
   static const String getAllPickups = "v1/pickup/pickups";
