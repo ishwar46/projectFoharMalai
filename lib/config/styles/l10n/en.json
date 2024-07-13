@@ -117,6 +117,17 @@
     "preferred_name": "Preferred Name",
     "contact_information": "Contact Information",
     "mobile_number": "Mobile Number",
-    "alternative_number": "Alternative Number"
+    "alternative_number": "Alternative Number",
+    "receiverPhoneNumber": "Receiver’s Phone Number",
+    "payment_successful": "Payment Successful",
+    "payment_failed": "Payment Failed",
+    "statements": "Statements",
+    "fromDate": "From Date",
+    "toDate": "To Date",
+    "download": "Download",
+    "download_statement": "Download Statement",
+    "1Week": "7 Days",
+    "1Month": "30 Days",
+    "pickDateRange": "Pick Date"
 
 }

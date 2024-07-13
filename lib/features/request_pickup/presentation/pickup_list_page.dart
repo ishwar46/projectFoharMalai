@@ -126,13 +126,23 @@ class _PickupListPageState extends State<PickupListPage> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
       decoration: BoxDecoration(
-        color: isDarkMode ? AppColors.cardDarkMode : Colors.white,
-        borderRadius: BorderRadius.circular(5),
+        gradient: isDarkMode
+            ? LinearGradient(
+                colors: [AppColors.darkModeOnPrimary, AppColors.dark],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              )
+            : LinearGradient(
+                colors: [AppColors.white, AppColors.white],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+        color: isDarkMode ? null : AppColors.primaryColor,
+        borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
+            color: isDarkMode ? Colors.black54 : Colors.grey.shade300,
+            blurRadius: 8,
             offset: Offset(0, 2),
           ),
         ],
@@ -158,7 +168,9 @@ class _PickupListPageState extends State<PickupListPage> {
                       Text(
                         day,
                         style: GoogleFonts.roboto(
-                          color: Colors.white,
+                          color: isDarkMode
+                              ? AppColors.secondaryColor
+                              : AppColors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -166,7 +178,9 @@ class _PickupListPageState extends State<PickupListPage> {
                       Text(
                         month,
                         style: GoogleFonts.roboto(
-                          color: Colors.white,
+                          color: isDarkMode
+                              ? AppColors.secondaryColor
+                              : AppColors.white,
                           fontSize: 16,
                         ),
                       ),

@@ -3,7 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import '../../../../app_localizations.dart';
+import '../../../home/model/user_model.dart';
+import '../../../home/service/user_service.dart';
+import '../../model/transaction_model.dart';
 import 'receipt_page.dart';
 
 class LoadToKhaltiPage extends StatefulWidget {
@@ -14,22 +18,26 @@ class LoadToKhaltiPage extends StatefulWidget {
 class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
   bool _isBalanceVisible = true;
   final _amountController = TextEditingController();
-  final _receiverKhaltiNumberController = TextEditingController();
+  final _receiverPhoneNumberController = TextEditingController();
   final _purposeController = TextEditingController();
   final ValueNotifier<bool> _isSubmitButtonEnabled = ValueNotifier<bool>(false);
+  late Future<User> userFuture;
+  late Future<List<Transaction>> transactionsFuture;
 
   @override
   void initState() {
     super.initState();
+    userFuture = UserService().getUserProfile();
+    transactionsFuture = UserService().getUserTransactions();
     _amountController.addListener(_updateSubmitButtonState);
-    _receiverKhaltiNumberController.addListener(_updateSubmitButtonState);
+    _receiverPhoneNumberController.addListener(_updateSubmitButtonState);
     _purposeController.addListener(_updateSubmitButtonState);
   }
 
   @override
   void dispose() {
     _amountController.dispose();
-    _receiverKhaltiNumberController.dispose();
+    _receiverPhoneNumberController.dispose();
     _purposeController.dispose();
     _isSubmitButtonEnabled.dispose();
     super.dispose();
@@ -37,7 +45,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
 
   void _updateSubmitButtonState() {
     final isButtonEnabled = _amountController.text.isNotEmpty &&
-        _receiverKhaltiNumberController.text.isNotEmpty &&
+        _receiverPhoneNumberController.text.isNotEmpty &&
         _purposeController.text.isNotEmpty;
     _isSubmitButtonEnabled.value = isButtonEnabled;
   }
@@ -56,7 +64,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
           contact.phones != null &&
           contact.phones!.isNotEmpty) {
         setState(() {
-          _receiverKhaltiNumberController.text =
+          _receiverPhoneNumberController.text =
               contact.phones!.first.value ?? '';
         });
       }
@@ -87,7 +95,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
   void _showConfirmationBottomSheet(BuildContext context) {
     final localization = AppLocalizations.of(context);
     final amount = _amountController.text;
-    final receiverKhaltiNumber = _receiverKhaltiNumberController.text;
+    final receiverPhoneNumber = _receiverPhoneNumberController.text;
     final purpose = _purposeController.text;
 
     showModalBottomSheet(
@@ -104,7 +112,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
             children: [
               Text(
                 localization.translate('confirmation'),
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.roboto(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -112,7 +120,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
               SizedBox(height: 16.0),
               Text(
                 localization.translate('confirmPaymentDetails'),
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.roboto(
                   fontSize: 16.0,
                   color: Colors.grey[700],
                 ),
@@ -138,8 +146,8 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                       Divider(),
                       _buildConfirmationDetail(
                         context,
-                        label: localization.translate('receiverKhaltiNumber'),
-                        value: receiverKhaltiNumber,
+                        label: localization.translate('receiverPhoneNumber'),
+                        value: receiverPhoneNumber,
                       ),
                       Divider(),
                       _buildConfirmationDetail(
@@ -157,8 +165,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    _showReceiptPage(
-                        context, amount, receiverKhaltiNumber, purpose);
+                    _makePayment(amount, receiverPhoneNumber, purpose);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 14.0),
@@ -169,7 +176,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                   ),
                   child: Text(
                     localization.translate('confirm'),
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.roboto(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
@@ -191,14 +198,14 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
       children: [
         Text(
           label,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.roboto(
             fontSize: 12.0,
             color: Colors.grey[800],
           ),
         ),
         Text(
           value,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.roboto(
             fontSize: 12.0,
             fontWeight: FontWeight.bold,
             color: Colors.black,
@@ -208,8 +215,36 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
     );
   }
 
+  void _makePayment(
+      String amount, String receiverPhoneNumber, String purpose) async {
+    final localization = AppLocalizations.of(context);
+    try {
+      final success = await UserService().makePayment(
+        int.parse(amount),
+        receiverPhoneNumber,
+        purpose,
+      );
+      if (success) {
+        showSnackBar(
+            message: localization.translate('payment_successful'),
+            context: context);
+        _showReceiptPage(context, amount, receiverPhoneNumber, purpose);
+      } else {
+        showSnackBar(
+            message: localization.translate('payment_failed'),
+            context: context,
+            color: AppColors.error);
+      }
+    } catch (e) {
+      showSnackBar(
+          message: '${localization.translate('error')}: $e',
+          context: context,
+          color: AppColors.error);
+    }
+  }
+
   void _showReceiptPage(BuildContext context, String amount,
-      String receiverKhaltiNumber, String purpose) {
+      String receiverPhoneNumber, String purpose) {
     final transactionId = 'FMTX-${DateTime.now().millisecondsSinceEpoch}';
     final transactionDateTime = DateTime.now();
     final transactionDate =
@@ -222,7 +257,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
       MaterialPageRoute(
         builder: (context) => ReceiptPage(
           amount: amount,
-          receiverKhaltiNumber: receiverKhaltiNumber,
+          receiverPhoneNumber: receiverPhoneNumber,
           purpose: purpose,
           transactionId: transactionId,
           transactionDate: transactionDate,
@@ -238,12 +273,9 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(localization.translate('loadToKhalti')),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        title: Text(
+          localization.translate('loadToKhalti'),
+          style: GoogleFonts.roboto(),
         ),
         elevation: 0,
         foregroundColor: Colors.black,
@@ -259,49 +291,65 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                 color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(8.0),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              child: FutureBuilder<User>(
+                future: userFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  } else if (!snapshot.hasData) {
+                    return Center(child: Text("No data found"));
+                  }
+
+                  User user = snapshot.data!;
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        _isBalanceVisible ? 'Rs. XXX.XX' : 'Rs. 13579.55',
-                        style: GoogleFonts.montserrat(
-                          color: AppColors.whiteText,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _isBalanceVisible
+                                ? 'Rs. ${user.balance!.toStringAsFixed(2)}'
+                                : 'Rs. XXX.XX',
+                            style: GoogleFonts.roboto(
+                              color: AppColors.whiteText,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(
+                            localization.translate('availableBalance'),
+                            style: GoogleFonts.roboto(
+                              color: AppColors.whiteText,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 4.0),
-                      Text(
-                        localization.translate('availableBalance'),
-                        style: GoogleFonts.montserrat(
-                          color: AppColors.whiteText,
-                          fontSize: 14.0,
-                        ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              _isBalanceVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: AppColors.whiteText,
+                            ),
+                            onPressed: _toggleBalanceVisibility,
+                          ),
+                          Icon(
+                            Icons.account_balance_wallet,
+                            color: AppColors.whiteText,
+                            size: 30.0,
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          _isBalanceVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: AppColors.whiteText,
-                        ),
-                        onPressed: _toggleBalanceVisibility,
-                      ),
-                      Icon(
-                        Icons.account_balance_wallet,
-                        color: AppColors.whiteText,
-                        size: 30.0,
-                      ),
-                    ],
-                  ),
-                ],
+                  );
+                },
               ),
             ),
             SizedBox(height: 24.0),
@@ -314,9 +362,9 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
             ),
             SizedBox(height: 16.0),
             TextField(
-              controller: _receiverKhaltiNumberController,
+              controller: _receiverPhoneNumberController,
               decoration: InputDecoration(
-                labelText: localization.translate('receiverKhaltiNumber'),
+                labelText: localization.translate('receiverPhoneNumber'),
                 suffixIcon: IconButton(
                   icon: Icon(Icons.contacts),
                   onPressed: _pickContact,
@@ -351,7 +399,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                     ),
                     child: Text(
                       localization.translate('submit'),
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.roboto(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),

@@ -7,6 +7,7 @@ class User {
   final String? mobileNo;
   final bool isAdmin;
   final String? image;
+  final double? balance;
 
   User({
     required this.id,
@@ -17,6 +18,7 @@ class User {
     this.mobileNo,
     required this.isAdmin,
     this.image,
+    this.balance,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class User {
       mobileNo: json['mobileNo'],
       isAdmin: json['isAdmin'],
       image: json['image'],
+      balance: json['balance']?.toDouble(),
     );
   }
 
@@ -42,6 +45,7 @@ class User {
       'mobileNo': mobileNo,
       'isAdmin': isAdmin,
       'image': image,
+      'balance': balance,
     };
   }
 }

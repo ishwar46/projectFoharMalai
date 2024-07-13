@@ -7,10 +7,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:flutter/services.dart';
 import '../../../../app_localizations.dart';
+import 'transaction_history_page.dart';
 
 class ReceiptPage extends StatelessWidget {
   final String amount;
-  final String receiverKhaltiNumber;
+  final String receiverPhoneNumber;
   final String purpose;
   final String transactionId;
   final String transactionDate;
@@ -18,7 +19,7 @@ class ReceiptPage extends StatelessWidget {
 
   ReceiptPage({
     required this.amount,
-    required this.receiverKhaltiNumber,
+    required this.receiverPhoneNumber,
     required this.purpose,
     required this.transactionId,
     required this.transactionDate,
@@ -99,7 +100,7 @@ class ReceiptPage extends StatelessWidget {
                         localization
                             .translate('thankYouMessage')
                             .replaceAll('{amount}', amount)
-                            .replaceAll('{receiver}', receiverKhaltiNumber),
+                            .replaceAll('{receiver}', receiverPhoneNumber),
                         style: GoogleFonts.montserrat(
                           fontSize: 12.0,
                           color: Colors.grey[700],
@@ -128,7 +129,7 @@ class ReceiptPage extends StatelessWidget {
                   context,
                   icon: Icons.phone_android,
                   label: localization.translate('receiverKhaltiNumber'),
-                  value: receiverKhaltiNumber,
+                  value: receiverPhoneNumber,
                 ),
                 _buildDetailCard(
                   context,

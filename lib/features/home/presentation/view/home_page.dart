@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foharmalai/features/payment/presentation/view/transaction_history_page.dart';
 import 'package:foharmalai/features/settings/settings_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iconsax/iconsax.dart';
@@ -25,7 +26,7 @@ class _HomePageNewState extends State<HomePageNew>
   int _currentIndex = 0;
   final List _children = [
     const DashboardView(),
-    QRCodeScreen(),
+    TransactionHistoryPage(),
     const SettingsView(),
     ProfilePage(),
   ];
@@ -121,8 +122,8 @@ class _HomePageNewState extends State<HomePageNew>
                         text: "Home",
                       ),
                       GButton(
-                        icon: Icons.qr_code_2_rounded,
-                        text: "QR",
+                        icon: Iconsax.receipt,
+                        text: "Statements",
                       ),
                       GButton(
                         icon: Iconsax.settings,
