@@ -89,7 +89,7 @@
     "date": "Date",
     "time": "Time",
     "phone": "Phone",
-    "no_pickups_found": "No pickups found",
+    "no_pickups_found": "No pickups request found",
     "error_fetching_requests": "Error Fetching Requests",
     "retry": "Retry",
     "no_special_req": "No special requests found for the user. Please request one.",

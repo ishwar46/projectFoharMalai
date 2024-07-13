@@ -138,4 +138,18 @@ class AppValidator {
     }
     return null;
   }
+
+  static String? validateTime(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please select a pickup time';
+    }
+    return null;
+  }
+
+  static String? validateDate(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please select a pickup date';
+    }
+    return null;
+  }
 }

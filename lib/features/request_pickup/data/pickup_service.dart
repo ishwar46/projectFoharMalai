@@ -45,7 +45,11 @@ class PickupService {
         return false;
       }
     } on DioException catch (e) {
-      print('Failed to create pickup request: ${e.message}');
+      String errorMessage = 'Failed to create pickup request';
+      if (e.response != null && e.response?.data != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      }
+      print(errorMessage);
       return false;
     }
   }

@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import '../../../app_localizations.dart';
+import '../../../core/common/widgets/no_request_found_widget.dart';
 import '../data/pickup_service.dart';
 import '../model/PickupRequest.dart';
 
@@ -105,9 +106,15 @@ class _PickupListPageState extends State<PickupListPage> {
                     },
                   );
                 } else {
-                  return Center(
-                      child: Text(localizations.translate('no_pickups_found'),
-                          style: GoogleFonts.roboto()));
+                  return NoRequestFoundWidget(
+                    onRetry: () {
+                      setState(() {
+                        _futurePickups = _loadPickupRequests();
+                      });
+                    },
+                    noRequestText: localizations.translate('no_pickups_found'),
+                    lottieAnimationPath: 'assets/animations/not_found.json',
+                  );
                 }
               },
             ),
