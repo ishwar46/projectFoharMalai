@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
-import '../../../config/constants/api_constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import '../../../config/constants/api_constants.dart';
+import '../../payment/model/transaction_model.dart';
 import '../model/user_model.dart';
 
 class UserService {
@@ -22,8 +23,10 @@ class UserService {
         ),
       );
       return User.fromJson(response.data['data']);
-    } catch (e) {
-      throw Exception('Failed to load user profile: $e');
+    } catch (e, stackTrace) {
+      print('Failed to load user profile: $e');
+      print(stackTrace);
+      throw Exception('Failed to load user profile');
     }
   }
 
@@ -38,8 +41,10 @@ class UserService {
         data: user.toJson(),
       );
       return response.statusCode == 200;
-    } catch (e) {
-      throw Exception('Failed to update user profile: $e');
+    } catch (e, stackTrace) {
+      print('Failed to update user profile: $e');
+      print(stackTrace);
+      throw Exception('Failed to update user profile');
     }
   }
 
@@ -55,8 +60,10 @@ class UserService {
       return (response.data['data'] as List)
           .map((json) => User.fromJson(json))
           .toList();
-    } catch (e) {
-      throw Exception('Failed to load users: $e');
+    } catch (e, stackTrace) {
+      print('Failed to load users: $e');
+      print(stackTrace);
+      throw Exception('Failed to load users');
     }
   }
 
@@ -70,8 +77,65 @@ class UserService {
         ),
       );
       return response.statusCode == 200;
-    } catch (e) {
-      throw Exception('Failed to delete user: $e');
+    } catch (e, stackTrace) {
+      print('Failed to delete user: $e');
+      print(stackTrace);
+      throw Exception('Failed to delete user');
+    }
+  }
+
+  Future<bool> makePayment(
+      int amount, String receiverPhoneNumber, String purpose) async {
+    try {
+      final token = await storage.read(key: 'authToken');
+      final response = await dio.post(
+        '${ApiEndpoints.baseUrl}v1/payments/deduct-balance',
+        data: jsonEncode({
+          'amount': amount,
+          'receiverPhoneNumber': receiverPhoneNumber,
+          'purpose': purpose,
+        }),
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 && response.data['success']) {
+        return true;
+      } else {
+        print('Payment failed: ${response.data['message']}');
+        return false;
+      }
+    } catch (e, stackTrace) {
+      print('Failed to make payment: $e');
+      print(stackTrace);
+      throw Exception('Failed to make payment');
+    }
+  }
+
+  Future<List<Transaction>> getUserTransactions() async {
+    try {
+      final token = await storage.read(key: 'authToken');
+      final response = await dio.get(
+        '${ApiEndpoints.baseUrl}v1/payments/transaction-logs',
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data['data'];
+        return data.map((json) => Transaction.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load transactions');
+      }
+    } catch (e, stackTrace) {
+      print('Failed to load transactions: $e');
+      print(stackTrace);
+      throw Exception('Failed to load transactions');
     }
   }
 }
