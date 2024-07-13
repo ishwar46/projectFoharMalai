@@ -128,5 +128,7 @@
     "download_statement": "Download Statement",
     "1Week": "१ हप्ता",
     "1Month": "१ महिना",
-    "pickDateRange": "मिति दायरा"
+    "pickDateRange": "मिति दायरा",
+    "statement_error": "विवरणहरू प्राप्त गर्न सकिएन। कृपया पछि प्रयास गर्नुहोस्।",
+    "no_statement": "हालका लागि कुनै विवरण उपलब्ध छैन।"
 }

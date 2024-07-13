@@ -128,6 +128,8 @@
     "download_statement": "Download Statement",
     "1Week": "7 Days",
     "1Month": "30 Days",
-    "pickDateRange": "Pick Date"
+    "pickDateRange": "Pick Date",
+    "statement_error": "Unable to retrieve statements. Please try again later.",
+    "no_statement": "No statements available at the moment."
 
 }
