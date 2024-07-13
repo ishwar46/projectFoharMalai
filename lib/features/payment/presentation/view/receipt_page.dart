@@ -200,17 +200,6 @@ class ReceiptPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TransactionHistoryPage(),
-                      ),
-                    );
-                  },
-                  child: Text(localization.translate('viewTransactionHistory')),
-                ),
                 SizedBox(height: 16.0),
                 SizedBox(
                   width: double.infinity,

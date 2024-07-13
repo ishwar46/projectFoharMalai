@@ -121,5 +121,12 @@
     "receiverPhoneNumber": "प्रापकको फोन नम्बर",
     "payment_successful": "भुक्तानी सफल भयो",
     "payment_failed": "भुक्तानी असफल भयो",
-    "statements": "विवरणहरू"
+    "statements": "विवरणहरू",
+    "fromDate": "मिति देखि",
+    "toDate": "मिति सम्म",
+    "download": "Download",
+    "download_statement": "Download Statement",
+    "1Week": "१ हप्ता",
+    "1Month": "१ महिना",
+    "pickDateRange": "मिति दायरा"
 }
