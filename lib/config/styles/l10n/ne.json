@@ -117,9 +117,9 @@
     "preferred_name": "रुचाइएको नाम",
     "contact_information": "सम्पर्क जानकारी",
     "mobile_number": "मोबाइल नम्बर",
-    "alternative_number": "वैकल्पिक नम्बर"
-
-
-
-
+    "alternative_number": "वैकल्पिक नम्बर",
+    "receiverPhoneNumber": "प्रापकको फोन नम्बर",
+    "payment_successful": "भुक्तानी सफल भयो",
+    "payment_failed": "भुक्तानी असफल भयो",
+    "statements": "विवरणहरू"
 }

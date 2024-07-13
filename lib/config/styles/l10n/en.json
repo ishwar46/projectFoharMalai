@@ -117,6 +117,9 @@
     "preferred_name": "Preferred Name",
     "contact_information": "Contact Information",
     "mobile_number": "Mobile Number",
-    "alternative_number": "Alternative Number"
+    "alternative_number": "Alternative Number",
+    "receiverPhoneNumber": "Receiver’s Phone Number",
+    "payment_successful": "Payment Successful",
+    "payment_failed": "Payment Failed"
 
 }

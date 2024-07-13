@@ -112,7 +112,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
             children: [
               Text(
                 localization.translate('confirmation'),
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.roboto(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -120,7 +120,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
               SizedBox(height: 16.0),
               Text(
                 localization.translate('confirmPaymentDetails'),
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.roboto(
                   fontSize: 16.0,
                   color: Colors.grey[700],
                 ),
@@ -176,7 +176,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                   ),
                   child: Text(
                     localization.translate('confirm'),
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.roboto(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
@@ -198,14 +198,14 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
       children: [
         Text(
           label,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.roboto(
             fontSize: 12.0,
             color: Colors.grey[800],
           ),
         ),
         Text(
           value,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.roboto(
             fontSize: 12.0,
             fontWeight: FontWeight.bold,
             color: Colors.black,
@@ -273,12 +273,9 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(localization.translate('loadToKhalti')),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        title: Text(
+          localization.translate('loadToKhalti'),
+          style: GoogleFonts.roboto(),
         ),
         elevation: 0,
         foregroundColor: Colors.black,
@@ -316,7 +313,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                             _isBalanceVisible
                                 ? 'Rs. ${user.balance!.toStringAsFixed(2)}'
                                 : 'Rs. XXX.XX',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.roboto(
                               color: AppColors.whiteText,
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,
@@ -325,7 +322,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                           SizedBox(height: 4.0),
                           Text(
                             localization.translate('availableBalance'),
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.roboto(
                               color: AppColors.whiteText,
                               fontSize: 14.0,
                             ),
@@ -402,7 +399,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                     ),
                     child: Text(
                       localization.translate('submit'),
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.roboto(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
