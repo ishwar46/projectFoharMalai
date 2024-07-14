@@ -120,6 +120,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
         title: Text(localization.translate('statements')),
         elevation: 0,
         foregroundColor: Colors.black,
+        automaticallyImplyLeading: false,
       ),
       body: RefreshIndicator(
         onRefresh: fetchTransactions,
