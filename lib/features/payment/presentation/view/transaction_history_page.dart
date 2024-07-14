@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foharmalai/core/common/widgets/shimmer_loading_widget.dart';
 import 'package:foharmalai/core/utils/helpers/helper_functions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
@@ -6,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:foharmalai/config/constants/app_colors.dart';
+import '../../../../core/common/widgets/no_request_found_widget.dart';
 import '../../../home/service/user_service.dart';
 import '../../model/transaction_model.dart';
 import '../../../../app_localizations.dart';
@@ -118,6 +120,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
         title: Text(localization.translate('statements')),
         elevation: 0,
         foregroundColor: Colors.black,
+        automaticallyImplyLeading: false,
       ),
       body: RefreshIndicator(
         onRefresh: fetchTransactions,
@@ -207,13 +210,22 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                 future: transactionsFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(child: ShimmerLoadingEffect());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text("Error: ${snapshot.error}"));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Center(
-                        child: Text(
-                            localization.translate('noTransactionsFound')));
+                      child: NoRequestFoundWidget(
+                        onRetry: fetchTransactions,
+                        noRequestText:
+                            localization.translate('statement_error'),
+                        lottieAnimationPath: 'assets/animations/not_found.json',
+                      ),
+                    );
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return NoRequestFoundWidget(
+                      onRetry: fetchTransactions,
+                      noRequestText: localization.translate('no_statement'),
+                      lottieAnimationPath: 'assets/animations/not_found.json',
+                    );
                   }
 
                   List<Transaction> transactions =

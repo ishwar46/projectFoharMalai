@@ -252,6 +252,13 @@ class _SpecialRequestsViewPageState
                         localizations.translate('preferred_date'),
                         request.preferredDate,
                         isDarkMode),
+                    const SizedBox(height: 4),
+                    buildDetailRow(
+                        context,
+                        Iconsax.location,
+                        localizations.translate('location'),
+                        request.location,
+                        isDarkMode),
                     if (request.additionalInstructions.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       buildDetailRow(

@@ -6,6 +6,7 @@ class SpecialRequest {
   final String preferredTime;
   final String preferredDate;
   final String additionalInstructions;
+  final String location;
 
   SpecialRequest({
     required this.id,
@@ -15,6 +16,7 @@ class SpecialRequest {
     required this.preferredTime,
     required this.preferredDate,
     required this.additionalInstructions,
+    required this.location,
   });
 
   factory SpecialRequest.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class SpecialRequest {
       preferredTime: json['preferredTime'],
       preferredDate: json['preferredDate'],
       additionalInstructions: json['additionalInstructions'] ?? '',
+      location: json['location'],
     );
   }
 
@@ -37,6 +40,7 @@ class SpecialRequest {
       'preferredTime': preferredTime,
       'preferredDate': preferredDate,
       'additionalInstructions': additionalInstructions,
+      'location': location,
     };
   }
 }

@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import '../../../app_localizations.dart';
@@ -24,6 +23,7 @@ import '../../../core/utils/helpers/permission_helper.dart';
 import '../../../core/utils/helpers/user_sessions.dart';
 import '../data/pickup_service.dart';
 import '../model/PickupRequest.dart';
+import '../../../core/utils/validators/validators.dart';
 
 class RequestPickUpView extends ConsumerStatefulWidget {
   const RequestPickUpView({Key? key}) : super(key: key);
@@ -33,6 +33,7 @@ class RequestPickUpView extends ConsumerStatefulWidget {
 }
 
 class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
+  final _formKey = GlobalKey<FormState>();
   CameraPosition? _initialCameraPosition;
   GoogleMapController? _mapController;
   StreamSubscription<Position>? _positionStreamSubscription;
@@ -189,226 +190,244 @@ class _RequestPickUpViewState extends ConsumerState<RequestPickUpView> {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Schedule Pickup',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  SizedBox(height: AppSizes.spaceBtwnInputFields),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Schedule Pickup',
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
-                    color: isDarkMode ? AppColors.dark : AppColors.white,
-                    surfaceTintColor:
-                        isDarkMode ? AppColors.dark : AppColors.white,
-                    elevation: 4.0,
-                    shadowColor: Colors.black.withOpacity(0.2),
-                    child: Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: dateController,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.calendar_today),
-                                    labelText: 'Pickup Date',
-                                    border: OutlineInputBorder(),
+                    SizedBox(height: AppSizes.spaceBtwnInputFields),
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      color: isDarkMode ? AppColors.dark : AppColors.white,
+                      surfaceTintColor:
+                          isDarkMode ? AppColors.dark : AppColors.white,
+                      elevation: 4.0,
+                      shadowColor: Colors.black.withOpacity(0.2),
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: dateController,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.calendar_today),
+                                      labelText: 'Pickup Date',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    onTap: () async {
+                                      DateTime? pickedDate =
+                                          await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime.now(),
+                                        lastDate: DateTime(2100),
+                                      );
+                                      if (pickedDate != null) {
+                                        setState(() {
+                                          dateController.text =
+                                              DateFormat('yyyy-MM-dd')
+                                                  .format(pickedDate);
+                                        });
+                                      }
+                                    },
+                                    readOnly: true,
+                                    validator: AppValidator.validateDate,
                                   ),
-                                  onTap: () async {
-                                    DateTime? pickedDate = await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime(2100),
-                                    );
-                                    if (pickedDate != null) {
-                                      setState(() {
-                                        dateController.text =
-                                            DateFormat('yyyy-MM-dd')
-                                                .format(pickedDate);
-                                      });
-                                    }
-                                  },
-                                  readOnly: true,
                                 ),
-                              ),
-                              SizedBox(width: AppSizes.spaceBtwnInputFields),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: timeController,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.access_time),
-                                    labelText: 'Pickup Time',
-                                    border: OutlineInputBorder(),
+                                SizedBox(width: AppSizes.spaceBtwnInputFields),
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: timeController,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.access_time),
+                                      labelText: 'Pickup Time',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    onTap: () async {
+                                      TimeOfDay? pickedTime =
+                                          await showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.now(),
+                                      );
+                                      if (pickedTime != null) {
+                                        setState(() {
+                                          final now = DateTime.now();
+                                          final dt = DateTime(
+                                              now.year,
+                                              now.month,
+                                              now.day,
+                                              pickedTime.hour,
+                                              pickedTime.minute);
+                                          final format = DateFormat('hh:mm a');
+                                          timeController.text =
+                                              format.format(dt);
+                                        });
+                                      }
+                                    },
+                                    readOnly: true,
+                                    validator: AppValidator.validateTime,
                                   ),
-                                  onTap: () async {
-                                    TimeOfDay? pickedTime =
-                                        await showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                    );
-                                    if (pickedTime != null) {
-                                      setState(() {
-                                        final now = DateTime.now();
-                                        final dt = DateTime(
-                                            now.year,
-                                            now.month,
-                                            now.day,
-                                            pickedTime.hour,
-                                            pickedTime.minute);
-                                        final format = DateFormat('hh:mm a');
-                                        timeController.text = format.format(dt);
-                                      });
-                                    }
-                                  },
-                                  readOnly: true,
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: AppSizes.spaceBtwnInputFields),
-                          GooglePlacesAutoCompleteTextFormField(
-                            decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)
-                                  .translate('address'),
-                              hintText: AppLocalizations.of(context)
-                                  .translate('address_hint'),
-                              prefixIcon: Icon(MdiIcons.mapMarker),
+                              ],
                             ),
-                            textEditingController: _addressController,
-                            googleAPIKey: apiKey ?? 'NA',
-                            debounceTime: 400,
-                            isLatLngRequired: true,
-                            getPlaceDetailWithLatLng: (prediction) {
-                              print(
-                                  "Coordinates: (${prediction.lat},${prediction.lng})");
-                              setState(() {
-                                selectedCoordinates = LatLng(
-                                  double.parse(prediction.lat.toString()),
-                                  double.parse(prediction.lng.toString()),
-                                );
-                              });
-                            },
-                            itmClick: (prediction) {
-                              if (prediction.description != null) {
-                                _addressController.text =
-                                    prediction.description!;
-                                _addressController.selection =
-                                    TextSelection.fromPosition(
-                                  TextPosition(
-                                      offset: prediction.description!.length),
-                                );
-                              } else {
-                                _addressController.clear();
-                              }
-                            },
-                          ),
-                          SizedBox(height: AppSizes.spaceBtwnInputFields),
-                          //Full Name
-                          TextFormField(
-                            controller: _fullNameController,
-                            decoration: InputDecoration(
+                            SizedBox(height: AppSizes.spaceBtwnInputFields),
+                            GooglePlacesAutoCompleteTextFormField(
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)
+                                    .translate('address'),
+                                hintText: AppLocalizations.of(context)
+                                    .translate('address_hint'),
+                                prefixIcon: Icon(MdiIcons.mapMarker),
+                              ),
+                              textEditingController: _addressController,
+                              googleAPIKey: apiKey ?? 'NA',
+                              debounceTime: 400,
+                              isLatLngRequired: true,
+                              getPlaceDetailWithLatLng: (prediction) {
+                                print(
+                                    "Coordinates: (${prediction.lat},${prediction.lng})");
+                                setState(() {
+                                  selectedCoordinates = LatLng(
+                                    double.parse(prediction.lat.toString()),
+                                    double.parse(prediction.lng.toString()),
+                                  );
+                                });
+                              },
+                              itmClick: (prediction) {
+                                if (prediction.description != null) {
+                                  _addressController.text =
+                                      prediction.description!;
+                                  _addressController.selection =
+                                      TextSelection.fromPosition(
+                                    TextPosition(
+                                        offset: prediction.description!.length),
+                                  );
+                                } else {
+                                  _addressController.clear();
+                                }
+                              },
+                              validator: AppValidator.validateAddress,
+                            ),
+                            SizedBox(height: AppSizes.spaceBtwnInputFields),
+                            //Full Name
+                            TextFormField(
+                              controller: _fullNameController,
+                              decoration: InputDecoration(
                                 prefixIcon: Icon(MdiIcons.account),
                                 labelText: 'Full Name',
-                                hintText: 'Enter your fullname'),
-                          ),
-                          SizedBox(
-                            height: AppSizes.spaceBtwnInputFields,
-                          ),
-                          TextFormField(
-                            controller: _phoneNumberController,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.phone),
-                              labelText: 'Mobile Number',
-                              hintText: 'Enter Mobile Number',
+                                hintText: 'Enter your fullname',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: AppValidator.validateFullName,
                             ),
-                            keyboardType: TextInputType.phone,
-                          ),
-                          SizedBox(height: AppSizes.spaceBtwnInputFields),
-                          ElevatedButton(
-                            onPressed: () async {
-                              if (selectedCoordinates != null) {
-                                EasyLoading.show(status: 'Processing...');
-                                try {
-                                  String? userId = await getUserId();
-                                  print("Using userId for request: $userId");
-                                  String sessionId =
-                                      await UserSession.getSessionId();
+                            SizedBox(
+                              height: AppSizes.spaceBtwnInputFields,
+                            ),
+                            TextFormField(
+                              controller: _phoneNumberController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.phone),
+                                labelText: 'Mobile Number',
+                                hintText: 'Enter Mobile Number',
+                                border: OutlineInputBorder(),
+                              ),
+                              keyboardType: TextInputType.phone,
+                              validator: AppValidator.validatePhoneNumber,
+                            ),
+                            SizedBox(height: AppSizes.spaceBtwnInputFields),
+                            ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  if (selectedCoordinates != null) {
+                                    EasyLoading.show(status: 'Processing...');
+                                    try {
+                                      String? userId = await getUserId();
+                                      print(
+                                          "Using userId for request: $userId");
+                                      String sessionId =
+                                          await UserSession.getSessionId();
 
-                                  PickupRequest pickupRequest = PickupRequest(
-                                    fullName: _fullNameController.text,
-                                    phoneNumber: _phoneNumberController.text,
-                                    address: _addressController.text,
-                                    date: dateController.text,
-                                    time: timeController.text,
-                                    coordinates: {
-                                      'lat': selectedCoordinates!.latitude,
-                                      'lng': selectedCoordinates!.longitude,
-                                    },
-                                    userId: userId,
-                                    sessionId:
-                                        userId == null ? sessionId : null,
-                                  );
+                                      PickupRequest pickupRequest =
+                                          PickupRequest(
+                                        fullName: _fullNameController.text,
+                                        phoneNumber:
+                                            _phoneNumberController.text,
+                                        address: _addressController.text,
+                                        date: dateController.text,
+                                        time: timeController.text,
+                                        coordinates: {
+                                          'lat': selectedCoordinates!.latitude,
+                                          'lng': selectedCoordinates!.longitude,
+                                        },
+                                        userId: userId,
+                                        sessionId:
+                                            userId == null ? sessionId : null,
+                                      );
 
-                                  bool success = await _pickupService
-                                      .createPickup(pickupRequest);
-                                  EasyLoading.dismiss();
-                                  if (success) {
-                                    showSnackBar(
-                                      message:
-                                          'Pickup request created successfully',
-                                      context: context,
-                                      color: AppColors.success,
-                                    );
-                                    Navigator.pushNamed(
-                                        context, '/pickupListRoute');
+                                      bool success = await _pickupService
+                                          .createPickup(pickupRequest);
+                                      EasyLoading.dismiss();
+                                      if (success) {
+                                        showSnackBar(
+                                          message:
+                                              'Pickup request created successfully',
+                                          context: context,
+                                          color: AppColors.success,
+                                        );
+                                        Navigator.pushNamed(
+                                            context, '/pickupListRoute');
+                                      } else {
+                                        showSnackBar(
+                                          message:
+                                              'Failed to create pickup request',
+                                          context: context,
+                                          color: AppColors.error,
+                                        );
+                                      }
+                                    } catch (e) {
+                                      EasyLoading.dismiss();
+                                      print("Error occurred: $e");
+                                    }
                                   } else {
                                     showSnackBar(
-                                      message:
-                                          'Failed to create pickup request',
+                                      message: 'Coordinates not selected',
                                       context: context,
                                       color: AppColors.error,
                                     );
                                   }
-                                } catch (e) {
-                                  EasyLoading.dismiss();
-                                  print("Error occurred: $e");
                                 }
-                              } else {
-                                showSnackBar(
-                                  message: 'Coordinates not selected',
-                                  context: context,
-                                  color: AppColors.error,
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 15.0),
                               ),
-                              padding: EdgeInsets.symmetric(vertical: 15.0),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Submit',
-                                style: TextStyle(
-                                  fontSize: 16.0,
+                              child: Center(
+                                child: Text(
+                                  'Submit',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

@@ -20,18 +20,29 @@ class CardWidgetPre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = HelperFunctions.isDarkMode(context);
-    return Card(
-      surfaceTintColor:
-          isDarkMode ? AppColors.darkModeOnPrimary : AppColors.whiteText,
-      color: isDarkMode ? AppColors.darkModeOnPrimary : AppColors.whiteText,
-      shape: RoundedRectangleBorder(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDarkMode
+              ? [AppColors.darkModeOnPrimary, AppColors.dark]
+              : [AppColors.whiteText, AppColors.whiteText],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode ? Colors.black54 : Colors.grey.shade300,
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
-      elevation: 2,
       child: InkWell(
         enableFeedback: true,
         onTap: () {
-          EasyLoading.showInfo("This feature is coming soon.");
+          EasyLoading.showInfo(
+              "Please Login or Entry as Guest to use this feature.");
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -40,17 +51,15 @@ class CardWidgetPre extends StatelessWidget {
               imagePath,
               height: 40,
               width: 40,
-              //color: Theme.of(context).textTheme.bodyLarge!.color,
             ),
             const SizedBox(
               height: 15,
             ),
             Text(
               title,
-              style: TextStyle(
+              style: GoogleFonts.roboto(
                 fontSize: 12.0,
-                color: Theme.of(context).textTheme.bodyMedium!.color,
-                fontFamily: GoogleFonts.montserrat().fontFamily,
+                color: isDarkMode ? AppColors.whiteText : Colors.black,
               ),
               textAlign: TextAlign.center,
             )

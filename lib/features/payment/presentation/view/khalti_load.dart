@@ -5,6 +5,8 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import '../../../../app_localizations.dart';
+import '../../../../core/common/widgets/balance_error.dart';
+import '../../../../core/common/widgets/balance_loading_shimmer.dart';
 import '../../../home/model/user_model.dart';
 import '../../../home/service/user_service.dart';
 import '../../model/transaction_model.dart';
@@ -295,9 +297,11 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                 future: userFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(child: BalanceLoadingShimmer());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text("Error: ${snapshot.error}"));
+                    return BalanceErrorWidget(
+                      errorMessage: 'Error Loading Balance',
+                    );
                   } else if (!snapshot.hasData) {
                     return Center(child: Text("No data found"));
                   }

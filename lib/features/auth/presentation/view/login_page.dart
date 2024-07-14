@@ -287,11 +287,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                             ).applyDefaults(
                                 CustomTextFormField.lightInputDecorationTheme),
-                            validator: (value) {
-                              final error =
-                                  AppValidator.validatePassword(value);
-                              return error;
-                            },
+                            // validator: (value) {
+                            //   final error =
+                            //       AppValidator.validatePassword(value);
+                            //   return error;
+                            // },
                           ),
                           const SizedBox(
                               height: AppSizes.spaceBtwnInputFields / 2),
@@ -314,7 +314,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               TextButton(
                                 onPressed: () {
                                   Navigator.pushNamed(
-                                      context, MyRoutes.sendOTPRoute);
+                                      context, MyRoutes.forgotPasswordRoute);
                                 },
                                 child: Text(
                                   AppLocalizations.of(context)

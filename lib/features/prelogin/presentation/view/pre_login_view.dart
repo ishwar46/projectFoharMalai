@@ -8,6 +8,7 @@ import 'package:card_swiper/card_swiper.dart';
 import '../../../../app_localizations.dart';
 import '../../../../config/constants/app_colors.dart';
 import '../../../../config/constants/image_strings.dart';
+import '../../../../config/router/app_routes.dart';
 import '../../../../core/app.dart';
 import '../../../../core/common/provider/biometric_provider.dart';
 import '../../../../core/common/provider/language_service.dart';
@@ -134,12 +135,21 @@ class _PreLoginPageState extends ConsumerState<PreLoginPage> {
             ),
           ),
           actions: [
-            IconButton(
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pushNamed(context, MyRoutes.homePageRoute);
+              },
               icon: Icon(
-                Icons.translate,
+                Icons.person,
                 color: isDark ? AppColors.whiteText : AppColors.primaryColor,
               ),
-              onPressed: () => _showLanguageBottomSheet(context),
+              label: Text(
+                'Guest Entry',
+                style: GoogleFonts.roboto(
+                  color: isDark ? AppColors.whiteText : AppColors.primaryColor,
+                  fontSize: 14,
+                ),
+              ),
             ),
             const ExploreMoreButton(),
             const SizedBox(width: 20),
@@ -178,7 +188,7 @@ class _PreLoginPageState extends ConsumerState<PreLoginPage> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     AppLocalizations.of(context).translate('our_services'),
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.roboto(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color:
@@ -193,7 +203,7 @@ class _PreLoginPageState extends ConsumerState<PreLoginPage> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     AppLocalizations.of(context).translate('articles'),
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.roboto(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color:
@@ -206,6 +216,15 @@ class _PreLoginPageState extends ConsumerState<PreLoginPage> {
                 const SizedBox(height: 30),
               ],
             ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor:
+              isDark ? AppColors.darkModeOnPrimary : AppColors.primaryColor,
+          onPressed: () => _showLanguageBottomSheet(context),
+          child: Icon(
+            Icons.translate,
+            color: isDark ? AppColors.whiteText : AppColors.white,
           ),
         ),
       ),

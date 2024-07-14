@@ -13,7 +13,7 @@ class ExploreMoreButton extends StatelessWidget {
     return SizedBox(
       width: 120,
       child: Hero(
-        tag: 'exploremorebutton',
+        tag: 'loginbutton',
         child: ElevatedButton(
           onPressed: () {
             Navigator.pushNamed(context, MyRoutes.loginRoute);
@@ -28,9 +28,7 @@ class ExploreMoreButton extends StatelessWidget {
             splashFactory: InkRipple.splashFactory,
           ),
           child: Text(
-              AppLocalizations.of(context)
-                  .translate('explore_more')
-                  .toUpperCase(),
+              AppLocalizations.of(context).translate('login').toUpperCase(),
               style: GoogleFonts.roboto(
                 fontSize: 12,
               )),

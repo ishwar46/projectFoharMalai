@@ -1,15 +1,18 @@
+import 'package:foharmalai/features/drop_points/drop_points_view.dart';
+import 'package:foharmalai/features/forgot_password/forgot_password_view.dart';
 import 'package:foharmalai/features/payment/presentation/view/transaction_history_page.dart';
 import 'package:foharmalai/features/request_pickup/presentation/pickup_list_page.dart';
 
 import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/home/presentation/view/home_page.dart';
+import '../../features/notification/notifications_page.dart';
 import '../../features/payment/presentation/esewa_load.dart';
 import '../../features/payment/presentation/view/khalti_load.dart';
 import '../../features/payment/presentation/view/payments_view.dart';
 import '../../features/prelogin/presentation/view/pre_login_view.dart';
 import '../../features/request_pickup/presentation/request_pickup_page.dart';
-import '../../features/special_requests/presentation/view/special_requests_view.dart';
+import '../../features/special_requests/presentation/view/create_special_requests_view.dart';
 import '../../features/splash_screen/splash_screen_view.dart';
 import '../../features/what_we_buy/view/what_we_buy_page.dart';
 
@@ -38,6 +41,8 @@ class MyRoutes {
   static String pickUpListRoute = '/pickupListRoute';
   static String specialRequestRoute = '/specialRequestRoute';
   static String statementRoute = '/statementRoute';
+  static String dropPointRoutes = '/dropPointRoute';
+  static String forgotPasswordRoute = '/forgotPassword';
 
   static getApplicationRoute() {
     return {
@@ -49,7 +54,7 @@ class MyRoutes {
       // onBoardingRoute: (context) => OnBoardingScreen(),
       preloginRoute: (context) => const PreLoginPage(),
       // userProfileRoute: (context) => StaffProfile(),
-      // // viewNotificationRoute: (context) => NotificationView(),
+      viewNotificationRoute: (context) => NotificationPage(),
       // // sendOTPRoute: (context) => SendOTPView(),
       // // verifyOTPRoute: (context) => VerifyOTPPage(),
       homePageRoute: (context) => HomePageNew(),
@@ -60,6 +65,8 @@ class MyRoutes {
       pickUpListRoute: (context) => PickupListPage(),
       specialRequestRoute: (context) => SpecialRequestsPage(),
       statementRoute: (context) => TransactionHistoryPage(),
+      dropPointRoutes: (context) => SelfServiceDropPointsView(),
+      forgotPasswordRoute: (context) => ForgotPasswordPage(),
     };
   }
 }
