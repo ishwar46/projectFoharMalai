@@ -158,7 +158,10 @@
     "logout": "Logout",
     "logout_confirmation": "Are you sure you want to logout?",
     "forgot_password": "Forgot Password",
-    "forgot_password_desc": "Enter your email to receive a password reset link."
+    "forgot_password_desc": "Enter your email to receive a password reset link.",
+    "press_again_to_exit": "Press again to exit the app.",
+    "home": "Home",
+    "login_required": "You must login to use this feature."
 
 
 }

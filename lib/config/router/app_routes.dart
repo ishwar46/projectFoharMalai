@@ -6,6 +6,7 @@ import 'package:foharmalai/features/request_pickup/presentation/pickup_list_page
 import '../../features/auth/presentation/view/login_page.dart';
 import '../../features/auth/presentation/view/register_page.dart';
 import '../../features/home/presentation/view/home_page.dart';
+import '../../features/notification/notifications_page.dart';
 import '../../features/payment/presentation/esewa_load.dart';
 import '../../features/payment/presentation/view/khalti_load.dart';
 import '../../features/payment/presentation/view/payments_view.dart';
@@ -53,7 +54,7 @@ class MyRoutes {
       // onBoardingRoute: (context) => OnBoardingScreen(),
       preloginRoute: (context) => const PreLoginPage(),
       // userProfileRoute: (context) => StaffProfile(),
-      // // viewNotificationRoute: (context) => NotificationView(),
+      viewNotificationRoute: (context) => NotificationPage(),
       // // sendOTPRoute: (context) => SendOTPView(),
       // // verifyOTPRoute: (context) => VerifyOTPPage(),
       homePageRoute: (context) => HomePageNew(),

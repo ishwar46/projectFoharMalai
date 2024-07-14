@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nepali_date_picker/nepali_date_picker.dart';
@@ -15,8 +14,6 @@ import '../../../../../config/constants/app_colors.dart';
 import '../../../../../config/router/app_routes.dart';
 import '../../../../../core/utils/helpers/helper_functions.dart';
 import '../../../../app_localizations.dart';
-import '../widgets/alert_text_widget.dart';
-import '../widgets/notification_card_widget.dart';
 import '../widgets/service_row_widget.dart';
 import '../widgets/myrequests_text_widget.dart';
 import '../widgets/what_we_buy.dart';
@@ -146,15 +143,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
         ],
       ),
       elevation: 0,
-      leading: IconButton(
-        icon: Icon(
-          Iconsax.menu,
-          color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
-        ),
-        onPressed: () {
-          Scaffold.of(context).openDrawer();
-        },
-      ),
+      automaticallyImplyLeading: false,
       actions: _buildAppBarActions(context),
     );
   }
@@ -166,7 +155,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
         color: isDarkMode ? AppColors.whiteText : AppColors.primaryColor,
         icon: const Icon(Icons.notifications),
         onPressed: () {
-          Navigator.pushNamed(context, MyRoutes.pickUpListRoute);
+          Navigator.pushNamed(context, MyRoutes.viewNotificationRoute);
         },
       ),
       IconButton(
@@ -210,9 +199,6 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
             WhatWeBuyText(isDarkMode: isDarkMode),
             const SizedBox(height: 10.0),
             WhatWeBuyWidget(isDarkMode: isDarkMode),
-            const SizedBox(height: 10.0),
-            AlertText(isDarkMode: isDarkMode),
-            AlertCard(),
           ],
         ),
       ),

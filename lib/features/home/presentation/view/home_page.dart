@@ -9,8 +9,8 @@ import '../../../../config/constants/app_colors.dart';
 import '../../../../core/common/widgets/custom_snackbar.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../../../dashboard/presentation/view/dashboard_page.dart';
-import 'bottom_view/my_qr_code.dart';
 import 'bottom_view/profile_page.dart';
+import '../../../../app_localizations.dart';
 
 class HomePageNew extends StatefulWidget {
   const HomePageNew({Key? key, this.firebaseToken}) : super(key: key);
@@ -48,6 +48,7 @@ class _HomePageNewState extends State<HomePageNew>
   @override
   Widget build(BuildContext context) {
     final isDarkMode = HelperFunctions.isDarkMode(context);
+    final localizations = AppLocalizations.of(context);
 
     return PopScope(
         canPop: false,
@@ -62,7 +63,7 @@ class _HomePageNewState extends State<HomePageNew>
               _lastPressedAt = currentTime;
 
               showSnackBar(
-                  message: 'Press again to exit the app.',
+                  message: localizations.translate('press_again_to_exit'),
                   context: context,
                   color: AppColors.warning);
             } else {}
@@ -72,7 +73,7 @@ class _HomePageNewState extends State<HomePageNew>
             _lastPressedAt = currentTime;
 
             showSnackBar(
-                message: 'Press again to exit the app.',
+                message: localizations.translate('press_again_to_exit'),
                 context: context,
                 color: AppColors.warning);
           }
@@ -119,26 +120,26 @@ class _HomePageNewState extends State<HomePageNew>
                     tabs: [
                       GButton(
                         icon: Iconsax.home,
-                        text: "Home",
+                        text: localizations.translate('home'),
                       ),
                       GButton(
                         icon: Iconsax.receipt,
-                        text: "Statements",
+                        text: localizations.translate('statements'),
                       ),
                       GButton(
                         icon: Iconsax.settings,
-                        text: "Settings",
+                        text: localizations.translate('settings'),
                       ),
                       GButton(
                         icon: Iconsax.user,
-                        text: "Profile",
+                        text: localizations.translate('profile'),
                       ),
                     ],
                     selectedIndex: _currentIndex,
                     onTabChange: (index) async {
                       if (index != 0 && !await _isUserLoggedIn()) {
                         showSnackBar(
-                            message: 'You must login to use this feature.',
+                            message: localizations.translate('login_required'),
                             context: context,
                             color: AppColors.error);
                       } else {
