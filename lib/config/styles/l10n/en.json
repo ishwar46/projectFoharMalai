@@ -149,13 +149,16 @@
     "developer": "Developer",
     "account": "Account",
     "profile": "Profile",
-    "sign_out": "Sign Out",
+    "sign_out": "Log Out",
     "change_email": "Change email",
     "change_password": "Change password",
     "delete_account": "Delete account",
-    "feature_under_development": "Feature Under Development",
+    "feature_under_development": "Please contact administrator for this feature at info@foharmalai.com",
     "contact_support_account_deletion": "Please contact support for account deletion. This feature is under development.",
     "logout": "Logout",
-    "logout_confirmation": "Are you sure you want to logout?"
+    "logout_confirmation": "Are you sure you want to logout?",
+    "forgot_password": "Forgot Password",
+    "forgot_password_desc": "Enter your email to receive a password reset link."
+
 
 }

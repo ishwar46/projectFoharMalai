@@ -240,13 +240,6 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
       items: [
         SettingsItem(
           onTap: () {
-            Navigator.pushNamed(context, MyRoutes.userProfileRoute);
-          },
-          icons: Icons.person,
-          title: localizations.translate("profile"),
-        ),
-        SettingsItem(
-          onTap: () {
             _logout(context, localizations);
           },
           icons: Icons.exit_to_app_rounded,
@@ -257,7 +250,7 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
             showSnackBar(
               message: localizations.translate('feature_under_development'),
               context: context,
-              color: AppColors.error,
+              color: AppColors.warning,
             );
           },
           icons: CupertinoIcons.repeat,
@@ -265,7 +258,11 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
         ),
         SettingsItem(
           onTap: () {
-            Navigator.pushNamed(context, MyRoutes.sendOTPRoute);
+            showSnackBar(
+              message: localizations.translate('feature_under_development'),
+              context: context,
+              color: AppColors.warning,
+            );
           },
           icons: CupertinoIcons.lock,
           title: localizations.translate("change_password"),
@@ -273,10 +270,9 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
         SettingsItem(
           onTap: () {
             showSnackBar(
-              message:
-                  localizations.translate('contact_support_account_deletion'),
+              message: localizations.translate('feature_under_development'),
               context: context,
-              color: AppColors.error,
+              color: AppColors.warning,
             );
           },
           icons: CupertinoIcons.delete_solid,

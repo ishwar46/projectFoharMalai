@@ -314,7 +314,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               TextButton(
                                 onPressed: () {
                                   Navigator.pushNamed(
-                                      context, MyRoutes.sendOTPRoute);
+                                      context, MyRoutes.forgotPasswordRoute);
                                 },
                                 child: Text(
                                   AppLocalizations.of(context)

@@ -1,4 +1,5 @@
 import 'package:foharmalai/features/drop_points/drop_points_view.dart';
+import 'package:foharmalai/features/forgot_password/forgot_password_view.dart';
 import 'package:foharmalai/features/payment/presentation/view/transaction_history_page.dart';
 import 'package:foharmalai/features/request_pickup/presentation/pickup_list_page.dart';
 
@@ -40,6 +41,7 @@ class MyRoutes {
   static String specialRequestRoute = '/specialRequestRoute';
   static String statementRoute = '/statementRoute';
   static String dropPointRoutes = '/dropPointRoute';
+  static String forgotPasswordRoute = '/forgotPassword';
 
   static getApplicationRoute() {
     return {
@@ -63,6 +65,7 @@ class MyRoutes {
       specialRequestRoute: (context) => SpecialRequestsPage(),
       statementRoute: (context) => TransactionHistoryPage(),
       dropPointRoutes: (context) => SelfServiceDropPointsView(),
+      forgotPasswordRoute: (context) => ForgotPasswordPage(),
     };
   }
 }
