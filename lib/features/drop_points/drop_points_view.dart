@@ -50,7 +50,6 @@ class _SelfServiceDropPointsViewState
   }
 
   void _setDropPointMarkers() {
-    // Drop points around Kathmandu, Lalitpur, and Bhaktapur
     List<LatLng> dropPoints = [
       // Kathmandu
       LatLng(27.7172, 85.3240),
@@ -88,11 +87,10 @@ class _SelfServiceDropPointsViewState
           )
           .toSet();
 
-      // Add Head Office marker
       _markers.add(
         Marker(
           markerId: MarkerId('head_office'),
-          position: LatLng(27.6905, 85.3700), // Kadaghari coordinates
+          position: LatLng(27.6905, 85.3700),
           infoWindow: InfoWindow(
             title: 'Head Office',
             snippet: 'Foharmalai Head Office',
