@@ -123,10 +123,10 @@ flutter_icons:
   android: "launcher_icon"
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/images/foharmalailogo.png"
+  image_path: "assets/images/darklogo.png"
 
 icons_launcher:
-  image_path: "assets/images/foharmalailogo.png"
+  image_path: "assets/images/darklogo.png"
   platforms:
     android:
       enable: true
