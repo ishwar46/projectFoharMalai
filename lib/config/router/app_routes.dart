@@ -1,3 +1,4 @@
+import 'package:foharmalai/features/drop_points/drop_points_view.dart';
 import 'package:foharmalai/features/payment/presentation/view/transaction_history_page.dart';
 import 'package:foharmalai/features/request_pickup/presentation/pickup_list_page.dart';
 
@@ -38,6 +39,7 @@ class MyRoutes {
   static String pickUpListRoute = '/pickupListRoute';
   static String specialRequestRoute = '/specialRequestRoute';
   static String statementRoute = '/statementRoute';
+  static String dropPointRoutes = '/dropPointRoute';
 
   static getApplicationRoute() {
     return {
@@ -60,6 +62,7 @@ class MyRoutes {
       pickUpListRoute: (context) => PickupListPage(),
       specialRequestRoute: (context) => SpecialRequestsPage(),
       statementRoute: (context) => TransactionHistoryPage(),
+      dropPointRoutes: (context) => SelfServiceDropPointsView(),
     };
   }
 }

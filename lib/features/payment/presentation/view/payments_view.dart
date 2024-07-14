@@ -6,6 +6,10 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../app_localizations.dart';
+import '../../../../core/common/widgets/balance_error.dart';
+import '../../../../core/common/widgets/balance_loading_shimmer.dart';
+import '../../../home/model/user_model.dart';
+import '../../../home/service/user_service.dart';
 
 class PaymentPage extends StatefulWidget {
   @override
@@ -15,6 +19,13 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   bool _isBalanceVisible = true;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  late Future<User> userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    userFuture = UserService().getUserProfile();
+  }
 
   void _toggleBalanceVisibility() {
     setState(() {
@@ -53,12 +64,6 @@ class _PaymentPageState extends State<PaymentPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(localization.translate('payments')),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         elevation: 0,
         foregroundColor: Colors.black,
       ),
@@ -73,49 +78,67 @@ class _PaymentPageState extends State<PaymentPage> {
                 color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(8.0),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              child: FutureBuilder<User>(
+                future: userFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: BalanceLoadingShimmer());
+                  } else if (snapshot.hasError) {
+                    return BalanceErrorWidget(
+                      errorMessage: 'Error Loading Balance',
+                    );
+                  } else if (!snapshot.hasData) {
+                    return Center(child: Text("No data found"));
+                  }
+
+                  User user = snapshot.data!;
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        _isBalanceVisible ? 'Rs. XXX.XX' : 'Rs. 13579.55',
-                        style: GoogleFonts.montserrat(
-                          color: AppColors.whiteText,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _isBalanceVisible
+                                ? 'Rs. ${user.balance!.toStringAsFixed(2)}'
+                                : 'Rs. XXX.XX',
+                            style: GoogleFonts.roboto(
+                              color: AppColors.whiteText,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(
+                            localization.translate('availableBalance'),
+                            style: GoogleFonts.roboto(
+                              color: AppColors.whiteText,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 4.0),
-                      Text(
-                        localization.translate('availableBalance'),
-                        style: GoogleFonts.montserrat(
-                          color: AppColors.whiteText,
-                          fontSize: 14.0,
-                        ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              _isBalanceVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: AppColors.whiteText,
+                            ),
+                            onPressed: _toggleBalanceVisibility,
+                          ),
+                          Icon(
+                            Icons.account_balance_wallet,
+                            color: AppColors.whiteText,
+                            size: 30.0,
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          _isBalanceVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: AppColors.whiteText,
-                        ),
-                        onPressed: _toggleBalanceVisibility,
-                      ),
-                      Icon(
-                        Icons.account_balance_wallet,
-                        color: AppColors.whiteText,
-                        size: 30.0,
-                      ),
-                    ],
-                  ),
-                ],
+                  );
+                },
               ),
             ),
             SizedBox(height: 24.0),
@@ -237,9 +260,7 @@ class _QRViewExampleState extends State<QRViewExample> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      // Handle scanned data
-    });
+    controller.scannedDataStream.listen((scanData) {});
   }
 
   @override

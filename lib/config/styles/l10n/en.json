@@ -67,7 +67,7 @@
     "receiverEsewaNumber": "Receiver’s E-sewa Number",
     "purpose": "Purpose",
     "submit": "Submit",
-    "loadToKhalti": "LOAD TO KHALTI",
+    "loadToKhalti": "Load to Khalti",
     "receiverKhaltiNumber": "Receiver’s Khalti Number",
     "confirmation": "Confirmation",
     "confirmPaymentDetails": "Do you confirm the payment details?",
@@ -130,6 +130,7 @@
     "1Month": "30 Days",
     "pickDateRange": "Pick Date",
     "statement_error": "Unable to retrieve statements. Please try again later.",
-    "no_statement": "No statements available at the moment."
+    "no_statement": "No statements available at the moment.",
+    "self_service_drop_points": "Self Service Drop Points"
 
 }
