@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:foharmalai/app_localizations.dart';
 import 'package:foharmalai/config/constants/app_sizes.dart';
-import 'package:iconsax/iconsax.dart';
-import '../../../../config/constants/app_colors.dart';
+import 'package:foharmalai/config/constants/app_colors.dart';
 import '../../../../core/common/widgets/custom_snackbar.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
 import '../../../../core/utils/validators/validators.dart';
@@ -29,8 +34,12 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
   final _dateController = TextEditingController();
   final _estimatedWasteController = TextEditingController();
   final _additionalInstructionsController = TextEditingController();
+  final _locationController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _selectedCategory;
+  LatLng? selectedCoordinates;
+  String? apiKey = dotenv.env['GOOGLE_PLACES_API_KEY'];
+
   final List<String> _categories = [
     'Paper Products',
     'Plastics',
@@ -55,6 +64,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
     _dateController.clear();
     _estimatedWasteController.clear();
     _additionalInstructionsController.clear();
+    _locationController.clear();
     _selectedCategory = null;
   }
 
@@ -100,6 +110,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
         preferredTime: _timeController.text,
         preferredDate: _dateController.text,
         additionalInstructions: _additionalInstructionsController.text,
+        location: _locationController.text,
       );
 
       bool success =
@@ -137,6 +148,7 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
     _dateController.dispose();
     _estimatedWasteController.dispose();
     _additionalInstructionsController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -235,6 +247,39 @@ class _SpecialRequestsPageState extends ConsumerState<SpecialRequestsPage> {
                   onTap: () => _selectDate(context),
                   validator: (value) =>
                       AppValidator.validateField(value, 'Preferred Date'),
+                ),
+                const SizedBox(height: AppSizes.spaceBtwnInputFields),
+                // Location
+                GooglePlacesAutoCompleteTextFormField(
+                  decoration: InputDecoration(
+                    labelText: localizations.translate('address'),
+                    prefixIcon: Icon(Iconsax.location),
+                    hintText: localizations.translate('address_hint'),
+                  ),
+                  textEditingController: _locationController,
+                  googleAPIKey: apiKey ?? 'NA',
+                  debounceTime: 400,
+                  isLatLngRequired: true,
+                  getPlaceDetailWithLatLng: (prediction) {
+                    setState(() {
+                      selectedCoordinates = LatLng(
+                        double.parse(prediction.lat.toString()),
+                        double.parse(prediction.lng.toString()),
+                      );
+                    });
+                  },
+                  itmClick: (prediction) {
+                    if (prediction.description != null) {
+                      _locationController.text = prediction.description!;
+                      _locationController.selection =
+                          TextSelection.fromPosition(
+                        TextPosition(offset: prediction.description!.length),
+                      );
+                    } else {
+                      _locationController.clear();
+                    }
+                  },
+                  validator: AppValidator.validateAddress,
                 ),
                 const SizedBox(height: AppSizes.spaceBtwnInputFields),
                 // Additional Instructions
