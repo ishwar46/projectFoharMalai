@@ -74,39 +74,46 @@ class WhatWeBuyPage extends StatelessWidget {
   }
 
   Widget _buildGridView(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 3,
-      childAspectRatio: 0.75,
+    return GridView.builder(
       padding: const EdgeInsets.all(8.0),
-      children: [
-        _buildCard(
-            context, 'Newspaper', 'assets/images/newspapers.png', 'Rs. 5/Kg'),
-        _buildCard(
-            context, 'Magazines', 'assets/images/newspapers.png', 'Re. 10/Kg'),
-        _buildCard(context, 'Books & Magazine', 'assets/images/newspapers.png',
-            'Re. 20/Kg'),
-        _buildCard(
-            context, 'Egg Crates', 'assets/images/newspapers.png', 'Rs. 10/Kg'),
-        _buildCard(context, 'Invitation cards', 'assets/images/newspapers.png',
-            'Rs. 4/Kg'),
-        _buildCard(context, 'Notes & Copy', 'assets/images/newspapers.png',
-            'Rs. 15/Kg'),
-      ],
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3, // Adjust to fit smaller screens
+        crossAxisSpacing: 10.0,
+        mainAxisSpacing: 10.0,
+        childAspectRatio: 0.7, // Adjust to fit the content properly
+      ),
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        List<Item> items = [
+          Item('Newspaper', 'assets/images/newspapers.png', 'Rs. 5/Kg'),
+          Item('Magazines', 'assets/images/newspapers.png', 'Re. 10/Kg'),
+          Item('Books & Magazine', 'assets/images/newspapers.png', 'Re. 20/Kg'),
+          Item('Egg Crates', 'assets/images/newspapers.png', 'Rs. 10/Kg'),
+          Item('Invitation cards', 'assets/images/newspapers.png', 'Rs. 4/Kg'),
+          Item('Notes & Copy', 'assets/images/newspapers.png', 'Rs. 15/Kg'),
+        ];
+        return _buildContainer(context, items[index].title, items[index].image,
+            items[index].subtitle);
+      },
     );
   }
 
-  Widget _buildCard(
+  Widget _buildContainer(
       BuildContext context, String title, String imagePath, String price) {
     bool isDarkMode = HelperFunctions.isDarkMode(context);
 
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppColors.darkModeOnPrimary : AppColors.white,
         borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode ? Colors.black54 : Colors.grey.shade300,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
-      surfaceTintColor:
-          isDarkMode ? AppColors.darkModeOnPrimary : AppColors.white,
-      color: isDarkMode ? AppColors.darkModeOnPrimary : AppColors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -140,4 +147,12 @@ class WhatWeBuyPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class Item {
+  final String title;
+  final String image;
+  final String subtitle;
+
+  Item(this.title, this.image, this.subtitle);
 }
