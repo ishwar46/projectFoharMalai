@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:foharmalai/app_localizations.dart';
-
 import '../../../../core/utils/helpers/helper_functions.dart';
 
 class WhatWeBuyWidget extends StatelessWidget {
@@ -17,7 +16,7 @@ class WhatWeBuyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    final isdark = HelperFunctions.isDarkMode(context);
+    final isDark = HelperFunctions.isDarkMode(context);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -32,13 +31,17 @@ class WhatWeBuyWidget extends StatelessWidget {
         ),
         itemCount: items.length < 8 ? items.length : 8,
         itemBuilder: (context, index) {
-          return Card(
-            elevation: 2,
-            color: isdark ? AppColors.darkModeOnPrimary : AppColors.whiteText,
-            surfaceTintColor:
-                isdark ? AppColors.darkModeOnPrimary : AppColors.whiteText,
-            shape: RoundedRectangleBorder(
+          return Container(
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkModeOnPrimary : AppColors.whiteText,
               borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  color: isDark ? Colors.black54 : Colors.grey.shade300,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -55,6 +58,7 @@ class WhatWeBuyWidget extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -63,6 +67,7 @@ class WhatWeBuyWidget extends StatelessWidget {
                     fontSize: 12,
                     color: Colors.grey,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
