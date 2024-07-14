@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foharmalai/config/constants/app_colors.dart';
 import 'package:foharmalai/app_localizations.dart';
-import '../../../../core/utils/helpers/helper_functions.dart';
 
 class WhatWeBuyWidget extends StatelessWidget {
   final List<Item> items = [
@@ -13,10 +12,13 @@ class WhatWeBuyWidget extends StatelessWidget {
     Item('aluminium', 'assets/images/alum.png', 'Re. 1/Pcs'),
   ];
 
+  final bool isDarkMode;
+
+  WhatWeBuyWidget({required this.isDarkMode});
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    final isDark = HelperFunctions.isDarkMode(context);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -33,11 +35,11 @@ class WhatWeBuyWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return Container(
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkModeOnPrimary : AppColors.whiteText,
+              color: isDarkMode ? AppColors.darkModeOnPrimary : AppColors.white,
               borderRadius: BorderRadius.circular(4),
               boxShadow: [
                 BoxShadow(
-                  color: isDark ? Colors.black54 : Colors.grey.shade300,
+                  color: isDarkMode ? Colors.black54 : Colors.grey.shade300,
                   blurRadius: 4,
                   offset: Offset(0, 2),
                 ),

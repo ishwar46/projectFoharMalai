@@ -9,6 +9,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nepali_date_picker/nepali_date_picker.dart';
 
+import '../../../request_pickup/presentation/limited_request_view.dart';
 import '../widgets/support_bottom_sheet.dart';
 import '../../../../../config/constants/app_colors.dart';
 import '../../../../../config/router/app_routes.dart';
@@ -17,8 +18,7 @@ import '../../../../app_localizations.dart';
 import '../widgets/alert_text_widget.dart';
 import '../widgets/notification_card_widget.dart';
 import '../widgets/service_row_widget.dart';
-import '../widgets/service_text_widget.dart';
-import '../widgets/upcoming_schedule_widget.dart';
+import '../widgets/myrequests_text_widget.dart';
 import '../widgets/what_we_buy.dart';
 import '../widgets/what_we_buy_text.dart';
 
@@ -198,45 +198,21 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   Widget _buildBody(BuildContext context, bool isDarkMode) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
         child: Column(
           children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-              child: ServiceRow(isDarkMode: isDarkMode),
-            ),
+            ServiceRow(isDarkMode: isDarkMode),
             const SizedBox(height: 10.0),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-              child: ServiceText(isDarkMode: isDarkMode),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-              child: UpComingWidget(),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-              child: WhatWeBuyText(isDarkMode: isDarkMode),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-              child: WhatWeBuyWidget(),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-              child: AlertText(isDarkMode: isDarkMode),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-              child: AlertCard(),
-            ),
+            MyRequestsTexts(isDarkMode: isDarkMode),
+            const SizedBox(height: 10.0),
+            LimitedRequestsWidget(),
+            const SizedBox(height: 10.0),
+            WhatWeBuyText(isDarkMode: isDarkMode),
+            const SizedBox(height: 10.0),
+            WhatWeBuyWidget(isDarkMode: isDarkMode),
+            const SizedBox(height: 10.0),
+            AlertText(isDarkMode: isDarkMode),
+            AlertCard(),
           ],
         ),
       ),

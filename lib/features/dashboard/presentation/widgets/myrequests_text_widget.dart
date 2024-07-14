@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foharmalai/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class WhatWeBuyText extends StatelessWidget {
-  const WhatWeBuyText({Key? key, required this.isDarkMode}) : super(key: key);
+import '../../../../app_localizations.dart';
+
+class MyRequestsTexts extends StatelessWidget {
+  const MyRequestsTexts({Key? key, required this.isDarkMode}) : super(key: key);
 
   final bool isDarkMode;
 
@@ -18,7 +19,7 @@ class WhatWeBuyText extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Text(
-              localizations.translate('what_we_buy'),
+              localizations.translate("my_requests"),
               style: GoogleFonts.roboto(
                 color:
                     isDarkMode ? Colors.white : Theme.of(context).primaryColor,
@@ -31,7 +32,7 @@ class WhatWeBuyText extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/whatwebuyRoute');
+                Navigator.pushNamed(context, '/pickupListRoute');
               },
               child: Text(
                 localizations.translate('view_all'),
