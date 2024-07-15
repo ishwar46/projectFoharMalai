@@ -36,7 +36,10 @@ class _PaymentPageState extends State<PaymentPage> {
   void _onPaymentOptionTap(String option) {
     switch (option) {
       case 'eSewa':
-        Navigator.pushNamed(context, '/loadEsewaRoute');
+        showSnackBar(
+            message: 'Esewa is coming soon! Stay Tuned.',
+            context: context,
+            color: AppColors.error);
         break;
       case 'Khalti':
         Navigator.pushNamed(context, '/loadKhaltiRoute');
@@ -154,10 +157,10 @@ class _PaymentPageState extends State<PaymentPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 GestureDetector(
-                  onTap: () => _onPaymentOptionTap('eSewa'),
+                  onTap: () => _onPaymentOptionTap('Khalti'),
                   child: CachedNetworkImage(
                     imageUrl:
-                        'https://cdn.esewa.com.np/ui/images/esewa_og.png?111',
+                        'https://upload.wikimedia.org/wikipedia/commons/e/ee/Khalti_Digital_Wallet_Logo.png.jpg',
                     height: 50.0,
                     placeholder: (context, url) => CircularProgressIndicator(),
                     errorWidget: (context, url, error) =>
@@ -165,10 +168,10 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => _onPaymentOptionTap('Khalti'),
+                  onTap: () => _onPaymentOptionTap('eSewa'),
                   child: CachedNetworkImage(
                     imageUrl:
-                        'https://upload.wikimedia.org/wikipedia/commons/e/ee/Khalti_Digital_Wallet_Logo.png.jpg',
+                        'https://cdn.esewa.com.np/ui/images/esewa_og.png?111',
                     height: 50.0,
                     placeholder: (context, url) => CircularProgressIndicator(),
                     errorWidget: (context, url, error) =>

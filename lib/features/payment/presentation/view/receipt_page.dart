@@ -7,7 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:flutter/services.dart';
 import '../../../../app_localizations.dart';
-import 'transaction_history_page.dart';
 
 class ReceiptPage extends StatelessWidget {
   final String amount;
@@ -177,12 +176,7 @@ class ReceiptPage extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DashboardView()),
-                        (Route<dynamic> route) => false,
-                      );
+                      Navigator.pushNamed(context, '/homePageRoute');
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
