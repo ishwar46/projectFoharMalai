@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../config/constants/api_constants.dart';
 import '../../payment/model/transaction_model.dart';
+import '../../payment/utils/payment_result.dart';
 import '../model/user_model.dart';
 
 class UserService {
@@ -84,7 +85,7 @@ class UserService {
     }
   }
 
-  Future<bool> makePayment(
+  Future<PaymentResult> makePayment(
       int amount, String receiverPhoneNumber, String purpose) async {
     try {
       final token = await storage.read(key: 'authToken');
@@ -104,15 +105,17 @@ class UserService {
       );
 
       if (response.statusCode == 200 && response.data['success']) {
-        return true;
+        return PaymentResult(success: true, message: "Payment successful");
       } else {
-        print('Payment failed: ${response.data['message']}');
-        return false;
+        return PaymentResult(
+            success: false,
+            message: response.data['message'] ?? "Unknown error occurred");
       }
     } catch (e, stackTrace) {
       print('Failed to make payment: $e');
       print(stackTrace);
-      throw Exception('Failed to make payment');
+      return PaymentResult(
+          success: false, message: 'Exception during payment: $e');
     }
   }
 

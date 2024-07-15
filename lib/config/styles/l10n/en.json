@@ -161,7 +161,8 @@
     "forgot_password_desc": "Enter your email to receive a password reset link.",
     "press_again_to_exit": "Press again to exit the app.",
     "home": "Home",
-    "login_required": "You must login to use this feature."
+    "login_required": "You must login to use this feature.",
+    "processing_payment": "Processing your payment. Please Wait."
 
 
 }

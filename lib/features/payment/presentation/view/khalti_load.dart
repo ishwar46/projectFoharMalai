@@ -7,6 +7,7 @@ import 'package:foharmalai/core/common/widgets/custom_snackbar.dart';
 import '../../../../app_localizations.dart';
 import '../../../../core/common/widgets/balance_error.dart';
 import '../../../../core/common/widgets/balance_loading_shimmer.dart';
+import '../../../../core/common/widgets/payment_processing.dart';
 import '../../../home/model/user_model.dart';
 import '../../../home/service/user_service.dart';
 import '../../model/transaction_model.dart';
@@ -23,8 +24,11 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
   final _receiverPhoneNumberController = TextEditingController();
   final _purposeController = TextEditingController();
   final ValueNotifier<bool> _isSubmitButtonEnabled = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> isProcessingPayment = ValueNotifier<bool>(false);
   late Future<User> userFuture;
   late Future<List<Transaction>> transactionsFuture;
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -42,13 +46,12 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
     _receiverPhoneNumberController.dispose();
     _purposeController.dispose();
     _isSubmitButtonEnabled.dispose();
+    isProcessingPayment.dispose();
     super.dispose();
   }
 
   void _updateSubmitButtonState() {
-    final isButtonEnabled = _amountController.text.isNotEmpty &&
-        _receiverPhoneNumberController.text.isNotEmpty &&
-        _purposeController.text.isNotEmpty;
+    final isButtonEnabled = _formKey.currentState?.validate() ?? false;
     _isSubmitButtonEnabled.value = isButtonEnabled;
   }
 
@@ -68,6 +71,7 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
         setState(() {
           _receiverPhoneNumberController.text =
               contact.phones!.first.value ?? '';
+          _updateSubmitButtonState(); // Validate after setting the phone number
         });
       }
     } else {
@@ -167,7 +171,12 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    _makePayment(amount, receiverPhoneNumber, purpose);
+                    _showProcessingDialog(context);
+                    Future.delayed(Duration(seconds: 2), () {
+                      isProcessingPayment.value =
+                          false; // Update processing state
+                      _makePayment(amount, receiverPhoneNumber, purpose);
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 14.0),
@@ -217,27 +226,43 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
     );
   }
 
+  void _showProcessingDialog(BuildContext context) {
+    isProcessingPayment.value = true; // Start processing
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return PaymentProcessingDialog(
+          message: AppLocalizations.of(context).translate('processing_payment'),
+          isProcessing: isProcessingPayment,
+        );
+      },
+    );
+  }
+
   void _makePayment(
       String amount, String receiverPhoneNumber, String purpose) async {
     final localization = AppLocalizations.of(context);
     try {
-      final success = await UserService().makePayment(
+      final result = await UserService().makePayment(
         int.parse(amount),
         receiverPhoneNumber,
         purpose,
       );
-      if (success) {
+      if (result.success) {
+        isProcessingPayment.value = false;
+        Navigator.pop(context);
         showSnackBar(
             message: localization.translate('payment_successful'),
             context: context);
         _showReceiptPage(context, amount, receiverPhoneNumber, purpose);
       } else {
+        isProcessingPayment.value = false;
         showSnackBar(
-            message: localization.translate('payment_failed'),
-            context: context,
-            color: AppColors.error);
+            message: result.message, context: context, color: AppColors.error);
       }
     } catch (e) {
+      isProcessingPayment.value = false;
       showSnackBar(
           message: '${localization.translate('error')}: $e',
           context: context,
@@ -284,135 +309,160 @@ class _LoadToKhaltiPageState extends State<LoadToKhaltiPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: FutureBuilder<User>(
-                future: userFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: BalanceLoadingShimmer());
-                  } else if (snapshot.hasError) {
-                    return BalanceErrorWidget(
-                      errorMessage: 'Error Loading Balance',
-                    );
-                  } else if (!snapshot.hasData) {
-                    return Center(child: Text("No data found"));
-                  }
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: FutureBuilder<User>(
+                  future: userFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: BalanceLoadingShimmer());
+                    } else if (snapshot.hasError) {
+                      return BalanceErrorWidget(
+                        errorMessage: 'Error Loading Balance',
+                      );
+                    } else if (!snapshot.hasData) {
+                      return Center(child: Text("No data found"));
+                    }
 
-                  User user = snapshot.data!;
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _isBalanceVisible
-                                ? 'Rs. ${user.balance!.toStringAsFixed(2)}'
-                                : 'Rs. XXX.XX',
-                            style: GoogleFonts.roboto(
-                              color: AppColors.whiteText,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            localization.translate('availableBalance'),
-                            style: GoogleFonts.roboto(
-                              color: AppColors.whiteText,
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(
+                    User user = snapshot.data!;
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                               _isBalanceVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: AppColors.whiteText,
+                                  ? 'Rs. ${user.balance!.toStringAsFixed(2)}'
+                                  : 'Rs. XXX.XX',
+                              style: GoogleFonts.roboto(
+                                color: AppColors.whiteText,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            onPressed: _toggleBalanceVisibility,
-                          ),
-                          Icon(
-                            Icons.account_balance_wallet,
-                            color: AppColors.whiteText,
-                            size: 30.0,
-                          ),
-                        ],
+                            SizedBox(height: 4.0),
+                            Text(
+                              localization.translate('availableBalance'),
+                              style: GoogleFonts.roboto(
+                                color: AppColors.whiteText,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                _isBalanceVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: AppColors.whiteText,
+                              ),
+                              onPressed: _toggleBalanceVisibility,
+                            ),
+                            Icon(
+                              Icons.account_balance_wallet,
+                              color: AppColors.whiteText,
+                              size: 30.0,
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 24.0),
+              TextFormField(
+                controller: _amountController,
+                decoration: InputDecoration(
+                  labelText: localization.translate('amount'),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an amount';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16.0),
+              TextFormField(
+                controller: _receiverPhoneNumberController,
+                decoration: InputDecoration(
+                  labelText: localization.translate('receiverPhoneNumber'),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.contacts),
+                    onPressed: _pickContact,
+                  ),
+                ),
+                keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a phone number';
+                  } else if (value.length != 10) {
+                    return 'Phone number must be exactly 10 digits';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16.0),
+              TextFormField(
+                controller: _purposeController,
+                decoration: InputDecoration(
+                  labelText: localization.translate('purpose'),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a purpose';
+                  }
+                  return null;
+                },
+              ),
+              Spacer(),
+              ValueListenableBuilder<bool>(
+                valueListenable: _isSubmitButtonEnabled,
+                builder: (context, isEnabled, child) {
+                  return SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: isEnabled
+                          ? () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                _showConfirmationBottomSheet(context);
+                              }
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-                    ],
+                      child: Text(
+                        localization.translate('submit'),
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),
-            ),
-            SizedBox(height: 24.0),
-            TextField(
-              controller: _amountController,
-              decoration: InputDecoration(
-                labelText: localization.translate('amount'),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: _receiverPhoneNumberController,
-              decoration: InputDecoration(
-                labelText: localization.translate('receiverPhoneNumber'),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.contacts),
-                  onPressed: _pickContact,
-                ),
-              ),
-              keyboardType: TextInputType.phone,
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: _purposeController,
-              decoration: InputDecoration(
-                labelText: localization.translate('purpose'),
-              ),
-            ),
-            Spacer(),
-            ValueListenableBuilder<bool>(
-              valueListenable: _isSubmitButtonEnabled,
-              builder: (context, isEnabled, child) {
-                return SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: isEnabled
-                        ? () {
-                            _showConfirmationBottomSheet(context);
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    child: Text(
-                      localization.translate('submit'),
-                      style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
