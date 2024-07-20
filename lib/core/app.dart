@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../config/router/app_routes.dart';
@@ -28,12 +29,14 @@ class App extends ConsumerStatefulWidget {
 
 class _AppState extends ConsumerState<App> {
   Locale _locale = Locale('en');
+  ThemeMode _themeMode = ThemeMode.system; // Add this line
 
   @override
   void initState() {
     super.initState();
     App.setInstance(this);
     _loadLocale();
+    _loadThemeMode();
   }
 
   Future<void> _loadLocale() async {
@@ -46,6 +49,20 @@ class _AppState extends ConsumerState<App> {
     }
   }
 
+  Future<void> _loadThemeMode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? theme = prefs.getString('themeMode');
+    setState(() {
+      if (theme == 'dark') {
+        _themeMode = ThemeMode.dark;
+      } else if (theme == 'light') {
+        _themeMode = ThemeMode.light;
+      } else {
+        _themeMode = ThemeMode.system;
+      }
+    });
+  }
+
   void setLocale(Locale locale) async {
     setState(() {
       _locale = locale;
@@ -54,12 +71,20 @@ class _AppState extends ConsumerState<App> {
     await languageService.saveLanguageCode(locale.languageCode);
   }
 
+  void setThemeMode(ThemeMode themeMode) async {
+    setState(() {
+      _themeMode = themeMode;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('themeMode', themeMode.toString().split('.').last);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Fohar Malai',
-      themeMode: ThemeMode.system,
+      themeMode: _themeMode,
       theme: MyAppTheme.lightTheme,
       darkTheme: MyAppTheme.darkTheme,
       initialRoute: MyRoutes.splashRoute,

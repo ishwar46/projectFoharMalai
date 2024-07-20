@@ -162,7 +162,8 @@
     "press_again_to_exit": "Press again to exit the app.",
     "home": "Home",
     "login_required": "You must login to use this feature.",
-    "processing_payment": "Processing your payment. Please Wait."
+    "processing_payment": "Processing your payment. Please Wait.",
+    "theme_mode": "Choose your theme mode"
 
 
 }

@@ -4,17 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../app_localizations.dart';
 import '../../../../config/constants/app_colors.dart';
-import '../../../../config/themes/apptheme.dart';
 import '../../../../core/app.dart';
 import '../../../../core/common/provider/biometric_provider.dart';
 import '../../../../core/common/provider/language_service.dart';
 import '../../../../core/utils/helpers/helper_functions.dart';
-import '../../config/router/app_routes.dart';
 import '../../core/common/widgets/custom_snackbar.dart';
 import '../auth/presentation/view/login_page.dart';
 
@@ -27,15 +25,46 @@ class SettingsView extends ConsumerStatefulWidget {
 
 class _SettingsViewState extends ConsumerState<SettingsView> {
   final LanguageService languageService = LanguageService();
+  bool isDarkMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadThemeMode();
+  }
+
+  Future<void> _loadThemeMode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? theme = prefs.getString('themeMode');
+    setState(() {
+      isDarkMode = theme == 'dark';
+    });
+  }
 
   void _changeLanguage(Locale locale) async {
     App.instance.setLocale(locale);
     await languageService.saveLanguageCode(locale.languageCode);
   }
 
+  void _changeThemeMode(bool value) {
+    if (value) {
+      App.instance.setThemeMode(ThemeMode.dark);
+    } else {
+      App.instance.setThemeMode(ThemeMode.light);
+    }
+    setState(() {
+      isDarkMode = value;
+    });
+    EasyLoading.showSuccess(
+      value
+          ? AppLocalizations.of(context).translate("dark_mode_enabled")
+          : AppLocalizations.of(context).translate("dark_mode_disabled"),
+      duration: const Duration(seconds: 2),
+    );
+  }
+
   void _showLanguageBottomSheet(BuildContext context) {
     showModalBottomSheet(
-      showDragHandle: false,
       context: context,
       builder: (BuildContext context) {
         return Container(
@@ -53,14 +82,6 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
               ),
               const SizedBox(height: 10),
               ListTile(
-                leading: CountryCodePicker(
-                  onInit: (_) {},
-                  initialSelection: 'US',
-                  showCountryOnly: true,
-                  showOnlyCountryWhenClosed: true,
-                  alignLeft: true,
-                  hideMainText: true,
-                ),
                 title: Text(AppLocalizations.of(context).translate('english')),
                 onTap: () {
                   _changeLanguage(Locale('en'));
@@ -68,14 +89,6 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                 },
               ),
               ListTile(
-                leading: CountryCodePicker(
-                  onInit: (_) {},
-                  initialSelection: 'np',
-                  showCountryOnly: true,
-                  showOnlyCountryWhenClosed: true,
-                  alignLeft: true,
-                  hideMainText: true,
-                ),
                 title: Text(AppLocalizations.of(context).translate('nepali')),
                 onTap: () {
                   _changeLanguage(Locale('ne'));
@@ -155,25 +168,11 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
         SettingsItem(
           onTap: () {},
           icons: Icons.dark_mode_rounded,
-          iconStyle: IconStyle(
-            iconsColor: Colors.white,
-            withBackground: true,
-            backgroundColor: Colors.red,
-          ),
           title: localizations.translate('dark_mode'),
-          subtitle: localizations.translate('automatic'),
+          subtitle: localizations.translate('theme_mode'),
           trailing: Switch.adaptive(
-            value: HelperFunctions.isDarkMode(context),
-            onChanged: (value) {
-              ref.read(appThemeProvider.notifier).toggleDarkMode();
-
-              EasyLoading.showSuccess(
-                value
-                    ? localizations.translate("dark_mode_enabled")
-                    : localizations.translate("dark_mode_disabled"),
-                duration: const Duration(seconds: 2),
-              );
-            },
+            value: isDarkMode,
+            onChanged: _changeThemeMode,
           ),
         ),
         SettingsItem(
