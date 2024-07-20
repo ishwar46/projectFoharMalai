@@ -77,18 +77,18 @@ class WhatWeBuyPage extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.all(8.0),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // Adjust to fit smaller screens
+        crossAxisCount: 3,
         crossAxisSpacing: 10.0,
         mainAxisSpacing: 10.0,
-        childAspectRatio: 0.7, // Adjust to fit the content properly
+        childAspectRatio: 0.7,
       ),
       itemCount: 6,
       itemBuilder: (context, index) {
         List<Item> items = [
           Item('Newspaper', 'assets/images/newspapers.png', 'Rs. 5/Kg'),
-          Item('Magazines', 'assets/images/newspapers.png', 'Re. 10/Kg'),
-          Item('Books & Magazine', 'assets/images/newspapers.png', 'Re. 20/Kg'),
-          Item('Egg Crates', 'assets/images/newspapers.png', 'Rs. 10/Kg'),
+          Item('Magazines', 'assets/images/books.png', 'Rs. 10/Kg'),
+          Item('Books & Magazine', 'assets/images/books1.png', 'Rs. 20/Kg'),
+          Item('Card Board', 'assets/images/cardboard.png', 'Rs. 10/Kg'),
           Item('Invitation cards', 'assets/images/newspapers.png', 'Rs. 4/Kg'),
           Item('Notes & Copy', 'assets/images/newspapers.png', 'Rs. 15/Kg'),
         ];
